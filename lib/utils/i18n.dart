@@ -1,0 +1,215 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+abstract final class I18n {
+  static const Locale defaultLocale = Locale('en');
+  static const List<Locale> supportedLocales = [
+    Locale('en'),
+    Locale('de'),
+    Locale('es'),
+  ];
+
+  static const String _fallbackLanguage = 'en';
+
+  static const Map<String, Map<String, String>> _localizedValues = {
+    'en': {
+      'app_title': 'Never Have I Ever AI',
+      'have_i': 'Have I',
+      'have_i_not': 'Have I not',
+      'create_lobby': 'Create Lobby',
+      'join_lobby': 'Join Lobby',
+      'create': 'Create',
+      'creating': 'Creating...',
+      'join': 'Join',
+      'joining': 'Joining...',
+      'start': 'Start',
+      'start_game': 'Start Game',
+      'starting': 'Starting...',
+      'waiting': 'Waiting',
+      'lobby': 'Lobby',
+      'game': 'Game',
+      'results': 'Results',
+      'round': 'Round',
+      'winner': 'Winner',
+      'fastest': 'Fastest',
+      'bravest': 'Bravest',
+      'highlights': 'Highlights',
+      'yes': 'YES',
+      'no': 'NO',
+      'score': 'Score',
+      'timer': 'Timer',
+      'risk': 'Risk',
+      'language': 'Language',
+      'round_limit': 'Round limit',
+      'your_nickname': 'Your nickname',
+      'nickname': 'Nickname',
+      'lobby_code': 'Lobby code',
+      'code': 'Code',
+      'back_to_home': 'Back to Home',
+      'highest_total_score': 'Highest total score',
+      'lowest_avg_response': 'Lowest average response time',
+      'highest_yes_ratio': 'Highest yes ratio and solo confessions',
+      'home_tagline': 'Play live rounds with synced answers, timed turns, and AI-polished prompts.',
+      'waiting_for_host': 'Waiting for host to start the game...',
+      'lobby_not_found': 'Lobby not found.',
+      'you_are_player': 'You',
+      'you_not_player': 'You are not a player in this lobby.',
+      'preparing_first_round': 'Preparing first round...',
+      'round_reveal': 'Round reveal',
+      'no_yes_clicked': 'No one clicked YES this round.',
+      'yes_list': 'YES: {names}',
+      'locked_in': '{name} locked in: {answer}',
+      'choose_before_time': '{name}, choose before time runs out.',
+      'won_with_points': '{name} won with {points} points.',
+      'reacted_fastest': '{name} reacted fastest on average.',
+      'boldest_profile': '{name} had the boldest yes/no profile.',
+      'no_players_found': 'No players found for this lobby.',
+      'etc': 'etc.',
+      'enter_nickname': 'Please enter a nickname',
+      'enter_valid_code': 'Enter a valid lobby code',
+      'waiting_status': 'Waiting',
+    },
+    'de': {
+      'app_title': 'Never Have I Ever AI',
+      'have_i': 'Habe ich',
+      'have_i_not': 'Habe ich nicht',
+      'create_lobby': 'Lobby erstellen',
+      'join_lobby': 'Lobby beitreten',
+      'create': 'Erstellen',
+      'creating': 'Erstelle...',
+      'join': 'Beitreten',
+      'joining': 'Trete bei...',
+      'start': 'Start',
+      'start_game': 'Spiel starten',
+      'starting': 'Starte...',
+      'waiting': 'Warten',
+      'lobby': 'Lobby',
+      'game': 'Spiel',
+      'results': 'Ergebnisse',
+      'round': 'Runde',
+      'winner': 'Sieger',
+      'fastest': 'Schnellste',
+      'bravest': 'Mutigste',
+      'highlights': 'Highlights',
+      'yes': 'JA',
+      'no': 'NEIN',
+      'score': 'Punkte',
+      'timer': 'Timer',
+      'risk': 'Risiko',
+      'language': 'Sprache',
+      'round_limit': 'Rundenlimit',
+      'your_nickname': 'Dein Name',
+      'nickname': 'Name',
+      'lobby_code': 'Lobby-Code',
+      'code': 'Code',
+      'back_to_home': 'Zur Startseite',
+      'highest_total_score': 'Hoechste Gesamtpunktzahl',
+      'lowest_avg_response': 'Niedrigste durchschnittliche Reaktionszeit',
+      'highest_yes_ratio': 'Hoechste Ja-Quote und Solo-Gestaendnisse',
+      'home_tagline': 'Spiele Live-Runden mit synchronen Antworten, Timer und KI-Prompts.',
+      'waiting_for_host': 'Warte auf den Host, um das Spiel zu starten...',
+      'lobby_not_found': 'Lobby nicht gefunden.',
+      'you_are_player': 'Du',
+      'you_not_player': 'Du bist kein Spieler in dieser Lobby.',
+      'preparing_first_round': 'Erste Runde wird vorbereitet...',
+      'round_reveal': 'Rundenaufloesung',
+      'no_yes_clicked': 'Niemand hat JA geklickt.',
+      'yes_list': 'JA: {names}',
+      'locked_in': '{name} hat gewaehlt: {answer}',
+      'choose_before_time': '{name}, waehle bevor die Zeit ablaeuft.',
+      'won_with_points': '{name} gewann mit {points} Punkten.',
+      'reacted_fastest': '{name} reagierte im Schnitt am schnellsten.',
+      'boldest_profile': '{name} hatte das mutigste Ja/Nein-Profil.',
+      'no_players_found': 'Keine Spieler fuer diese Lobby gefunden.',
+      'etc': 'usw.',
+      'enter_nickname': 'Bitte gib einen Namen ein',
+      'enter_valid_code': 'Gueltigen Lobby-Code eingeben',
+      'waiting_status': 'Warten',
+    },
+    'es': {
+      'app_title': 'Never Have I Ever AI',
+      'have_i': 'He hecho',
+      'have_i_not': 'No he hecho',
+      'create_lobby': 'Crear sala',
+      'join_lobby': 'Unirse a sala',
+      'create': 'Crear',
+      'creating': 'Creando...',
+      'join': 'Unirse',
+      'joining': 'Uniendo...',
+      'start': 'Iniciar',
+      'start_game': 'Iniciar juego',
+      'starting': 'Iniciando...',
+      'waiting': 'Esperando',
+      'lobby': 'Sala',
+      'game': 'Juego',
+      'results': 'Resultados',
+      'round': 'Ronda',
+      'winner': 'Ganador',
+      'fastest': 'Mas rapido',
+      'bravest': 'Mas valiente',
+      'highlights': 'Momentos clave',
+      'yes': 'SI',
+      'no': 'NO',
+      'score': 'Puntuacion',
+      'timer': 'Temporizador',
+      'risk': 'Riesgo',
+      'language': 'Idioma',
+      'round_limit': 'Limite de rondas',
+      'your_nickname': 'Tu apodo',
+      'nickname': 'Apodo',
+      'lobby_code': 'Codigo de sala',
+      'code': 'Codigo',
+      'back_to_home': 'Volver al inicio',
+      'highest_total_score': 'Mayor puntuacion total',
+      'lowest_avg_response': 'Menor tiempo promedio de respuesta',
+      'highest_yes_ratio': 'Mayor proporcion de SI y confesiones en solitario',
+      'home_tagline': 'Juega rondas en vivo con respuestas sincronizadas, temporizador y prompts con IA.',
+      'waiting_for_host': 'Esperando al anfitrion para iniciar el juego...',
+      'lobby_not_found': 'Sala no encontrada.',
+      'you_are_player': 'Tu',
+      'you_not_player': 'No eres jugador en esta sala.',
+      'preparing_first_round': 'Preparando la primera ronda...',
+      'round_reveal': 'Revelacion de ronda',
+      'no_yes_clicked': 'Nadie hizo clic en SI.',
+      'yes_list': 'SI: {names}',
+      'locked_in': '{name} confirmo: {answer}',
+      'choose_before_time': '{name}, elige antes de que termine el tiempo.',
+      'won_with_points': '{name} gano con {points} puntos.',
+      'reacted_fastest': '{name} reacciono mas rapido en promedio.',
+      'boldest_profile': '{name} tuvo el perfil SI/NO mas valiente.',
+      'no_players_found': 'No se encontraron jugadores para esta sala.',
+      'etc': 'etc.',
+      'enter_nickname': 'Ingresa un apodo',
+      'enter_valid_code': 'Ingresa un codigo valido',
+      'waiting_status': 'Esperando',
+    },
+  };
+
+  static String resolveLanguageCode(String? raw) {
+    final code = (raw ?? _fallbackLanguage).toLowerCase();
+    if (_localizedValues.containsKey(code)) {
+      return code;
+    }
+    return _fallbackLanguage;
+  }
+
+  static String tr(
+    String key, {
+    String? languageCode,
+    Map<String, String> params = const {},
+  }) {
+    final resolvedCode = resolveLanguageCode(languageCode);
+    final languageMap = _localizedValues[resolvedCode]!;
+    String value = languageMap[key] ?? _localizedValues[_fallbackLanguage]![key] ?? key;
+
+    for (final entry in params.entries) {
+      value = value.replaceAll('{${entry.key}}', entry.value);
+    }
+
+    return value;
+  }
+
+  static String formatTimestamp(DateTime value) {
+    return DateFormat('yMMMd jm').format(value);
+  }
+}
