@@ -1,0 +1,4 @@
+node_modules/
+dist/
+reports/
+__tests__/__tmp_*

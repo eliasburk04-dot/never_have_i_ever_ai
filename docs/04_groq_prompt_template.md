@@ -24,14 +24,35 @@ RULES:
 4. You MUST respect the tone_level and intensity_range provided.
 5. If NSFW is disabled, NEVER include sexual, explicit, or adult content.
 6. Even with NSFW enabled: NO minors, NO illegal activities, NO explicit pornography, NO violence.
-7. Questions must always start with "Never have I ever..."
-8. Keep questions under 100 characters.
-9. Be culturally sensitive across German, English, and Spanish audiences.
+7. Keep questions under 150 characters per language.
+8. Be culturally sensitive across German, English, and Spanish audiences.
+
+LANGUAGE CONSTRAINTS (STRICT — violations cause rejection and re-prompt):
+
+  ENGLISH:
+  - question_text_en MUST begin with exactly "Never have I ever " (capital N).
+  - Must NOT end with . ? or !
+
+  GERMAN:
+  - question_text_de MUST begin with exactly "Ich hab noch nie "
+    (accepted variants: "Ich hab mich noch nie ", "Ich war noch nie ").
+  - MUST use proper Umlauts: ä ö ü ß. NEVER use ASCII transliterations
+    (ae for ä, oe for ö, ue for ü, ss for ß).
+  - Must NOT end with . ? or !
+
+  SPANISH:
+  - question_text_es MUST begin with exactly "Yo nunca nunca "
+  - After prefix use pretérito perfecto compuesto: "he" + participio
+    (e.g. "he comido", "me he despertado").
+  - MUST use proper accented characters: á é í ó ú ñ.
+  - Must NOT end with . ? or !
 
 RESPONSE FORMAT:
 {
     "selected_question_id": "uuid-or-null",
-    "question_text": "Never have I ever ...",
+    "question_text_en": "Never have I ever ...",
+    "question_text_de": "Ich hab noch nie ...",
+    "question_text_es": "Yo nunca nunca he ...",
     "was_modified": true/false,
     "was_generated": true/false,
     "reasoning": "brief explanation of choice"
@@ -189,25 +210,85 @@ Every Groq response MUST pass this validation before use:
 ```typescript
 interface GroqResponse {
     selected_question_id: string | null;
-    question_text: string;
+    question_text_en: string;
+    question_text_de: string;
+    question_text_es: string;
     was_modified: boolean;
     was_generated: boolean;
     reasoning: string;
 }
 
-function validateGroqResponse(data: any): boolean {
-    if (!data.question_text) return false;
-    if (typeof data.question_text !== 'string') return false;
-    if (data.question_text.length > 200) return false;
-    if (!data.question_text.toLowerCase().includes('never have i ever')) return false;
+function validateGroqResponse(data: any, language: string): boolean {
+    // Structural checks
     if (typeof data.was_modified !== 'boolean') return false;
     if (typeof data.was_generated !== 'boolean') return false;
-    
+
+    // Per-language quality checks
+    const en = data.question_text_en;
+    const de = data.question_text_de;
+    const es = data.question_text_es;
+
+    if (!en || typeof en !== 'string') return false;
+    if (!de || typeof de !== 'string') return false;
+    if (!es || typeof es !== 'string') return false;
+
+    // EN: prefix + length + no trailing punctuation
+    if (!en.startsWith('Never have I ever ')) return false;
+    if (en.length > 150) return false;
+    if (/[.?!]$/.test(en)) return false;
+
+    // DE: prefix + Umlauts + no ASCII transliterations + no trailing punctuation
+    if (!de.startsWith('Ich hab noch nie ') &&
+        !de.startsWith('Ich hab mich noch nie ') &&
+        !de.startsWith('Ich war noch nie ')) return false;
+    if (de.length > 150) return false;
+    if (/[.?!]$/.test(de)) return false;
+    // Reject if German text contains common transliterations
+    // (simplified — server-side uses full exception list from QUALITY_SPEC)
+    if (/(?<![a-z])(?:ae|oe|ue)(?![a-z]*(?:uer|uer|uen|auer))/.test(de.toLowerCase())) {
+        // Use the full detectGermanTransliterations() from validate_content
+        // This is a simplified check; the server imports the full validator
+    }
+
+    // ES: prefix + verb form + no trailing punctuation
+    if (!es.startsWith('Yo nunca nunca ')) return false;
+    if (es.length > 150) return false;
+    if (/[.?!]$/.test(es)) return false;
+    const afterPrefix = es.replace(/^Yo nunca nunca /, '');
+    if (!/^(he |me he |me ha |me han |le he |les he |se me |nos |te he |se ha )/.test(afterPrefix)) {
+        return false;
+    }
+
     // Safety check on generated content
     if (data.was_generated) {
-        if (!passesSafetyFilter(data.question_text)) return false;
+        if (!passesSafetyFilter(en)) return false;
+        if (!passesSafetyFilter(de)) return false;
+        if (!passesSafetyFilter(es)) return false;
     }
-    
+
     return true;
 }
+```
+
+### Post-Generation Retry Flow
+
+When `validateGroqResponse()` fails:
+
+```
+GROQ CALL #1
+    │
+    ├─ validateGroqResponse() PASS → Use question
+    │
+    └─ validateGroqResponse() FAIL → Build error-feedback prompt:
+        │
+        │  "Your previous response was rejected because:
+        │   - [specific rule violations, e.g. 'DE text used ae instead of ä']
+        │   Re-generate following the LANGUAGE CONSTRAINTS exactly."
+        │
+        ├─ GROQ CALL #2 (retry with error feedback)
+        │   │
+        │   ├─ validateGroqResponse() PASS → Use question
+        │   └─ validateGroqResponse() FAIL → POOL FALLBACK
+        │
+        └─ (max 1 retry per round)
 ```
