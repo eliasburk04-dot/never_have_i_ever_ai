@@ -1,0 +1,92 @@
+{
+    "@@locale": "en",
+    "appTitle": "Never Have I Ever",
+    "iHave": "I Have",
+    "iHaveNot": "I Have Not",
+    "createLobby": "Create Lobby",
+    "joinLobby": "Join Lobby",
+    "enterCode": "Enter lobby code",
+    "waitingForPlayers": "Waiting for players...",
+    "roundOf": "Round {current} of {total}",
+    "@roundOf": {
+        "placeholders": {
+            "current": {"type": "int"},
+            "total": {"type": "int"}
+        }
+    },
+    "playersInLobby": "{count} players",
+    "@playersInLobby": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "startGame": "Start Game",
+    "nsfwMode": "Spicy Mode 🌶️",
+    "premium": "Go Premium",
+    "premiumUnlock": "Unlock for $4.99",
+    "premiumLifetime": "One-time purchase",
+    "restorePurchases": "Restore Purchases",
+    "settings": "Settings",
+    "language": "Language",
+    "displayName": "Display Name",
+    "avatar": "Avatar",
+    "gameOver": "Game Over!",
+    "groupProfile": "Your Group Profile",
+    "conservative": "Conservative 😇",
+    "adventurous": "Adventurous 😏",
+    "wild": "Wild 🔥",
+    "fearless": "Fearless 💀",
+    "boldness": "Boldness",
+    "roundsPlayed": "Rounds Played",
+    "highestTone": "Highest Tone",
+    "playAgain": "Play Again",
+    "backToHome": "Back to Home",
+    "lobbyCode": "Lobby Code",
+    "tapToCopy": "Tap to copy",
+    "copied": "Copied!",
+    "playerJoined": "{name} joined",
+    "@playerJoined": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "playerLeft": "{name} left",
+    "@playerLeft": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "reconnecting": "Reconnecting...",
+    "connectionLost": "Connection lost",
+    "retry": "Retry",
+    "leave": "Leave",
+    "notEnoughPlayers": "Not enough players to continue",
+    "minPlayersRequired": "At least 2 players required",
+    "rounds": "Rounds",
+    "safe": "Safe",
+    "deeper": "Deeper",
+    "secretive": "Secretive",
+    "freaky": "Freaky",
+    "free": "Free",
+    "premiumLabel": "Premium",
+    "unlimitedAi": "Unlimited AI",
+    "limitedAi": "10 AI questions/day",
+    "nsfwAccess": "🌶️ Spicy Mode",
+    "maxRounds100": "Up to 100 rounds",
+    "maxRounds50": "Up to 50 rounds",
+    "about": "About",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "selectLanguage": "Select Language",
+    "timesUp": "Time's up!",
+    "waitingForAnswers": "Waiting for answers...",
+    "everyoneAnswered": "Everyone answered!",
+    "mostHonest": "Most Honest",
+    "mostSecretive": "Most Secretive",
+    "stats": "Stats",
+    "avgHaveRatio": "Avg \"I Have\"",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "error": "Error",
+    "ok": "OK"
+}

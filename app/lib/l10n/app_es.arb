@@ -1,0 +1,92 @@
+{
+    "@@locale": "es",
+    "appTitle": "Yo Nunca Nunca",
+    "iHave": "Yo Sí",
+    "iHaveNot": "Yo No",
+    "createLobby": "Crear sala",
+    "joinLobby": "Unirse a sala",
+    "enterCode": "Ingresa el código",
+    "waitingForPlayers": "Esperando jugadores...",
+    "roundOf": "Ronda {current} de {total}",
+    "@roundOf": {
+        "placeholders": {
+            "current": {"type": "int"},
+            "total": {"type": "int"}
+        }
+    },
+    "playersInLobby": "{count} jugadores",
+    "@playersInLobby": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "startGame": "Iniciar juego",
+    "nsfwMode": "Modo Picante 🌶️",
+    "premium": "Obtener Premium",
+    "premiumUnlock": "Desbloquear por $4.99",
+    "premiumLifetime": "Compra única",
+    "restorePurchases": "Restaurar compras",
+    "settings": "Ajustes",
+    "language": "Idioma",
+    "displayName": "Nombre",
+    "avatar": "Avatar",
+    "gameOver": "¡Fin del juego!",
+    "groupProfile": "Perfil del grupo",
+    "conservative": "Conservador 😇",
+    "adventurous": "Aventurero 😏",
+    "wild": "Salvaje 🔥",
+    "fearless": "Sin miedo 💀",
+    "boldness": "Audacia",
+    "roundsPlayed": "Rondas jugadas",
+    "highestTone": "Nivel más alto",
+    "playAgain": "Jugar de nuevo",
+    "backToHome": "Volver al inicio",
+    "lobbyCode": "Código de sala",
+    "tapToCopy": "Toca para copiar",
+    "copied": "¡Copiado!",
+    "playerJoined": "{name} se unió",
+    "@playerJoined": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "playerLeft": "{name} se fue",
+    "@playerLeft": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "reconnecting": "Reconectando...",
+    "connectionLost": "Conexión perdida",
+    "retry": "Reintentar",
+    "leave": "Salir",
+    "notEnoughPlayers": "No hay suficientes jugadores",
+    "minPlayersRequired": "Se necesitan al menos 2 jugadores",
+    "rounds": "Rondas",
+    "safe": "Seguro",
+    "deeper": "Más profundo",
+    "secretive": "Secreto",
+    "freaky": "Atrevido",
+    "free": "Gratis",
+    "premiumLabel": "Premium",
+    "unlimitedAi": "IA ilimitada",
+    "limitedAi": "10 preguntas IA/día",
+    "nsfwAccess": "🌶️ Modo Picante",
+    "maxRounds100": "Hasta 100 rondas",
+    "maxRounds50": "Hasta 50 rondas",
+    "about": "Acerca de",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
+    "selectLanguage": "Seleccionar idioma",
+    "timesUp": "¡Se acabó el tiempo!",
+    "waitingForAnswers": "Esperando respuestas...",
+    "everyoneAnswered": "¡Todos respondieron!",
+    "mostHonest": "Más honesto",
+    "mostSecretive": "Más reservado",
+    "stats": "Estadísticas",
+    "avgHaveRatio": "Prom. \"Yo Sí\"",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "error": "Error",
+    "ok": "OK"
+}

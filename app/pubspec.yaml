@@ -1,0 +1,58 @@
+name: nhie_app
+description: "Never Have I Ever — AI-Powered Party Game"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.8
+
+  # Navigation
+  go_router: ^17.1.0
+
+  # Backend
+  http: ^1.2.2
+  socket_io_client: ^3.1.2
+
+  # DI
+  get_it: ^9.2.0
+
+  # Storage
+  flutter_secure_storage: ^10.0.0
+  shared_preferences: ^2.5.4
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # In-App Purchase (StoreKit 2 on iOS)
+  in_app_purchase: ^3.2.0
+
+  # UI
+  flutter_animate: ^4.5.2
+  google_fonts: ^8.0.1
+  cupertino_icons: ^1.0.8
+
+  # Utilities
+  intl: ^0.20.2
+  uuid: ^4.5.2
+  logger: ^2.6.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  mocktail: ^1.0.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/questions.json

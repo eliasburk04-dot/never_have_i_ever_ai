@@ -1,0 +1,546 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_de.dart';
+import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
+    Locale('en'),
+    Locale('es'),
+  ];
+
+  /// No description provided for @appTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Never Have I Ever'**
+  String get appTitle;
+
+  /// No description provided for @iHave.
+  ///
+  /// In en, this message translates to:
+  /// **'I Have'**
+  String get iHave;
+
+  /// No description provided for @iHaveNot.
+  ///
+  /// In en, this message translates to:
+  /// **'I Have Not'**
+  String get iHaveNot;
+
+  /// No description provided for @createLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Lobby'**
+  String get createLobby;
+
+  /// No description provided for @joinLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Lobby'**
+  String get joinLobby;
+
+  /// No description provided for @enterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter lobby code'**
+  String get enterCode;
+
+  /// No description provided for @waitingForPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for players...'**
+  String get waitingForPlayers;
+
+  /// No description provided for @roundOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Round {current} of {total}'**
+  String roundOf(int current, int total);
+
+  /// No description provided for @playersInLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} players'**
+  String playersInLobby(int count);
+
+  /// No description provided for @startGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Game'**
+  String get startGame;
+
+  /// No description provided for @nsfwMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Spicy Mode 🌶️'**
+  String get nsfwMode;
+
+  /// No description provided for @premium.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Premium'**
+  String get premium;
+
+  /// No description provided for @premiumUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock for \$4.99'**
+  String get premiumUnlock;
+
+  /// No description provided for @premiumLifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'One-time purchase'**
+  String get premiumLifetime;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @displayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display Name'**
+  String get displayName;
+
+  /// No description provided for @avatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar'**
+  String get avatar;
+
+  /// No description provided for @gameOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Game Over!'**
+  String get gameOver;
+
+  /// No description provided for @groupProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Group Profile'**
+  String get groupProfile;
+
+  /// No description provided for @conservative.
+  ///
+  /// In en, this message translates to:
+  /// **'Conservative 😇'**
+  String get conservative;
+
+  /// No description provided for @adventurous.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventurous 😏'**
+  String get adventurous;
+
+  /// No description provided for @wild.
+  ///
+  /// In en, this message translates to:
+  /// **'Wild 🔥'**
+  String get wild;
+
+  /// No description provided for @fearless.
+  ///
+  /// In en, this message translates to:
+  /// **'Fearless 💀'**
+  String get fearless;
+
+  /// No description provided for @boldness.
+  ///
+  /// In en, this message translates to:
+  /// **'Boldness'**
+  String get boldness;
+
+  /// No description provided for @roundsPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds Played'**
+  String get roundsPlayed;
+
+  /// No description provided for @highestTone.
+  ///
+  /// In en, this message translates to:
+  /// **'Highest Tone'**
+  String get highestTone;
+
+  /// No description provided for @playAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Play Again'**
+  String get playAgain;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// No description provided for @lobbyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Lobby Code'**
+  String get lobbyCode;
+
+  /// No description provided for @tapToCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to copy'**
+  String get tapToCopy;
+
+  /// No description provided for @copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied!'**
+  String get copied;
+
+  /// No description provided for @playerJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} joined'**
+  String playerJoined(String name);
+
+  /// No description provided for @playerLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} left'**
+  String playerLeft(String name);
+
+  /// No description provided for @reconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting...'**
+  String get reconnecting;
+
+  /// No description provided for @connectionLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost'**
+  String get connectionLost;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @leave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leave;
+
+  /// No description provided for @notEnoughPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough players to continue'**
+  String get notEnoughPlayers;
+
+  /// No description provided for @minPlayersRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 2 players required'**
+  String get minPlayersRequired;
+
+  /// No description provided for @rounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds'**
+  String get rounds;
+
+  /// No description provided for @safe.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe'**
+  String get safe;
+
+  /// No description provided for @deeper.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper'**
+  String get deeper;
+
+  /// No description provided for @secretive.
+  ///
+  /// In en, this message translates to:
+  /// **'Secretive'**
+  String get secretive;
+
+  /// No description provided for @freaky.
+  ///
+  /// In en, this message translates to:
+  /// **'Freaky'**
+  String get freaky;
+
+  /// No description provided for @free.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get free;
+
+  /// No description provided for @premiumLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get premiumLabel;
+
+  /// No description provided for @unlimitedAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited AI'**
+  String get unlimitedAi;
+
+  /// No description provided for @limitedAi.
+  ///
+  /// In en, this message translates to:
+  /// **'10 AI questions/day'**
+  String get limitedAi;
+
+  /// No description provided for @nsfwAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'🌶️ Spicy Mode'**
+  String get nsfwAccess;
+
+  /// No description provided for @maxRounds100.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 100 rounds'**
+  String get maxRounds100;
+
+  /// No description provided for @maxRounds50.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 50 rounds'**
+  String get maxRounds50;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// No description provided for @timesUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s up!'**
+  String get timesUp;
+
+  /// No description provided for @waitingForAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for answers...'**
+  String get waitingForAnswers;
+
+  /// No description provided for @everyoneAnswered.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone answered!'**
+  String get everyoneAnswered;
+
+  /// No description provided for @mostHonest.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Honest'**
+  String get mostHonest;
+
+  /// No description provided for @mostSecretive.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Secretive'**
+  String get mostSecretive;
+
+  /// No description provided for @stats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get stats;
+
+  /// No description provided for @avgHaveRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg \"I Have\"'**
+  String get avgHaveRatio;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['de', 'en', 'es'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

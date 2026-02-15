@@ -1,0 +1,92 @@
+{
+    "@@locale": "de",
+    "appTitle": "Ich hab noch nie",
+    "iHave": "Hab ich",
+    "iHaveNot": "Hab ich nicht",
+    "createLobby": "Lobby erstellen",
+    "joinLobby": "Lobby beitreten",
+    "enterCode": "Lobby-Code eingeben",
+    "waitingForPlayers": "Warte auf Spieler...",
+    "roundOf": "Runde {current} von {total}",
+    "@roundOf": {
+        "placeholders": {
+            "current": {"type": "int"},
+            "total": {"type": "int"}
+        }
+    },
+    "playersInLobby": "{count} Spieler",
+    "@playersInLobby": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "startGame": "Spiel starten",
+    "nsfwMode": "Pikanter Modus 🌶️",
+    "premium": "Premium holen",
+    "premiumUnlock": "Für 4,99 € freischalten",
+    "premiumLifetime": "Einmaliger Kauf",
+    "restorePurchases": "Käufe wiederherstellen",
+    "settings": "Einstellungen",
+    "language": "Sprache",
+    "displayName": "Anzeigename",
+    "avatar": "Avatar",
+    "gameOver": "Spiel vorbei!",
+    "groupProfile": "Euer Gruppenprofil",
+    "conservative": "Brav 😇",
+    "adventurous": "Abenteuerlich 😏",
+    "wild": "Wild 🔥",
+    "fearless": "Furchtlos 💀",
+    "boldness": "Mutigkeitswert",
+    "roundsPlayed": "Gespielte Runden",
+    "highestTone": "Höchstes Level",
+    "playAgain": "Nochmal spielen",
+    "backToHome": "Zurück zum Start",
+    "lobbyCode": "Lobby-Code",
+    "tapToCopy": "Tippen zum Kopieren",
+    "copied": "Kopiert!",
+    "playerJoined": "{name} ist beigetreten",
+    "@playerJoined": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "playerLeft": "{name} hat verlassen",
+    "@playerLeft": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "reconnecting": "Verbinde erneut...",
+    "connectionLost": "Verbindung verloren",
+    "retry": "Erneut versuchen",
+    "leave": "Verlassen",
+    "notEnoughPlayers": "Nicht genug Spieler",
+    "minPlayersRequired": "Mindestens 2 Spieler erforderlich",
+    "rounds": "Runden",
+    "safe": "Harmlos",
+    "deeper": "Tiefer",
+    "secretive": "Geheimnisvoll",
+    "freaky": "Gewagt",
+    "free": "Kostenlos",
+    "premiumLabel": "Premium",
+    "unlimitedAi": "Unbegrenzte KI",
+    "limitedAi": "10 KI-Fragen/Tag",
+    "nsfwAccess": "🌶️ Pikanter Modus",
+    "maxRounds100": "Bis zu 100 Runden",
+    "maxRounds50": "Bis zu 50 Runden",
+    "about": "Über",
+    "privacyPolicy": "Datenschutz",
+    "termsOfService": "Nutzungsbedingungen",
+    "selectLanguage": "Sprache wählen",
+    "timesUp": "Zeit abgelaufen!",
+    "waitingForAnswers": "Warte auf Antworten...",
+    "everyoneAnswered": "Alle haben geantwortet!",
+    "mostHonest": "Am ehrlichsten",
+    "mostSecretive": "Am verschwiegensten",
+    "stats": "Statistiken",
+    "avgHaveRatio": "Durchschn. \"Hab ich\"",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "error": "Fehler",
+    "ok": "OK"
+}

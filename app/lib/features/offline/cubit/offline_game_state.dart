@@ -1,0 +1,83 @@
+import 'package:equatable/equatable.dart';
+
+import '../../../domain/entities/offline_session.dart';
+
+/// Phases of an offline game.
+enum OfflineGamePhase {
+  /// Initial — no game running.
+  idle,
+
+  /// A question is being displayed. Players discuss + count hands.
+  showingQuestion,
+
+  /// All rounds finished — final summary.
+  complete,
+}
+
+/// State for the offline pass-and-play game.
+class OfflineGameState extends Equatable {
+  const OfflineGameState({
+    this.phase = OfflineGamePhase.idle,
+    this.session,
+    this.currentQuestionText,
+    this.currentQuestionRecycled = false,
+    this.currentIntensity = 1,
+    this.isAiGenerated = false,
+    this.currentCategory,
+    this.currentSubcategory,
+    this.errorMessage,
+  });
+
+  final OfflineGamePhase phase;
+  final OfflineSession? session;
+  final String? currentQuestionText;
+  final bool currentQuestionRecycled;
+  final int currentIntensity;
+  final bool isAiGenerated;
+  final String? currentCategory;
+  final String? currentSubcategory;
+  final String? errorMessage;
+
+  int get roundNumber => session?.currentRound ?? 0;
+  int get maxRounds => session?.maxRounds ?? 0;
+  int get playerCount => session?.playerCount ?? 0;
+  String get currentTone => session?.currentTone ?? 'safe';
+
+  OfflineGameState copyWith({
+    OfflineGamePhase? phase,
+    OfflineSession? session,
+    String? currentQuestionText,
+    bool? currentQuestionRecycled,
+    int? currentIntensity,
+    bool? isAiGenerated,
+    String? currentCategory,
+    String? currentSubcategory,
+    String? errorMessage,
+  }) {
+    return OfflineGameState(
+      phase: phase ?? this.phase,
+      session: session ?? this.session,
+      currentQuestionText: currentQuestionText ?? this.currentQuestionText,
+      currentQuestionRecycled:
+          currentQuestionRecycled ?? this.currentQuestionRecycled,
+      currentIntensity: currentIntensity ?? this.currentIntensity,
+      isAiGenerated: isAiGenerated ?? this.isAiGenerated,
+      currentCategory: currentCategory ?? this.currentCategory,
+      currentSubcategory: currentSubcategory ?? this.currentSubcategory,
+      errorMessage: errorMessage,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        phase,
+        session,
+        currentQuestionText,
+        currentQuestionRecycled,
+        currentIntensity,
+        isAiGenerated,
+        currentCategory,
+        currentSubcategory,
+        errorMessage,
+      ];
+}
