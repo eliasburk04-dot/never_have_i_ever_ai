@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,8 +13,6 @@ import '../../../features/premium/cubit/premium_cubit.dart';
 import '../../../l10n/app_localizations.dart';
 import '../cubit/game_config_cubit.dart';
 import '../cubit/offline_game_cubit.dart';
-
-
 
 class OfflineSetupScreen extends StatefulWidget {
   const OfflineSetupScreen({super.key});
@@ -40,14 +35,13 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
 
   int _getMaxPlayersLimit(BuildContext context) {
     final isPremium = context.read<PremiumCubit>().state.isPremium;
-    return isPremium ? AppConstants.maxPlayers : 5; // Free users get max 5 players
+    return isPremium ? AppConstants.maxPlayers : 5;
   }
 
   void _incrementPlayers() {
     final limit = _getMaxPlayersLimit(context);
     if (_playerCount >= limit) {
-      final isPremium = context.read<PremiumCubit>().state.isPremium;
-      if (!isPremium) {
+      if (!context.read<PremiumCubit>().state.isPremium) {
         context.push('/premium');
       }
       return;
@@ -63,212 +57,315 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   }
 
   void _startGame() {
-    final config = context.read<GameConfigCubit>();
+    final configCubit = context.read<GameConfigCubit>();
+    final config = configCubit.state;
 
-    // Generate dummy players for gameplay logic based on count
     final players = List.generate(
       _playerCount,
       (i) => OfflinePlayer(name: 'Player ${i + 1}', emoji: '👤'),
     );
 
-    // Persist settings for "Play Again"
-    config.setPlayers(players);
+    configCubit.setPlayers(players);
 
     // TODO: Restore after testing
     // final isPremium = context.read<PremiumCubit>().state.isPremium;
-
     context.read<OfflineGameCubit>().startGame(
-          players: players,
-          maxRounds: config.state.maxRounds,
-          language: config.state.language,
-          nsfwEnabled: config.state.nsfwEnabled,
-          // TODO: Restore after testing
-          // isPremium: isPremium,
-          isPremium: true, // TEMP: bypassed for NSFW testing
-          isDrinkingGame: config.state.isDrinkingGame,
-          customQuestions: const [], // Feature removed
-        );
+      players: players,
+      maxRounds: config.maxRounds,
+      language: config.language,
+      nsfwEnabled: config.nsfwEnabled,
+      // TODO: Restore after testing
+      // isPremium: isPremium,
+      isPremium: true,
+      isDrinkingGame: config.isDrinkingGame,
+      customQuestions: const [],
+    );
 
     context.go('/offline/game');
   }
 
+  void _togglePremiumFeature({
+    required bool isPremium,
+    required bool value,
+    required ValueChanged<bool> onPremiumChanged,
+  }) {
+    if (!isPremium && value) {
+      context.push('/premium');
+      return;
+    }
+    onPremiumChanged(value);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isPremium = context.watch<PremiumCubit>().state.isPremium;
-    final maxRoundsLimit =
-        isPremium ? AppConstants.maxRoundsPremium : AppConstants.maxRoundsFree;
     final l10n = AppLocalizations.of(context)!;
     final config = context.watch<GameConfigCubit>().state;
+    final isPremium = context.watch<PremiumCubit>().state.isPremium;
+    final maxRoundsLimit = isPremium
+        ? AppConstants.maxRoundsPremium
+        : AppConstants.maxRoundsFree;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => context.go('/home'),
         ),
-        title: Text('Setup', // Using hardcoded English to replace offlineMode as requested
-            style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
+        title: Text(
+          'Setup',
+          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+        ),
       ),
       body: SafeArea(
         child: LayoutBuilder(
-          builder: (context, constraints) => SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight - AppSpacing.lg * 2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // PLAYERS section
-                  // PLAYER COUNT section
-                  Text(l10n.players,
-                      style: AppTypography.overline
-                          .copyWith(color: AppColors.textTertiary)),
-                  const SizedBox(height: AppSpacing.sm),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                      vertical: AppSpacing.xs + 2,
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - (AppSpacing.lg * 2),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.players,
+                      style: AppTypography.overline.copyWith(
+                        color: AppColors.textTertiary,
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusMd),
-                      border: Border.all(color: AppColors.divider),
+                    const SizedBox(height: AppSpacing.sm),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.xs + 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
+                        border: Border.all(color: AppColors.divider),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(l10n.playerCount, style: AppTypography.label),
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                isPremium
+                                    ? l10n.upToPlayers(AppConstants.maxPlayers)
+                                    : l10n.upToPlayersFree(5),
+                                style: AppTypography.bodySmall,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: _decrementPlayers,
+                                icon: const Icon(
+                                  Icons.remove_circle_outline_rounded,
+                                ),
+                                color: AppColors.textTertiary,
+                              ),
+                              SizedBox(
+                                width: 36,
+                                child: Text(
+                                  '$_playerCount',
+                                  style: AppTypography.h3.copyWith(
+                                    color: AppColors.accent,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: _incrementPlayers,
+                                icon: const Icon(
+                                  Icons.add_circle_outline_rounded,
+                                ),
+                                color: AppColors.accent,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Row(
+                    const SizedBox(height: AppSpacing.md),
+                    Divider(color: AppColors.divider),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      l10n.rounds,
+                      style: AppTypography.overline.copyWith(
+                        color: AppColors.textTertiary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Icon(Icons.people_alt_rounded, color: AppColors.textSecondary, size: 20),
-                            const SizedBox(width: AppSpacing.sm),
-                            Text('Player Count', style: AppTypography.label),
-                          ],
+                        Text(
+                          l10n.roundsCount(config.maxRounds),
+                          style: AppTypography.body,
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: _decrementPlayers,
-                              icon: const Icon(Icons.remove_circle_outline_rounded),
-                              color: AppColors.textTertiary,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusFull,
                             ),
-                            SizedBox(
-                              width: 30,
-                              child: Text(
-                                '$_playerCount',
-                                style: AppTypography.h3.copyWith(color: AppColors.accent),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: _incrementPlayers,
-                              icon: const Icon(Icons.add_circle_outline_rounded),
+                          ),
+                          child: Text(
+                            '${config.maxRounds}',
+                            style: AppTypography.label.copyWith(
                               color: AppColors.accent,
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-
-              Divider(color: AppColors.divider),
-              const SizedBox(height: AppSpacing.sm),
-
-              // ROUNDS
-              Text(l10n.rounds,
-                  style: AppTypography.overline
-                      .copyWith(color: AppColors.textTertiary)),
-              const SizedBox(height: AppSpacing.xs),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('${config.maxRounds} rounds', style: AppTypography.body),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.accent.withValues(alpha: 0.12),
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusFull),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: AppColors.accent,
+                        inactiveTrackColor: AppColors.surface,
+                        thumbColor: AppColors.accent,
+                        overlayColor: AppColors.accent.withValues(alpha: 0.12),
+                      ),
+                      child: Slider(
+                        value: config.maxRounds.toDouble(),
+                        min: AppConstants.minRounds.toDouble(),
+                        max: maxRoundsLimit.toDouble(),
+                        divisions:
+                            (maxRoundsLimit - AppConstants.minRounds) ~/ 5,
+                        label: '${config.maxRounds}',
+                        onChanged: (v) => context
+                            .read<GameConfigCubit>()
+                            .setMaxRounds(v.round()),
+                      ),
                     ),
-                    child: Text('${config.maxRounds}',
-                        style: AppTypography.label
-                            .copyWith(color: AppColors.accent)),
-                  ),
-                ],
-              ),
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: AppColors.accent,
-                  inactiveTrackColor: AppColors.surface,
-                  thumbColor: AppColors.accent,
-                  overlayColor: AppColors.accent.withValues(alpha: 0.12),
-                ),
-                child: Slider(
-                  value: config.maxRounds.toDouble(),
-                  min: 5,
-                  max: maxRoundsLimit.toDouble(),
-                  divisions: (maxRoundsLimit - 5) ~/ 5,
-                  label: '${config.maxRounds}',
-                  onChanged: (v) =>
-                      context.read<GameConfigCubit>().setMaxRounds(v.round()),
-                ),
-              ),
-
-              const SizedBox(height: AppSpacing.md),
-              
-              // ----------------------------------------------------
-              // PREMIUM FEATURES SECTION
-              // ----------------------------------------------------
-              Text('Premium Rules',
-                  style: AppTypography.overline
-                      .copyWith(color: AppColors.secondary)),
-              const SizedBox(height: AppSpacing.xs),
-              
-              // Drinking Game Mode Toggle
-              Container(
-                margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusMd),
-                  border: Border.all(
-                    color: config.isDrinkingGame && !isPremium 
-                      ? AppColors.error 
-                      : AppColors.divider,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text('Drinking Game Mode', style: AppTypography.label),
-                        if (!isPremium) ...[
-                          const SizedBox(width: AppSpacing.xs),
-                          Icon(Icons.lock_rounded,
-                              size: 14, color: AppColors.textTertiary),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      l10n.premiumRules,
+                      style: AppTypography.overline.copyWith(
+                        color: AppColors.secondary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.sm,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
+                        border: Border.all(color: AppColors.divider),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(l10n.nsfwMode, style: AppTypography.label),
+                              if (!isPremium) ...[
+                                const SizedBox(width: AppSpacing.xs),
+                                Icon(
+                                  Icons.lock_rounded,
+                                  size: 14,
+                                  color: AppColors.textTertiary,
+                                ),
+                              ],
+                            ],
+                          ),
+                          Switch(
+                            value: config.nsfwEnabled,
+                            activeTrackColor: AppColors.secondary,
+                            onChanged: (v) => _togglePremiumFeature(
+                              isPremium: isPremium,
+                              value: v,
+                              onPremiumChanged: (enabled) => context
+                                  .read<GameConfigCubit>()
+                                  .setNsfwEnabled(enabled),
+                            ),
+                          ),
                         ],
-                      ],
+                      ),
                     ),
-                    Switch(
-                      value: config.isDrinkingGame,
-                      activeTrackColor: AppColors.secondary,
-                      onChanged: isPremium
-                          ? (v) => context.read<GameConfigCubit>().setIsDrinkingGame(v)
-                          : (_) => context.push('/premium'),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.sm,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
+                        border: Border.all(color: AppColors.divider),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                l10n.drinkingGameMode,
+                                style: AppTypography.label,
+                              ),
+                              if (!isPremium) ...[
+                                const SizedBox(width: AppSpacing.xs),
+                                Icon(
+                                  Icons.lock_rounded,
+                                  size: 14,
+                                  color: AppColors.textTertiary,
+                                ),
+                              ],
+                            ],
+                          ),
+                          Switch(
+                            value: config.isDrinkingGame,
+                            activeTrackColor: AppColors.secondary,
+                            onChanged: (v) => _togglePremiumFeature(
+                              isPremium: isPremium,
+                              value: v,
+                              onPremiumChanged: (enabled) => context
+                                  .read<GameConfigCubit>()
+                                  .setIsDrinkingGame(enabled),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    AppButton(
+                      label: l10n.startGame,
+                      onPressed: _startGame,
+                      isPrimary: true,
+                      icon: Icons.play_arrow_rounded,
                     ),
                   ],
                 ),
               ),
-
-                  ],
-                ),
-              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
 }

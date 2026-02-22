@@ -312,4 +312,132 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get version => 'Version 1.0.0';
+
+  @override
+  String get drinkingGameMode => 'Modo Trago 🍺';
+
+  @override
+  String get premiumRules => 'Reglas Premium';
+
+  @override
+  String get playerCount => 'Cantidad de jugadores';
+
+  @override
+  String upToPlayers(int count) {
+    return 'Hasta $count';
+  }
+
+  @override
+  String upToPlayersFree(int count) {
+    return 'Hasta $count (Gratis)';
+  }
+
+  @override
+  String get yourName => 'TU NOMBRE';
+
+  @override
+  String get enterDisplayName => 'Ingresa tu nombre';
+
+  @override
+  String get maxRoundsLabel => 'RONDAS MÁXIMAS';
+
+  @override
+  String get nsfwModeDesc => '+18 preguntas incluidas';
+
+  @override
+  String get waitingRoom => 'Sala de espera';
+
+  @override
+  String get lobbyCodeLabel => 'CÓDIGO DE SALA';
+
+  @override
+  String get tapToCopyCode => 'Toca para copiar';
+
+  @override
+  String get codeCopied => '¡Código copiado!';
+
+  @override
+  String needMinPlayers(int count) {
+    return 'Se necesitan al menos $count jugadores para empezar';
+  }
+
+  @override
+  String get waitingForHost => 'Esperando al anfitrión…';
+
+  @override
+  String get gettingNextQuestion => 'Cargando siguiente pregunta…';
+
+  @override
+  String get nextQuestion => 'Siguiente pregunta';
+
+  @override
+  String get waitingForAnswers2 => 'Esperando respuestas…';
+
+  @override
+  String get waitingForHostToContinue => 'Esperando al anfitrión…';
+
+  @override
+  String get playersLabel => 'Jugadores';
+
+  @override
+  String get you => 'tú';
+
+  @override
+  String get disconnected => 'desconectado';
+
+  @override
+  String get waiting => 'esperando…';
+
+  @override
+  String get host => 'ANFITRIÓN';
+
+  @override
+  String get purchasePremium => 'Comprar Premium';
+
+  @override
+  String get lifetimeOneTime => 'De por vida · Compra única';
+
+  @override
+  String get youArePremium => 'Eres Premium';
+
+  @override
+  String get premiumEnjoy =>
+      'Disfruta de rondas ilimitadas\ny juegos más largos.';
+
+  @override
+  String get unlimitedOfflineRounds => 'Rondas sin conexión ilimitadas';
+
+  @override
+  String get upTo100Rounds => 'Hasta 100 rondas por juego';
+
+  @override
+  String get goPremium => 'Obtener Premium';
+
+  @override
+  String drinkSips(int count) {
+    return 'Toma $count tragos.';
+  }
+
+  @override
+  String giveSips(int count) {
+    return 'Reparte $count tragos.';
+  }
+
+  @override
+  String get finishDrink => '¡Termina tu bebida!';
+
+  @override
+  String get everyoneDrinks => '¡Salud! Todos beben.';
+
+  @override
+  String get chooseSomeone => 'Elige a alguien para beber.';
+
+  @override
+  String get takeAShot => 'Toma un shot.';
+
+  @override
+  String get everyoneElseSips => 'Los demás: 1 trago.';
+
+  @override
+  String get about2 => 'ACERCA DE';
 }

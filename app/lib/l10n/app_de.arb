@@ -21,7 +21,7 @@
         }
     },
     "startGame": "Spiel starten",
-    "nsfwMode": "Pikanter Modus 🌶️",
+    "nsfwMode": "NSFW Modus 🌶️",
     "premium": "Premium holen",
     "premiumUnlock": "Für 4,99 € freischalten",
     "premiumLifetime": "Einmaliger Kauf",
@@ -71,7 +71,7 @@
     "premiumLabel": "Premium",
     "unlimitedAi": "Unbegrenzte KI",
     "limitedAi": "10 KI-Fragen/Tag",
-    "nsfwAccess": "🌶️ Pikanter Modus",
+    "nsfwAccess": "🌶️ NSFW Modus",
     "maxRounds100": "Bis zu 100 Runden",
     "maxRounds50": "Bis zu 50 Runden",
     "about": "Über",
@@ -136,5 +136,69 @@
     "changeLanguageLater": "Du kannst dies später in den Einstellungen ändern",
     "account": "KONTO",
     "legal": "RECHTLICHES",
-    "version": "Version 1.0.0"
+    "version": "Version 1.0.0",
+    "drinkingGameMode": "Trinkspiel Modus 🍺",
+    "premiumRules": "Premium Regeln",
+    "playerCount": "Spieleranzahl",
+    "upToPlayers": "Bis zu {count}",
+    "@upToPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "upToPlayersFree": "Bis zu {count} (Kostenlos)",
+    "@upToPlayersFree": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "yourName": "DEIN NAME",
+    "enterDisplayName": "Anzeigename eingeben",
+    "maxRoundsLabel": "MAX RUNDEN",
+    "nsfwModeDesc": "Ab 18 – explizite Fragen",
+    "waitingRoom": "Warteraum",
+    "lobbyCodeLabel": "LOBBY-CODE",
+    "tapToCopyCode": "Tippen zum Kopieren",
+    "codeCopied": "Code kopiert!",
+    "needMinPlayers": "Mindestens {count} Spieler zum Starten",
+    "@needMinPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "waitingForHost": "Warte auf den Host…",
+    "gettingNextQuestion": "Nächste Frage wird geladen…",
+    "nextQuestion": "Nächste Frage",
+    "waitingForAnswers2": "Warte auf Antworten…",
+    "waitingForHostToContinue": "Warte auf Host…",
+    "playersLabel": "Spieler",
+    "you": "du",
+    "disconnected": "getrennt",
+    "waiting": "wartet…",
+    "host": "HOST",
+    "purchasePremium": "Premium kaufen",
+    "lifetimeOneTime": "Lebenslang · Einmalkauf",
+    "youArePremium": "Du bist Premium",
+    "premiumEnjoy": "Genieße unbegrenzte Runden\nund längere Spiele.",
+    "unlimitedOfflineRounds": "Unbegrenzte Offline-Runden",
+    "upTo100Rounds": "Bis zu 100 Runden pro Spiel",
+    "goPremium": "Premium holen",
+    "drinkSips": "Nimm {count} Schlücke.",
+    "@drinkSips": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "giveSips": "Verteile {count} Schlücke.",
+    "@giveSips": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "finishDrink": "Ex dein Getränk!",
+    "everyoneDrinks": "Prost! Alle trinken.",
+    "chooseSomeone": "Wähle jemanden zum Trinken.",
+    "takeAShot": "Nimm einen Shot.",
+    "everyoneElseSips": "Alle anderen: 1 Schluck.",
+    "about2": "ÜBER"
 }

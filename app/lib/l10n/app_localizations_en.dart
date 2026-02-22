@@ -312,4 +312,131 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get version => 'Version 1.0.0';
+
+  @override
+  String get drinkingGameMode => 'Drinking Game Mode 🍺';
+
+  @override
+  String get premiumRules => 'Premium Rules';
+
+  @override
+  String get playerCount => 'Player Count';
+
+  @override
+  String upToPlayers(int count) {
+    return 'Up to $count';
+  }
+
+  @override
+  String upToPlayersFree(int count) {
+    return 'Up to $count (Free)';
+  }
+
+  @override
+  String get yourName => 'YOUR NAME';
+
+  @override
+  String get enterDisplayName => 'Enter your display name';
+
+  @override
+  String get maxRoundsLabel => 'MAX ROUNDS';
+
+  @override
+  String get nsfwModeDesc => '18+ questions included';
+
+  @override
+  String get waitingRoom => 'Waiting Room';
+
+  @override
+  String get lobbyCodeLabel => 'LOBBY CODE';
+
+  @override
+  String get tapToCopyCode => 'Tap to copy';
+
+  @override
+  String get codeCopied => 'Code copied!';
+
+  @override
+  String needMinPlayers(int count) {
+    return 'Need at least $count players to start';
+  }
+
+  @override
+  String get waitingForHost => 'Waiting for host to start the game…';
+
+  @override
+  String get gettingNextQuestion => 'Getting next question…';
+
+  @override
+  String get nextQuestion => 'Next Question';
+
+  @override
+  String get waitingForAnswers2 => 'Waiting for answers…';
+
+  @override
+  String get waitingForHostToContinue => 'Waiting for host to continue…';
+
+  @override
+  String get playersLabel => 'Players';
+
+  @override
+  String get you => 'you';
+
+  @override
+  String get disconnected => 'disconnected';
+
+  @override
+  String get waiting => 'waiting…';
+
+  @override
+  String get host => 'HOST';
+
+  @override
+  String get purchasePremium => 'Purchase Premium';
+
+  @override
+  String get lifetimeOneTime => 'Lifetime · One-time purchase';
+
+  @override
+  String get youArePremium => 'You\'re Premium';
+
+  @override
+  String get premiumEnjoy => 'Enjoy unlimited rounds\nand longer games.';
+
+  @override
+  String get unlimitedOfflineRounds => 'Unlimited offline rounds';
+
+  @override
+  String get upTo100Rounds => 'Up to 100 rounds per game';
+
+  @override
+  String get goPremium => 'Go Premium';
+
+  @override
+  String drinkSips(int count) {
+    return 'Take $count sips.';
+  }
+
+  @override
+  String giveSips(int count) {
+    return 'Give out $count sips.';
+  }
+
+  @override
+  String get finishDrink => 'Finish your drink!';
+
+  @override
+  String get everyoneDrinks => 'Cheers! Everyone drinks.';
+
+  @override
+  String get chooseSomeone => 'Choose someone to drink.';
+
+  @override
+  String get takeAShot => 'Take a shot.';
+
+  @override
+  String get everyoneElseSips => 'Everyone else takes 1 sip.';
+
+  @override
+  String get about2 => 'ABOUT';
 }

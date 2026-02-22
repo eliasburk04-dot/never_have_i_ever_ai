@@ -675,6 +675,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version 1.0.0'**
   String get version;
+
+  /// No description provided for @drinkingGameMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinking Game Mode 🍺'**
+  String get drinkingGameMode;
+
+  /// No description provided for @premiumRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Rules'**
+  String get premiumRules;
+
+  /// No description provided for @playerCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Player Count'**
+  String get playerCount;
+
+  /// No description provided for @upToPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {count}'**
+  String upToPlayers(int count);
+
+  /// No description provided for @upToPlayersFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {count} (Free)'**
+  String upToPlayersFree(int count);
+
+  /// No description provided for @yourName.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR NAME'**
+  String get yourName;
+
+  /// No description provided for @enterDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your display name'**
+  String get enterDisplayName;
+
+  /// No description provided for @maxRoundsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'MAX ROUNDS'**
+  String get maxRoundsLabel;
+
+  /// No description provided for @nsfwModeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'18+ questions included'**
+  String get nsfwModeDesc;
+
+  /// No description provided for @waitingRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting Room'**
+  String get waitingRoom;
+
+  /// No description provided for @lobbyCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'LOBBY CODE'**
+  String get lobbyCodeLabel;
+
+  /// No description provided for @tapToCopyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to copy'**
+  String get tapToCopyCode;
+
+  /// No description provided for @codeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied!'**
+  String get codeCopied;
+
+  /// No description provided for @needMinPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Need at least {count} players to start'**
+  String needMinPlayers(int count);
+
+  /// No description provided for @waitingForHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for host to start the game…'**
+  String get waitingForHost;
+
+  /// No description provided for @gettingNextQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting next question…'**
+  String get gettingNextQuestion;
+
+  /// No description provided for @nextQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Question'**
+  String get nextQuestion;
+
+  /// No description provided for @waitingForAnswers2.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for answers…'**
+  String get waitingForAnswers2;
+
+  /// No description provided for @waitingForHostToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for host to continue…'**
+  String get waitingForHostToContinue;
+
+  /// No description provided for @playersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get playersLabel;
+
+  /// No description provided for @you.
+  ///
+  /// In en, this message translates to:
+  /// **'you'**
+  String get you;
+
+  /// No description provided for @disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'disconnected'**
+  String get disconnected;
+
+  /// No description provided for @waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'waiting…'**
+  String get waiting;
+
+  /// No description provided for @host.
+  ///
+  /// In en, this message translates to:
+  /// **'HOST'**
+  String get host;
+
+  /// No description provided for @purchasePremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase Premium'**
+  String get purchasePremium;
+
+  /// No description provided for @lifetimeOneTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime · One-time purchase'**
+  String get lifetimeOneTime;
+
+  /// No description provided for @youArePremium.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re Premium'**
+  String get youArePremium;
+
+  /// No description provided for @premiumEnjoy.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy unlimited rounds\nand longer games.'**
+  String get premiumEnjoy;
+
+  /// No description provided for @unlimitedOfflineRounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited offline rounds'**
+  String get unlimitedOfflineRounds;
+
+  /// No description provided for @upTo100Rounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 100 rounds per game'**
+  String get upTo100Rounds;
+
+  /// No description provided for @goPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Premium'**
+  String get goPremium;
+
+  /// No description provided for @drinkSips.
+  ///
+  /// In en, this message translates to:
+  /// **'Take {count} sips.'**
+  String drinkSips(int count);
+
+  /// No description provided for @giveSips.
+  ///
+  /// In en, this message translates to:
+  /// **'Give out {count} sips.'**
+  String giveSips(int count);
+
+  /// No description provided for @finishDrink.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish your drink!'**
+  String get finishDrink;
+
+  /// No description provided for @everyoneDrinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Cheers! Everyone drinks.'**
+  String get everyoneDrinks;
+
+  /// No description provided for @chooseSomeone.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose someone to drink.'**
+  String get chooseSomeone;
+
+  /// No description provided for @takeAShot.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a shot.'**
+  String get takeAShot;
+
+  /// No description provided for @everyoneElseSips.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone else takes 1 sip.'**
+  String get everyoneElseSips;
+
+  /// No description provided for @about2.
+  ///
+  /// In en, this message translates to:
+  /// **'ABOUT'**
+  String get about2;
 }
 
 class _AppLocalizationsDelegate

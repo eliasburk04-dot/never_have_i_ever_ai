@@ -31,6 +31,9 @@ class AppColors {
   // Premium Gold is replaced by an Industrial Chrome/Titanium
   static const secondary = Color(0xFFD4D4D8);
   static const secondaryMuted = Color(0xFF52525B);
+  
+  // ── Premium Gold ───────────────────────────────────────
+  static const premiumGold = Color(0xFFFFD700);
 
   // ── Text ───────────────────────────────────────────────
   static const textPrimary = Color(0xFFFFFFFF); // High-contrast white
@@ -93,9 +96,9 @@ class AppColors {
   static Color escalationBackground(String tone) {
     switch (tone) {
       case 'deeper':
-        return const Color(0xFF050505);
+        return const Color(0xFF0A0800); // faint yellow tint
       case 'secretive':
-        return const Color(0xFF070707);
+        return const Color(0xFF070010); // faint purple tint
       case 'freaky':
         return const Color(0xFF0A0000); // very faint red tint
       default:

@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../domain/entities/lobby.dart';
 import '../../../services/backend_session_service.dart';
 import '../bloc/lobby_bloc.dart';
@@ -35,7 +36,7 @@ class LobbyWaitingScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          title: const Text('Waiting Room'),
+          title: Text(AppLocalizations.of(context)!.waitingRoom),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () {
@@ -72,7 +73,7 @@ class LobbyWaitingScreen extends StatelessWidget {
                         Clipboard.setData(ClipboardData(text: lobby.code));
                         HapticFeedback.mediumImpact();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Code copied!')),
+                          SnackBar(content: Text(AppLocalizations.of(context)!.codeCopied)),
                         );
                       },
                       child: Container(
@@ -98,7 +99,7 @@ class LobbyWaitingScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            Text('LOBBY CODE', style: AppTypography.overline),
+                            Text(AppLocalizations.of(context)!.lobbyCodeLabel, style: AppTypography.overline),
                             const SizedBox(height: AppSpacing.sm),
                             Text(lobby.code, style: AppTypography.lobbyCode),
                             const SizedBox(height: AppSpacing.xs),
@@ -112,7 +113,7 @@ class LobbyWaitingScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'Tap to copy',
+                                  AppLocalizations.of(context)!.tapToCopyCode,
                                   style: AppTypography.bodySmall.copyWith(
                                     color: AppColors.textTertiary,
                                   ),
@@ -129,7 +130,7 @@ class LobbyWaitingScreen extends StatelessWidget {
                     // Players header
                     Row(
                       children: [
-                        Text('PLAYERS', style: AppTypography.overline),
+                        Text(AppLocalizations.of(context)!.playersLabel.toUpperCase(), style: AppTypography.overline),
                         const SizedBox(width: AppSpacing.sm),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -220,7 +221,7 @@ class LobbyWaitingScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          'HOST',
+                                          AppLocalizations.of(context)!.host,
                                           style: AppTypography.overline
                                               .copyWith(
                                                 color: AppColors.accentLight,
@@ -261,7 +262,7 @@ class LobbyWaitingScreen extends StatelessWidget {
 
                       if (!hasEnough) {
                         return Text(
-                          'Need at least ${AppConstants.minPlayers} players to start',
+                          AppLocalizations.of(context)!.needMinPlayers(AppConstants.minPlayers),
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.textTertiary,
                           ),
@@ -301,7 +302,7 @@ class LobbyWaitingScreen extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    'Start Game',
+                                    AppLocalizations.of(context)!.startGame,
                                     style: AppTypography.button.copyWith(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -313,7 +314,7 @@ class LobbyWaitingScreen extends StatelessWidget {
 
                       // Guest: waiting for host
                       return Text(
-                        'Waiting for host to start the game…',
+                        AppLocalizations.of(context)!.waitingForHost,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textTertiary,
                         ),

@@ -43,7 +43,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get startGame => 'Spiel starten';
 
   @override
-  String get nsfwMode => 'Pikanter Modus 🌶️';
+  String get nsfwMode => 'NSFW Modus 🌶️';
 
   @override
   String get premium => 'Premium holen';
@@ -167,7 +167,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get limitedAi => '10 KI-Fragen/Tag';
 
   @override
-  String get nsfwAccess => '🌶️ Pikanter Modus';
+  String get nsfwAccess => '🌶️ NSFW Modus';
 
   @override
   String get maxRounds100 => 'Bis zu 100 Runden';
@@ -313,4 +313,131 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get version => 'Version 1.0.0';
+
+  @override
+  String get drinkingGameMode => 'Trinkspiel Modus 🍺';
+
+  @override
+  String get premiumRules => 'Premium Regeln';
+
+  @override
+  String get playerCount => 'Spieleranzahl';
+
+  @override
+  String upToPlayers(int count) {
+    return 'Bis zu $count';
+  }
+
+  @override
+  String upToPlayersFree(int count) {
+    return 'Bis zu $count (Kostenlos)';
+  }
+
+  @override
+  String get yourName => 'DEIN NAME';
+
+  @override
+  String get enterDisplayName => 'Anzeigename eingeben';
+
+  @override
+  String get maxRoundsLabel => 'MAX RUNDEN';
+
+  @override
+  String get nsfwModeDesc => 'Ab 18 – explizite Fragen';
+
+  @override
+  String get waitingRoom => 'Warteraum';
+
+  @override
+  String get lobbyCodeLabel => 'LOBBY-CODE';
+
+  @override
+  String get tapToCopyCode => 'Tippen zum Kopieren';
+
+  @override
+  String get codeCopied => 'Code kopiert!';
+
+  @override
+  String needMinPlayers(int count) {
+    return 'Mindestens $count Spieler zum Starten';
+  }
+
+  @override
+  String get waitingForHost => 'Warte auf den Host…';
+
+  @override
+  String get gettingNextQuestion => 'Nächste Frage wird geladen…';
+
+  @override
+  String get nextQuestion => 'Nächste Frage';
+
+  @override
+  String get waitingForAnswers2 => 'Warte auf Antworten…';
+
+  @override
+  String get waitingForHostToContinue => 'Warte auf Host…';
+
+  @override
+  String get playersLabel => 'Spieler';
+
+  @override
+  String get you => 'du';
+
+  @override
+  String get disconnected => 'getrennt';
+
+  @override
+  String get waiting => 'wartet…';
+
+  @override
+  String get host => 'HOST';
+
+  @override
+  String get purchasePremium => 'Premium kaufen';
+
+  @override
+  String get lifetimeOneTime => 'Lebenslang · Einmalkauf';
+
+  @override
+  String get youArePremium => 'Du bist Premium';
+
+  @override
+  String get premiumEnjoy => 'Genieße unbegrenzte Runden\nund längere Spiele.';
+
+  @override
+  String get unlimitedOfflineRounds => 'Unbegrenzte Offline-Runden';
+
+  @override
+  String get upTo100Rounds => 'Bis zu 100 Runden pro Spiel';
+
+  @override
+  String get goPremium => 'Premium holen';
+
+  @override
+  String drinkSips(int count) {
+    return 'Nimm $count Schlücke.';
+  }
+
+  @override
+  String giveSips(int count) {
+    return 'Verteile $count Schlücke.';
+  }
+
+  @override
+  String get finishDrink => 'Ex dein Getränk!';
+
+  @override
+  String get everyoneDrinks => 'Prost! Alle trinken.';
+
+  @override
+  String get chooseSomeone => 'Wähle jemanden zum Trinken.';
+
+  @override
+  String get takeAShot => 'Nimm einen Shot.';
+
+  @override
+  String get everyoneElseSips => 'Alle anderen: 1 Schluck.';
+
+  @override
+  String get about2 => 'ÜBER';
 }

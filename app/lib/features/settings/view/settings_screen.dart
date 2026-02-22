@@ -98,15 +98,15 @@ class SettingsScreen extends StatelessWidget {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: AppColors.secondary.withValues(alpha: 0.1),
+                      color: AppColors.premiumGold.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(Icons.star_rounded,
-                        color: AppColors.secondary, size: 20),
+                        color: AppColors.premiumGold, size: 20),
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
-                    child: Text('Premium', style: AppTypography.body),
+                    child: Text(l10n.premiumLabel, style: AppTypography.body),
                   ),
                   Icon(Icons.chevron_right_rounded,
                       color: AppColors.textTertiary, size: 20),
@@ -118,7 +118,7 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
 
           // ABOUT
-          Text('ABOUT',
+          Text(l10n.about2,
               style: AppTypography.overline
                   .copyWith(color: AppColors.textTertiary)),
           const SizedBox(height: AppSpacing.sm),
@@ -132,7 +132,7 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Never Have I Ever', style: AppTypography.body),
+                Text(l10n.appTitle, style: AppTypography.body),
                 const SizedBox(height: 4),
                 Text(
                   l10n.version,

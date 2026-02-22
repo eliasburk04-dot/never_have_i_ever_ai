@@ -136,5 +136,69 @@
     "changeLanguageLater": "You can change this later in settings",
     "account": "ACCOUNT",
     "legal": "LEGAL",
-    "version": "Version 1.0.0"
+    "version": "Version 1.0.0",
+    "drinkingGameMode": "Drinking Game Mode 🍺",
+    "premiumRules": "Premium Rules",
+    "playerCount": "Player Count",
+    "upToPlayers": "Up to {count}",
+    "@upToPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "upToPlayersFree": "Up to {count} (Free)",
+    "@upToPlayersFree": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "yourName": "YOUR NAME",
+    "enterDisplayName": "Enter your display name",
+    "maxRoundsLabel": "MAX ROUNDS",
+    "nsfwModeDesc": "18+ questions included",
+    "waitingRoom": "Waiting Room",
+    "lobbyCodeLabel": "LOBBY CODE",
+    "tapToCopyCode": "Tap to copy",
+    "codeCopied": "Code copied!",
+    "needMinPlayers": "Need at least {count} players to start",
+    "@needMinPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "waitingForHost": "Waiting for host to start the game…",
+    "gettingNextQuestion": "Getting next question…",
+    "nextQuestion": "Next Question",
+    "waitingForAnswers2": "Waiting for answers…",
+    "waitingForHostToContinue": "Waiting for host to continue…",
+    "playersLabel": "Players",
+    "you": "you",
+    "disconnected": "disconnected",
+    "waiting": "waiting…",
+    "host": "HOST",
+    "purchasePremium": "Purchase Premium",
+    "lifetimeOneTime": "Lifetime · One-time purchase",
+    "youArePremium": "You're Premium",
+    "premiumEnjoy": "Enjoy unlimited rounds\nand longer games.",
+    "unlimitedOfflineRounds": "Unlimited offline rounds",
+    "upTo100Rounds": "Up to 100 rounds per game",
+    "goPremium": "Go Premium",
+    "drinkSips": "Take {count} sips.",
+    "@drinkSips": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "giveSips": "Give out {count} sips.",
+    "@giveSips": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "finishDrink": "Finish your drink!",
+    "everyoneDrinks": "Cheers! Everyone drinks.",
+    "chooseSomeone": "Choose someone to drink.",
+    "takeAShot": "Take a shot.",
+    "everyoneElseSips": "Everyone else takes 1 sip.",
+    "about2": "ABOUT"
 }

@@ -10,6 +10,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/pressable.dart';
 import '../../../domain/entities/player.dart';
+import '../../../l10n/app_localizations.dart';
 import '../bloc/game_bloc.dart';
 
 /// Online Game Round — single-screen layout with question, answer buttons,
@@ -78,7 +79,7 @@ class _GameRoundScreenState extends State<GameRoundScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Getting next question…',
+            AppLocalizations.of(context)!.gettingNextQuestion,
             style: AppTypography.bodySmall
                 .copyWith(color: AppColors.textTertiary),
           ),
@@ -131,7 +132,7 @@ class _PlayingScreen extends StatelessWidget {
                         BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                   child: Text(
-                    'Round ${state.roundNumber}',
+                    '${AppLocalizations.of(context)!.rounds} ${state.roundNumber}',
                     style: AppTypography.label
                         .copyWith(color: AppColors.textSecondary),
                   ),
@@ -172,8 +173,8 @@ class _PlayingScreen extends StatelessWidget {
                 width: double.infinity,
                 child: AppButton(
                   label: state.allAnswered
-                      ? 'Next Question'
-                      : 'Waiting for answers…',
+                      ? AppLocalizations.of(context)!.nextQuestion
+                      : AppLocalizations.of(context)!.waitingForAnswers2,
                   onPressed: state.allAnswered && !state.isAdvancing
                       ? () => bloc.add(const HostAdvanceRequested())
                       : null,
@@ -196,7 +197,7 @@ class _PlayingScreen extends StatelessWidget {
                   border: Border.all(color: AppColors.divider),
                 ),
                 child: Text(
-                  'Waiting for host to continue…',
+                  AppLocalizations.of(context)!.waitingForHostToContinue,
                   style: AppTypography.bodySmall
                       .copyWith(color: AppColors.textTertiary),
                   textAlign: TextAlign.center,
@@ -221,11 +222,12 @@ class _AnswerButtons extends StatelessWidget {
     final bloc = context.read<GameBloc>();
     final hasAnswered = state.hasAnswered;
     final myAnswer = state.myAnswer;
+    final l10n = AppLocalizations.of(context)!;
 
     return Row(
       children: [
         _GameAnswerButton(
-          label: 'I Have',
+          label: l10n.iHave,
           isHave: true,
           isSelected: hasAnswered && myAnswer == true,
           isDimmed: hasAnswered && myAnswer != true,
@@ -236,7 +238,7 @@ class _AnswerButtons extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.md),
         _GameAnswerButton(
-          label: 'I Have Not',
+          label: l10n.iHaveNot,
           isHave: false,
           isSelected: hasAnswered && myAnswer == false,
           isDimmed: hasAnswered && myAnswer != false,
@@ -283,7 +285,7 @@ class _PlayerStatusList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Players',
+            AppLocalizations.of(context)!.playersLabel,
             style: AppTypography.overline
                 .copyWith(color: AppColors.textTertiary),
           ),
@@ -337,10 +339,11 @@ class _PlayerRow extends StatelessWidget {
     return answer! ? AppColors.iHaveGlow : AppColors.iHaveNotGlow;
   }
 
-  String get _statusText {
-    if (isDisconnected) return 'disconnected';
-    if (answer == null) return 'waiting…';
-    return answer! ? 'I Have' : 'I Have Not';
+  String _statusText(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (isDisconnected) return l10n.disconnected;
+    if (answer == null) return l10n.waiting;
+    return answer! ? l10n.iHave : l10n.iHaveNot;
   }
 
   @override
@@ -369,7 +372,7 @@ class _PlayerRow extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              '${player.displayName}${isCurrentUser ? ' (you)' : ''}',
+              '${player.displayName}${isCurrentUser ? ' (${AppLocalizations.of(context)!.you})' : ''}',
               style: AppTypography.body.copyWith(
                 color: isDisconnected
                     ? AppColors.textTertiary
@@ -386,7 +389,7 @@ class _PlayerRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              _statusText,
+              _statusText(context),
               style: AppTypography.bodySmall.copyWith(
                 color: _indicatorColor,
                 fontWeight: FontWeight.w600,
@@ -471,7 +474,7 @@ class _EscalationQuestionCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'NEVER HAVE I EVER',
+            AppLocalizations.of(context)!.neverHaveIEver,
             style: AppTypography.overline.copyWith(
               color: AppColors.accentLight.withValues(alpha: 0.6),
               letterSpacing: 3,
@@ -520,6 +523,14 @@ class _EscalationBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final label = switch (tone) {
+      'deeper' => l10n.deeper,
+      'secretive' => l10n.secretive,
+      'freaky' => l10n.freaky,
+      _ => l10n.safe,
+    };
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       padding: const EdgeInsets.symmetric(
@@ -538,7 +549,7 @@ class _EscalationBadge extends StatelessWidget {
         ],
       ),
       child: Text(
-        tone.toUpperCase(),
+        label.toUpperCase(),
         style: AppTypography.overline.copyWith(
           color: _color,
           letterSpacing: 1.5,

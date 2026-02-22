@@ -369,32 +369,81 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
   }
 
   String _generateDrinkingRule(int intensity) {
+    final lang = state.session?.language ?? 'en';
+    
+    final rules = _drinkingRules[lang] ?? _drinkingRules['en']!;
+    
     if (intensity >= 8) {
-      final heavyRules = [
+      return rules['heavy']![nextRound() % rules['heavy']!.length];
+    } else if (intensity >= 4) {
+      return rules['medium']![nextRound() % rules['medium']!.length];
+    } else {
+      return rules['light']![nextRound() % rules['light']!.length];
+    }
+  }
+
+  static const Map<String, Map<String, List<String>>> _drinkingRules = {
+    'en': {
+      'heavy': [
         'Take 2 sips.',
         'Give out 3 sips.',
         'Finish your drink!',
         'Everyone else takes 1 sip.',
         'Take a shot.',
-      ];
-      return heavyRules[nextRound() % heavyRules.length];
-    } else if (intensity >= 4) {
-      final mediumRules = [
+      ],
+      'medium': [
         'Take 1 sip.',
         'Give out 2 sips.',
         'Cheers! Everyone drinks.',
         'Take 2 sips.',
-      ];
-      return mediumRules[nextRound() % mediumRules.length];
-    } else {
-      final lightRules = [
+      ],
+      'light': [
         'Give out 1 sip.',
         'Take 1 sip.',
         'Choose someone to drink.',
-      ];
-      return lightRules[nextRound() % lightRules.length];
-    }
-  }
+      ],
+    },
+    'de': {
+      'heavy': [
+        'Nimm 2 Schlücke.',
+        'Verteile 3 Schlücke.',
+        'Ex dein Getränk!',
+        'Alle anderen: 1 Schluck.',
+        'Nimm einen Shot.',
+      ],
+      'medium': [
+        'Nimm 1 Schluck.',
+        'Verteile 2 Schlücke.',
+        'Prost! Alle trinken.',
+        'Nimm 2 Schlücke.',
+      ],
+      'light': [
+        'Verteile 1 Schluck.',
+        'Nimm 1 Schluck.',
+        'Wähle jemanden zum Trinken.',
+      ],
+    },
+    'es': {
+      'heavy': [
+        'Toma 2 tragos.',
+        'Reparte 3 tragos.',
+        '¡Termina tu bebida!',
+        'Los demás: 1 trago.',
+        'Toma un shot.',
+      ],
+      'medium': [
+        'Toma 1 trago.',
+        'Reparte 2 tragos.',
+        '¡Salud! Todos beben.',
+        'Toma 2 tragos.',
+      ],
+      'light': [
+        'Reparte 1 trago.',
+        'Toma 1 trago.',
+        'Elige a alguien para beber.',
+      ],
+    },
+  };
 
   int nextRound() => state.session?.currentRound ?? 0;
 

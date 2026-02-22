@@ -136,5 +136,69 @@
     "changeLanguageLater": "Puedes cambiarlo más tarde en ajustes",
     "account": "CUENTA",
     "legal": "LEGAL",
-    "version": "Version 1.0.0"
+    "version": "Version 1.0.0",
+    "drinkingGameMode": "Modo Trago 🍺",
+    "premiumRules": "Reglas Premium",
+    "playerCount": "Cantidad de jugadores",
+    "upToPlayers": "Hasta {count}",
+    "@upToPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "upToPlayersFree": "Hasta {count} (Gratis)",
+    "@upToPlayersFree": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "yourName": "TU NOMBRE",
+    "enterDisplayName": "Ingresa tu nombre",
+    "maxRoundsLabel": "RONDAS MÁXIMAS",
+    "nsfwModeDesc": "+18 preguntas incluidas",
+    "waitingRoom": "Sala de espera",
+    "lobbyCodeLabel": "CÓDIGO DE SALA",
+    "tapToCopyCode": "Toca para copiar",
+    "codeCopied": "¡Código copiado!",
+    "needMinPlayers": "Se necesitan al menos {count} jugadores para empezar",
+    "@needMinPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "waitingForHost": "Esperando al anfitrión…",
+    "gettingNextQuestion": "Cargando siguiente pregunta…",
+    "nextQuestion": "Siguiente pregunta",
+    "waitingForAnswers2": "Esperando respuestas…",
+    "waitingForHostToContinue": "Esperando al anfitrión…",
+    "playersLabel": "Jugadores",
+    "you": "tú",
+    "disconnected": "desconectado",
+    "waiting": "esperando…",
+    "host": "ANFITRIÓN",
+    "purchasePremium": "Comprar Premium",
+    "lifetimeOneTime": "De por vida · Compra única",
+    "youArePremium": "Eres Premium",
+    "premiumEnjoy": "Disfruta de rondas ilimitadas\ny juegos más largos.",
+    "unlimitedOfflineRounds": "Rondas sin conexión ilimitadas",
+    "upTo100Rounds": "Hasta 100 rondas por juego",
+    "goPremium": "Obtener Premium",
+    "drinkSips": "Toma {count} tragos.",
+    "@drinkSips": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "giveSips": "Reparte {count} tragos.",
+    "@giveSips": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "finishDrink": "¡Termina tu bebida!",
+    "everyoneDrinks": "¡Salud! Todos beben.",
+    "chooseSomeone": "Elige a alguien para beber.",
+    "takeAShot": "Toma un shot.",
+    "everyoneElseSips": "Los demás: 1 trago.",
+    "about2": "ACERCA DE"
 }

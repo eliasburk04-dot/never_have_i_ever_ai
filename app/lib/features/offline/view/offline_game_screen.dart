@@ -165,7 +165,12 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
               AppColors.escalationBackground(tone),
               AppColors.primary.withValues(alpha: 0.6),
               AppColors.escalationBackground(tone).withValues(alpha: 0.8),
-              if (tone == 'freaky') AppColors.toneFreaky else AppColors.accentDeep,
+              switch (tone) {
+                'freaky' => AppColors.toneFreaky,
+                'deeper' => AppColors.toneDeeper,
+                'secretive' => AppColors.toneSecretive,
+                _ => AppColors.accentDeep,
+              },
             ],
             speed: tone == 'safe' ? 0.8 : 1.5,
           ),
@@ -284,7 +289,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
                       '$i',
                       style: AppTypography.h3.copyWith(
                         color: isSelected
-                            ? Colors.white
+                            ? AppColors.background
                             : AppColors.textPrimary,
                       ),
                     ),
@@ -406,6 +411,40 @@ class _OfflineQuestionCard extends StatelessWidget {
               }),
             ),
           ],
+          if (drinkingRule != null && drinkingRule!.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.lg),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.warning.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                border: Border.all(
+                  color: AppColors.warning.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('🍺', style: TextStyle(fontSize: 18)),
+                  const SizedBox(width: AppSpacing.sm),
+                  Flexible(
+                    child: Text(
+                      drinkingRule!,
+                      style: AppTypography.body.copyWith(
+                        color: AppColors.warning,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     )
@@ -435,6 +474,14 @@ class _ToneBadge extends StatelessWidget {
       _ => AppColors.toneSafe,
     };
 
+    final l10n = AppLocalizations.of(context)!;
+    final label = switch (tone) {
+      'deeper' => l10n.deeper,
+      'secretive' => l10n.secretive,
+      'freaky' => l10n.freaky,
+      _ => l10n.safe,
+    };
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -450,7 +497,7 @@ class _ToneBadge extends StatelessWidget {
         ],
       ),
       child: Text(
-        tone.toUpperCase(),
+        label.toUpperCase(),
         style: AppTypography.overline.copyWith(
           color: color,
           letterSpacing: 1.5,

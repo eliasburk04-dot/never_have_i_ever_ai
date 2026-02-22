@@ -7,6 +7,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/animated_mesh_background.dart';
 import '../../../core/widgets/glass_container.dart';
+import '../../../l10n/app_localizations.dart';
 import '../cubit/premium_cubit.dart';
 
 class PremiumScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class PremiumScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
-        title: Text('Premium',
+        title: Text(AppLocalizations.of(context)!.premiumLabel,
             style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
       ),
       body: Stack(
@@ -56,6 +57,7 @@ class PremiumScreen extends StatelessWidget {
   }
 
   Widget _buildAlreadyPremium(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -66,24 +68,24 @@ class PremiumScreen extends StatelessWidget {
             height: 88,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.secondary.withValues(alpha: 0.1),
+              color: AppColors.premiumGold.withValues(alpha: 0.1),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.secondary.withValues(alpha: 0.2),
+                  color: AppColors.premiumGold.withValues(alpha: 0.3),
                   blurRadius: 32,
                 ),
               ],
             ),
             child: const Icon(Icons.star_rounded,
-                color: AppColors.secondary, size: 48),
+                color: AppColors.premiumGold, size: 48),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text('You\'re Premium',
+          Text(l10n.youArePremium,
               style: AppTypography.display
-                  .copyWith(color: AppColors.secondary)),
+                  .copyWith(color: AppColors.premiumGold)),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Enjoy unlimited rounds\nand longer games.',
+            l10n.premiumEnjoy,
             style:
                 AppTypography.body.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
@@ -94,6 +96,7 @@ class PremiumScreen extends StatelessWidget {
   }
 
   Widget _buildUpgradeCTA(BuildContext context, PremiumState state) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<PremiumCubit, PremiumState>(
       listener: (context, state) {
         if (state.errorMessage != null) {
@@ -125,17 +128,17 @@ class PremiumScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color:
-                              AppColors.secondary.withValues(alpha: 0.1),
+                              AppColors.premiumGold.withValues(alpha: 0.1),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.secondary
-                                  .withValues(alpha: 0.2),
+                              color: AppColors.premiumGold
+                                  .withValues(alpha: 0.3),
                               blurRadius: 32,
                             ),
                           ],
                         ),
                         child: const Icon(Icons.star_rounded,
-                            color: AppColors.secondary, size: 48),
+                            color: AppColors.premiumGold, size: 48),
                       )
                           .animate()
                           .scale(
@@ -145,7 +148,7 @@ class PremiumScreen extends StatelessWidget {
                             curve: Curves.elasticOut,
                           ),
                       const SizedBox(height: AppSpacing.lg),
-                      Text('Go Premium', style: AppTypography.display)
+                      Text(l10n.goPremium, style: AppTypography.display)
                           .animate()
                           .fadeIn(delay: 200.ms),
                       const SizedBox(height: AppSpacing.xl),
@@ -159,10 +162,10 @@ class PremiumScreen extends StatelessWidget {
                           children: [
                             const _FeatureRow(
                                 icon: Icons.all_inclusive,
-                                text: 'Unlimited offline rounds'),
+                                textKey: 'unlimitedOfflineRounds'),
                             const _FeatureRow(
                                 icon: Icons.timer,
-                                text: 'Up to 100 rounds per game'),
+                                textKey: 'upTo100Rounds'),
                           ],
                         ),
                       ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
@@ -173,11 +176,11 @@ class PremiumScreen extends StatelessWidget {
                       Text(
                         state.priceString,
                         style: AppTypography.display.copyWith(
-                          color: AppColors.secondary,
+                          color: AppColors.premiumGold,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text('Lifetime · One-time purchase',
+                      Text(l10n.lifetimeOneTime,
                           style: AppTypography.bodySmall
                               .copyWith(color: AppColors.textTertiary)),
                     ],
@@ -210,7 +213,7 @@ class PremiumScreen extends StatelessWidget {
                               : () =>
                                   context.read<PremiumCubit>().purchase(),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.secondary,
+                            backgroundColor: AppColors.premiumGold,
                             foregroundColor: Colors.black,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
@@ -228,7 +231,7 @@ class PremiumScreen extends StatelessWidget {
                                         Colors.black.withValues(alpha: 0.6),
                                   ),
                                 )
-                              : Text('Purchase Premium',
+                              : Text(l10n.purchasePremium,
                                   style: AppTypography.button.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700,
@@ -240,7 +243,7 @@ class PremiumScreen extends StatelessWidget {
                         onPressed: () =>
                             context.read<PremiumCubit>().restore(),
                         child: Text(
-                          'Restore Purchases',
+                          l10n.restorePurchases,
                           style: AppTypography.bodySmall
                               .copyWith(color: AppColors.textTertiary),
                         ),
@@ -258,13 +261,20 @@ class PremiumScreen extends StatelessWidget {
 }
 
 class _FeatureRow extends StatelessWidget {
-  const _FeatureRow({required this.icon, required this.text});
+  const _FeatureRow({required this.icon, required this.textKey});
 
   final IconData icon;
-  final String text;
+  final String textKey;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final text = switch (textKey) {
+      'unlimitedOfflineRounds' => l10n.unlimitedOfflineRounds,
+      'upTo100Rounds' => l10n.upTo100Rounds,
+      _ => textKey,
+    };
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs + 2),
       child: Row(
@@ -273,10 +283,10 @@ class _FeatureRow extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: AppColors.secondary.withValues(alpha: 0.1),
+              color: AppColors.premiumGold.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: AppColors.secondary, size: 18),
+            child: Icon(icon, color: AppColors.premiumGold, size: 18),
           ),
           const SizedBox(width: AppSpacing.md),
           Text(text, style: AppTypography.body),
