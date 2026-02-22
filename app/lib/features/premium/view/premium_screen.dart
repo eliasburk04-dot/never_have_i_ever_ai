@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/animated_mesh_background.dart';
+import '../../../core/widgets/glass_container.dart';
 import '../cubit/premium_cubit.dart';
 
 class PremiumScreen extends StatelessWidget {
@@ -14,20 +16,41 @@ class PremiumScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
         title: Text('Premium',
             style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
       ),
-      body: SafeArea(
-        child: BlocBuilder<PremiumCubit, PremiumState>(
-          builder: (context, state) {
-            if (state.isPremium) {
-              return _buildAlreadyPremium(context);
-            }
-            return _buildUpgradeCTA(context, state);
-          },
-        ),
+      body: Stack(
+        children: [
+          // 1. Dynamic gold mesh background
+          const Positioned.fill(
+            child: AnimatedMeshBackground(
+              colors: [
+                AppColors.backgroundElevated,
+                Color(0xFF27272A), // Zinc 800 - industrial gray
+                Color(0xFF18181B), // Zinc 900 - dark brutalist gray
+                AppColors.background,
+              ],
+              speed: 0.5, // Slow, premium feeling
+            ),
+          ),
+
+          // 2. Content
+          SafeArea(
+            child: BlocBuilder<PremiumCubit, PremiumState>(
+              builder: (context, state) {
+                if (state.isPremium) {
+                  return _buildAlreadyPremium(context);
+                }
+                return _buildUpgradeCTA(context, state);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -128,24 +151,19 @@ class PremiumScreen extends StatelessWidget {
                       const SizedBox(height: AppSpacing.xl),
 
                       // Feature list — glass card
-                      Container(
+                      GlassContainer(
                         width: double.infinity,
                         padding: const EdgeInsets.all(AppSpacing.lg),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusLg),
-                          border: Border.all(color: AppColors.divider),
-                        ),
+                        color: AppColors.surface.withValues(alpha: 0.3),
                         child: Column(
                           children: [
-                            _FeatureRow(
+                            const _FeatureRow(
                                 icon: Icons.all_inclusive,
                                 text: 'Unlimited offline rounds'),
-                            _FeatureRow(
+                            const _FeatureRow(
                                 icon: Icons.timer,
                                 text: 'Up to 100 rounds per game'),
-                            _FeatureRow(
+                            const _FeatureRow(
                                 icon: Icons.block,
                                 text: 'Ad-free experience'),
                           ],
@@ -214,8 +232,10 @@ class PremiumScreen extends StatelessWidget {
                                   ),
                                 )
                               : Text('Purchase Premium',
-                                  style: AppTypography.button
-                                      .copyWith(color: Colors.black)),
+                                  style: AppTypography.button.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  )),
                         ),
                       ),
                       const SizedBox(height: AppSpacing.md),

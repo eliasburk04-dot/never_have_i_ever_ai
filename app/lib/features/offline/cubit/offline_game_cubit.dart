@@ -57,6 +57,8 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     required String language,
     required bool nsfwEnabled,
     required bool isPremium,
+    required bool isDrinkingGame,
+    required List<String> customQuestions,
     int? debugSeed,
   }) async {
     // TODO: Restore after testing
@@ -79,7 +81,12 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
 
     _questionPool.beginSession(debugSeed: debugSeed);
 
-    emit(state.copyWith(phase: OfflineGamePhase.idle, session: session));
+    emit(state.copyWith(
+      phase: OfflineGamePhase.idle, 
+      session: session,
+      isDrinkingGame: isDrinkingGame,
+      customQuestions: customQuestions,
+    ));
 
     // Immediately advance to round 1
     await advanceRound();
@@ -135,16 +142,44 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     final earlyEnergiesSeen = _earlyWindowEnergies(session);
     final recentQuestionIds = _recentQuestionIds(session, count: 10);
 
-    String questionText;
+    String questionText = '';
     bool recycled = false;
-    int intensity;
+    int intensity = 1;
     OfflineQuestionSource questionSource = OfflineQuestionSource.localPool;
     String? questionCategory;
     String? questionSubcategory;
 
-    // Always select from the local JSON pool.
-    final selection = _questionPool.select(
-      language: session.language,
+    // Check if we should inject a custom question
+    bool injectedCustom = false;
+    if (state.customQuestions.isNotEmpty) {
+      // Find custom questions that haven't been asked yet
+      final availableCustom = state.customQuestions.where((q) => !session.usedQuestionIds.contains(q)).toList();
+      
+      if (availableCustom.isNotEmpty) {
+        // High chance to inject early on, or random 20% chance
+        final shouldInject = (nextRound <= 3 && availableCustom.length >= 3) || 
+                             (nextRound == 1) || 
+                             (_random() < 0.2);
+                             
+        if (shouldInject) {
+          questionText = availableCustom[_randomInt(availableCustom.length)];
+          intensity = result.intensityMax; // Custom ones are usually spicy
+          questionSource = OfflineQuestionSource.localPool; // Treat as local
+          _pendingQuestionId = questionText; // Use text as ID for tracking
+          _pendingCategory = 'Custom';
+          _pendingSubcategory = null;
+          
+          questionCategory = 'Custom';
+          questionSubcategory = null;
+          injectedCustom = true;
+        }
+      }
+    }
+
+    if (!injectedCustom) {
+      // Always select from the local JSON pool.
+      final selection = _questionPool.select(
+        language: session.language,
       intensityMin: result.intensityMin,
       intensityMax: result.intensityMax,
       nsfwEnabled: session.nsfwEnabled,
@@ -184,6 +219,12 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       _pendingCategory = null;
       _pendingSubcategory = null;
     }
+    }
+
+    String? drinkingRule;
+    if (state.isDrinkingGame) {
+      drinkingRule = _generateDrinkingRule(intensity);
+    }
 
     // Update session
     final updatedSession = session.copyWith(
@@ -208,6 +249,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
         currentCategory: questionCategory,
         currentSubcategory: questionSubcategory,
         errorMessage: null,
+        currentDrinkingRule: drinkingRule,
       ),
     );
   }
@@ -326,6 +368,36 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     return 'light';
   }
 
+  String _generateDrinkingRule(int intensity) {
+    if (intensity >= 8) {
+      final heavyRules = [
+        'Take 2 sips.',
+        'Give out 3 sips.',
+        'Finish your drink!',
+        'Everyone else takes 1 sip.',
+        'Take a shot.',
+      ];
+      return heavyRules[nextRound() % heavyRules.length];
+    } else if (intensity >= 4) {
+      final mediumRules = [
+        'Take 1 sip.',
+        'Give out 2 sips.',
+        'Cheers! Everyone drinks.',
+        'Take 2 sips.',
+      ];
+      return mediumRules[nextRound() % mediumRules.length];
+    } else {
+      final lightRules = [
+        'Give out 1 sip.',
+        'Take 1 sip.',
+        'Choose someone to drink.',
+      ];
+      return lightRules[nextRound() % lightRules.length];
+    }
+  }
+
+  int nextRound() => state.session?.currentRound ?? 0;
+
   Future<void> _finishGame() async {
     final session = state.session;
     if (session == null) return;
@@ -340,6 +412,15 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
         session: finishedSession,
       ),
     );
+  }
+
+  double _random() {
+    return (state.session?.currentRound ?? 0) % 10 / 10.0; // deterministic pseudo-random
+  }
+
+  int _randomInt(int max) {
+    if (max <= 0) return 0;
+    return (state.session?.currentRound ?? 0) % max;
   }
 
   // TODO: Restore after testing

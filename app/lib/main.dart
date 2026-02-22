@@ -9,6 +9,7 @@ import 'package:logger/logger.dart';
 import 'app.dart';
 import 'core/bloc_observer.dart';
 import 'core/service_locator.dart';
+import 'core/services/native_iap_service.dart';
 import 'domain/repositories/i_premium_repository.dart';
 import 'services/local_question_pool.dart';
 
@@ -25,6 +26,9 @@ Future<void> main() async {
 
   // Setup dependency injection
   setupServiceLocator();
+
+  // Initialize native IAP service
+  await NativeIapService.instance.initialize();
 
   // Keep startup non-blocking so iOS never sits on a white launch screen.
   await _initializeStorage(log);

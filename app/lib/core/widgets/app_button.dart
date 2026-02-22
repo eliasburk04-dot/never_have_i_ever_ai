@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../services/audio_service.dart';
+import '../services/haptics_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import 'pressable.dart';
+import 'glass_container.dart';
 
 /// Primary elevated button with glow, press scale, and dark surface.
 ///
@@ -27,29 +30,19 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Pressable(
-      onPressed: isLoading ? null : onPressed,
+      onPressed: isLoading ? null : () {
+        HapticsService.instance.lightImpact();
+        AudioService.instance.playTap();
+        if (onPressed != null) onPressed!();
+      },
       disabled: isLoading || onPressed == null,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
+      child: GlassContainer(
         height: 56,
-        decoration: BoxDecoration(
-          color: isPrimary ? AppColors.accent : AppColors.surface,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-          border: isPrimary
-              ? null
-              : Border.all(color: AppColors.border, width: 1.5),
-          boxShadow: isPrimary
-              ? [
-                  BoxShadow(
-                    color: AppColors.glowAccent(0.25),
-                    blurRadius: AppSpacing.glowBlur,
-                    spreadRadius: AppSpacing.glowSpread,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
-        ),
+        padding: EdgeInsets.zero,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        color: isPrimary ? AppColors.primary.withValues(alpha: 0.3) : AppColors.surface.withValues(alpha: 0.4),
+        borderWidth: isPrimary ? 0 : 1.5,
+        intensity: isLoading || onPressed == null ? 0.4 : 1.0,
         child: Center(
           child: isLoading
               ? const SizedBox(
@@ -67,18 +60,14 @@ class AppButton extends StatelessWidget {
                       Icon(
                         icon,
                         size: 20,
-                        color: isPrimary
-                            ? Colors.white
-                            : AppColors.textPrimary,
+                        color: Colors.white,
                       ),
                       const SizedBox(width: AppSpacing.sm),
                     ],
                     Text(
                       label,
                       style: AppTypography.button.copyWith(
-                        color: isPrimary
-                            ? Colors.white
-                            : AppColors.textPrimary,
+                        color: Colors.white,
                       ),
                     ),
                   ],

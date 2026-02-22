@@ -9,55 +9,68 @@ class AppColors {
   AppColors._();
 
   // ── Background Layers ──────────────────────────────────
-  static const background = Color(0xFF0B0B14);
-  static const backgroundElevated = Color(0xFF12121E);
-  static const surface = Color(0xFF1A1A2E);
-  static const surfaceElevated = Color(0xFF22223A);
+  static const background = Color(0xFF000000); // Pure stark black
+  static const backgroundElevated = Color(0xFF09090B); // Very dark gray
+  static const surface = Color(0xFF18181B); // Brutalist gray surface
+  static const surfaceElevated = Color(0xFF27272A); // Lighter gray structure
+  
+  // ── Glass Surfaces ─────────────────────────────────────
+  static const glassSurface = Color(0x18FFFFFF); // slightly milkier raw glass
+  static const glassBorder = Color(0x33FFFFFF); // harsher structural borders
 
   // ── Accent System ──────────────────────────────────────
-  static const primary = Color(0xFF6366F1);
-  static const primaryLight = Color(0xFF818CF8);
-  static const accent = Color(0xFF6366F1);
-  static const accentLight = Color(0xFF818CF8);
-  static const accentDeep = Color(0xFF4338CA);
-  static const secondary = Color(0xFFF59E0B);
-  static const secondaryMuted = Color(0xFF78560A);
+  // ── Accent System ──────────────────────────────────────
+  // Brutalism emphasizes stark high-contrast forms rather than colorful hues.
+  // Using pure whites and industrial silvers.
+  static const primary = Color(0xFFE4E4E7);
+  static const primaryLight = Color(0xFFFFFFFF);
+  static const accent = Color(0xFFFAFAFA);
+  static const accentLight = Color(0xFFFFFFFF);
+  static const accentDeep = Color(0xFFA1A1AA);
+  
+  // Premium Gold is replaced by an Industrial Chrome/Titanium
+  static const secondary = Color(0xFFD4D4D8);
+  static const secondaryMuted = Color(0xFF52525B);
 
   // ── Text ───────────────────────────────────────────────
-  static const textPrimary = Color(0xFFF1F1F6);
-  static const textSecondary = Color(0xFF9CA3AF);
-  static const textTertiary = Color(0xFF6B7280);
+  static const textPrimary = Color(0xFFFFFFFF); // High-contrast white
+  static const textSecondary = Color(0xFFA1A1AA); // Industrial gray
+  static const textTertiary = Color(0xFF71717A); // Deep gray
 
   // ── Semantic ───────────────────────────────────────────
-  static const error = Color(0xFFEF4444);
-  static const success = Color(0xFF22C55E);
-  static const warning = Color(0xFFF59E0B);
+  static const error = Color(0xFFF87171);
+  static const success = Color(0xFF34D399);
+  static const warning = Color(0xFFFBBF24);
 
   // ── Dividers / Borders ─────────────────────────────────
-  static const divider = Color(0xFF2A2A40);
-  static const border = Color(0xFF353550);
+  // ── Dividers / Borders ─────────────────────────────────
+  static const divider = Color(0x44FFFFFF);
+  static const border = Color(0x66FFFFFF); // Sharper borders
 
-  // ── Tone Escalation ────────────────────────────────────
-  static const toneSafe = Color(0xFF22C55E);
-  static const toneDeeper = Color(0xFFFBBF24);
-  static const toneSecretive = Color(0xFFF97316);
-  static const toneFreaky = Color(0xFFEF4444);
+  // ── Tone Escalation (Stark Industrial Tones) ───────────
+  // Instead of playful vibrant colors, we use raw warning colors:
+  static const toneSafe = Color(0xFFA1A1AA);      // Gray/Silver
+  static const toneDeeper = Color(0xFFEAB308);    // Raw caution yellow
+  static const toneSecretive = Color(0xFF7C3AED); // High voltage purple (or solid sharp white)
+  static const toneFreaky = Color(0xFFDC2626);    // Danger red
 
   // ── Answer Buttons ─────────────────────────────────────
-  static const iHave = Color(0xFF166534);        // deep green
-  static const iHavePressed = Color(0xFF14532D); // pressed green
-  static const iHaveNot = Color(0xFF7F1D1D);     // deep red
-  static const iHaveNotPressed = Color(0xFF991B1B); // pressed red
-  static const iHaveText = Color(0xFFFFFFFF);
-  static const iHaveNotText = Color(0xFFFFFFFF);
-  static const iHaveGlow = Color(0xFF22C55E);    // green glow
-  static const iHaveNotGlow = Color(0xFFEF4444); // red glow
-  static const iHaveBorder = Color(0xFF22C55E);
-  static const iHaveNotBorder = Color(0xFFEF4444);
+  // ── Answer Buttons ─────────────────────────────────────
+  // Stark brutalist contrast for answers.
+  static const iHave = Color(0xFF000000);        // Black core
+  static const iHavePressed = Color(0xFF27272A); 
+  static const iHaveNot = Color(0xFFFFFFFF);     // White core
+  static const iHaveNotPressed = Color(0xFFE4E4E7); 
+  static const iHaveText = Color(0xFFFFFFFF);    // White text on black
+  static const iHaveNotText = Color(0xFF000000); // Black text on white
+  static const iHaveGlow = Color(0x33FFFFFF);    
+  static const iHaveNotGlow = Color(0x00000000); 
+  static const iHaveBorder = Color(0xFFFFFFFF);  // Hard white border
+  static const iHaveNotBorder = Color(0xFF000000); // Hard black border
 
   // ── Player Status Row Backgrounds ──────────────────────
-  static const playerRowHave = Color(0xFF0D2818);
-  static const playerRowHaveNot = Color(0xFF2A0D0D);
+  static const playerRowHave = Color(0xFF18181B); // Dark gray
+  static const playerRowHaveNot = Color(0xFF27272A); // Lighter gray
 
   // ── Glow helpers ───────────────────────────────────────
   static Color glowAccent([double opacity = 0.25]) =>
@@ -80,13 +93,13 @@ class AppColors {
   static Color escalationBackground(String tone) {
     switch (tone) {
       case 'deeper':
-        return const Color(0xFF0F0D18);
+        return const Color(0xFF050505);
       case 'secretive':
-        return const Color(0xFF120D15);
+        return const Color(0xFF070707);
       case 'freaky':
-        return const Color(0xFF150D12);
+        return const Color(0xFF0A0000); // very faint red tint
       default:
-        return background;
+        return const Color(0xFF000000); // Absolute black
     }
   }
 

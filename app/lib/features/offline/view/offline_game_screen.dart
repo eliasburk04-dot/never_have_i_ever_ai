@@ -8,7 +8,11 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/animated_mesh_background.dart';
+import '../../../core/widgets/glass_container.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../core/services/audio_service.dart';
+import '../../../core/services/haptics_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../cubit/offline_game_cubit.dart';
 
@@ -109,7 +113,8 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
   }
 
   void _submitAndAdvance() {
-    HapticFeedback.mediumImpact();
+    HapticsService.instance.mediumImpact();
+    AudioService.instance.playSwipe();
     context.read<OfflineGameCubit>().submitAndAdvance(_selectedHaveCount);
   }
 
@@ -151,11 +156,24 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
     final tone = s.currentTone;
     final l10n = AppLocalizations.of(context)!;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 800),
-      curve: Curves.easeOut,
-      color: AppColors.escalationBackground(tone),
-      child: Padding(
+    return Stack(
+      children: [
+        // 1. Dynamic background based on tone
+        Positioned.fill(
+          child: AnimatedMeshBackground(
+            colors: [
+              AppColors.escalationBackground(tone),
+              AppColors.primary.withValues(alpha: 0.6),
+              AppColors.escalationBackground(tone).withValues(alpha: 0.8),
+              if (tone == 'freaky') AppColors.toneFreaky else AppColors.accentDeep,
+            ],
+            speed: tone == 'safe' ? 0.8 : 1.5,
+          ),
+        ),
+        
+        // 2. Content
+        SafeArea(
+          child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           children: [
@@ -212,6 +230,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
               text: s.currentQuestionText ?? '',
               tone: tone,
               isRecycled: s.currentQuestionRecycled,
+              drinkingRule: s.currentDrinkingRule,
             ),
 
             const Spacer(),
@@ -232,7 +251,8 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
                 final isSelected = i == _selectedHaveCount;
                 return Pressable(
                   onPressed: () {
-                    HapticFeedback.selectionClick();
+                    HapticsService.instance.lightImpact();
+                    AudioService.instance.playTap();
                     setState(() => _selectedHaveCount = i);
                   },
                   scale: 0.94,
@@ -292,7 +312,9 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
           ],
         ),
       ),
-    );
+      ),
+    ],
+  );
   }
 }
 
@@ -302,12 +324,14 @@ class _OfflineQuestionCard extends StatelessWidget {
   const _OfflineQuestionCard({
     required this.text,
     required this.tone,
-    required this.isRecycled,
+    this.isRecycled = false,
+    this.drinkingRule,
   });
 
   final String text;
   final String tone;
   final bool isRecycled;
+  final String? drinkingRule;
 
   Color get _glowColor {
     switch (tone) {
@@ -337,34 +361,14 @@ class _OfflineQuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 600),
+    return GlassContainer(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.xl,
         vertical: AppSpacing.xxl,
       ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.accent.withValues(alpha: 0.12),
-            AppColors.accentDeep.withValues(alpha: 0.06),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        border: Border.all(
-          color: AppColors.accent.withValues(alpha: 0.15),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: _glowColor.withValues(alpha: _glowOpacity),
-            blurRadius: 32,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+      color: AppColors.accent.withValues(alpha: 0.05),
+      borderWidth: 1.5,
       child: Column(
         children: [
           Builder(builder: (context) {
@@ -401,7 +405,6 @@ class _OfflineQuestionCard extends StatelessWidget {
                 );
               }),
             ),
-          ],
           ],
         ],
       ),

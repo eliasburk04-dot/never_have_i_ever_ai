@@ -69,6 +69,11 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
     }
   }
 
+  int _getMaxPlayersLimit(BuildContext context) {
+    final isPremium = context.read<PremiumCubit>().state.isPremium;
+    return isPremium ? AppConstants.maxPlayers : 5; // Free users get max 5 players
+  }
+
   String _randomEmoji() {
     final available =
         _avatarEmojis.where((e) => !_usedEmojis.contains(e)).toList();
@@ -89,7 +94,8 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   }
 
   void _addPlayer() {
-    if (_controllers.length >= AppConstants.maxPlayers) return;
+    final limit = _getMaxPlayersLimit(context);
+    if (_controllers.length >= limit) return;
     HapticFeedback.lightImpact();
     setState(() {
       _controllers.add(TextEditingController());
@@ -156,6 +162,8 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
           // TODO: Restore after testing
           // isPremium: isPremium,
           isPremium: true, // TEMP: bypassed for NSFW testing
+          isDrinkingGame: config.state.isDrinkingGame,
+          customQuestions: config.state.customQuestions,
         );
 
     context.go('/offline/game');
@@ -254,7 +262,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                   }),
 
                   // Add player button
-                  if (_controllers.length < AppConstants.maxPlayers)
+                  if (_controllers.length < _getMaxPlayersLimit(context))
                     Pressable(
                       onPressed: _addPlayer,
                       child: Container(
@@ -279,6 +287,37 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                             Text(l10n.addPlayer,
                                 style: AppTypography.label
                                     .copyWith(color: AppColors.accent)),
+                          ],
+                        ),
+                      ),
+                    ).animate().fadeIn(duration: 200.ms)
+                  else if (!isPremium)
+                    // Premium upsell button for players > 5
+                    Pressable(
+                      onPressed: () => context.push('/premium'),
+                      child: Container(
+                        margin: const EdgeInsets.only(top: AppSpacing.xs),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.md,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary.withValues(alpha: 0.1),
+                          border: Border.all(
+                            color: AppColors.secondary.withValues(alpha: 0.5),
+                            width: 1,
+                          ),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusMd),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.lock_rounded,
+                                color: AppColors.secondary, size: 16),
+                            const SizedBox(width: AppSpacing.xs),
+                            Text('Unlock Unlimited Players',
+                                style: AppTypography.label
+                                    .copyWith(color: AppColors.secondary)),
                           ],
                         ),
                       ),
@@ -363,6 +402,144 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
               ),
 
               const SizedBox(height: AppSpacing.md),
+              
+              // ----------------------------------------------------
+              // PREMIUM FEATURES SECTION
+              // ----------------------------------------------------
+              Text('Premium Rules',
+                  style: AppTypography.overline
+                      .copyWith(color: AppColors.secondary)),
+              const SizedBox(height: AppSpacing.xs),
+              
+              // Drinking Game Mode Toggle
+              Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius:
+                      BorderRadius.circular(AppSpacing.radiusMd),
+                  border: Border.all(
+                    color: config.isDrinkingGame && !isPremium 
+                      ? AppColors.error 
+                      : AppColors.divider,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text('Drinking Game Mode', style: AppTypography.label),
+                        if (!isPremium) ...[
+                          const SizedBox(width: AppSpacing.xs),
+                          Icon(Icons.lock_rounded,
+                              size: 14, color: AppColors.textTertiary),
+                        ],
+                      ],
+                    ),
+                    Switch(
+                      value: config.isDrinkingGame,
+                      activeTrackColor: AppColors.secondary,
+                      onChanged: isPremium
+                          ? (v) => context.read<GameConfigCubit>().setIsDrinkingGame(v)
+                          : (_) => context.push('/premium'),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Custom Cards (Premium)
+              Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius:
+                      BorderRadius.circular(AppSpacing.radiusMd),
+                  border: Border.all(color: AppColors.divider),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text('Custom Questions', style: AppTypography.label),
+                            if (!isPremium) ...[
+                              const SizedBox(width: AppSpacing.xs),
+                              Icon(Icons.lock_rounded,
+                                  size: 14, color: AppColors.textTertiary),
+                            ],
+                          ],
+                        ),
+                        Text(
+                          '${config.customQuestions.length}',
+                          style: AppTypography.label.copyWith(color: AppColors.accent),
+                        ),
+                      ],
+                    ),
+                    if (config.customQuestions.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.xs),
+                      ...List.generate(config.customQuestions.length, (i) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '"${config.customQuestions[i]}"',
+                                  style: AppTypography.bodySmall.copyWith(
+                                    color: AppColors.textSecondary,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              if (isPremium)
+                                Pressable(
+                                  onPressed: () => context.read<GameConfigCubit>().removeCustomQuestion(i),
+                                  child: Icon(Icons.close_rounded, size: 16, color: AppColors.error),
+                                ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                    const SizedBox(height: AppSpacing.sm),
+                    Pressable(
+                      onPressed: isPremium
+                          ? () => _showAddCustomQuestionDialog(context)
+                          : () => context.push('/premium'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                        decoration: BoxDecoration(
+                          color: isPremium
+                              ? AppColors.accent.withValues(alpha: 0.1)
+                              : AppColors.secondary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          isPremium ? '+ Add Own Question' : 'Unlock Custom Cards',
+                          style: AppTypography.label.copyWith(
+                            color: isPremium ? AppColors.accent : AppColors.secondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
               // NSFW Toggle
               Container(
@@ -393,12 +570,9 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                     Switch(
                       value: config.nsfwEnabled,
                       activeTrackColor: AppColors.accent,
-                      // TODO: Restore premium gating after testing
-                      // onChanged: isPremium
-                      //     ? (v) => context.read<GameConfigCubit>().setNsfwEnabled(v)
-                      //     : (_) => context.push('/premium'),
-                      onChanged: (v) =>
-                          context.read<GameConfigCubit>().setNsfwEnabled(v),
+                      onChanged: isPremium
+                          ? (v) => context.read<GameConfigCubit>().setNsfwEnabled(v)
+                          : (_) => context.push('/premium'),
                     ),
                   ],
                 ),
@@ -420,6 +594,44 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showAddCustomQuestionDialog(BuildContext context) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surfaceElevated,
+        title: Text('Add Custom Question', style: AppTypography.h3),
+        content: TextField(
+          controller: controller,
+          style: AppTypography.body,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(
+            hintText: 'Never have I ever...',
+            hintStyle: AppTypography.body.copyWith(color: AppColors.textTertiary),
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider)),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.accent)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () {
+              final text = controller.text.trim();
+              if (text.isNotEmpty) {
+                context.read<GameConfigCubit>().addCustomQuestion(text);
+              }
+              Navigator.pop(ctx);
+            },
+            child: Text('Add', style: TextStyle(color: AppColors.accent)),
+          ),
+        ],
       ),
     );
   }

@@ -29,6 +29,9 @@ class OfflineGameState extends Equatable {
     this.currentCategory,
     this.currentSubcategory,
     this.errorMessage,
+    this.isDrinkingGame = false,
+    this.currentDrinkingRule,
+    this.customQuestions = const [],
   });
 
   final OfflineGamePhase phase;
@@ -40,6 +43,15 @@ class OfflineGameState extends Equatable {
   final String? currentCategory;
   final String? currentSubcategory;
   final String? errorMessage;
+  
+  /// Whether the Premium 'Drinking Game Mode' is active for this session
+  final bool isDrinkingGame;
+  
+  /// The generated drinking rule for the current card (e.g., 'Take 2 sips')
+  final String? currentDrinkingRule;
+  
+  /// A list of custom questions injected by the players
+  final List<String> customQuestions;
 
   int get roundNumber => session?.currentRound ?? 0;
   int get maxRounds => session?.maxRounds ?? 0;
@@ -58,6 +70,9 @@ class OfflineGameState extends Equatable {
     String? currentCategory,
     String? currentSubcategory,
     String? errorMessage,
+    bool? isDrinkingGame,
+    String? currentDrinkingRule,
+    List<String>? customQuestions,
   }) {
     return OfflineGameState(
       phase: phase ?? this.phase,
@@ -71,6 +86,9 @@ class OfflineGameState extends Equatable {
       currentCategory: currentCategory ?? this.currentCategory,
       currentSubcategory: currentSubcategory ?? this.currentSubcategory,
       errorMessage: errorMessage,
+      isDrinkingGame: isDrinkingGame ?? this.isDrinkingGame,
+      currentDrinkingRule: currentDrinkingRule ?? this.currentDrinkingRule,
+      customQuestions: customQuestions ?? this.customQuestions,
     );
   }
 
@@ -85,5 +103,8 @@ class OfflineGameState extends Equatable {
     currentCategory,
     currentSubcategory,
     errorMessage,
+    isDrinkingGame,
+    currentDrinkingRule,
+    customQuestions,
   ];
 }
