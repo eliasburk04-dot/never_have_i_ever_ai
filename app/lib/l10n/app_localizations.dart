@@ -625,7 +625,7 @@ abstract class AppLocalizations {
   /// No description provided for @appSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'The AI-powered party game'**
+  /// **'The party game'**
   String get appSubtitle;
 
   /// No description provided for @playOffline.
@@ -673,7 +673,7 @@ abstract class AppLocalizations {
   /// No description provided for @version.
   ///
   /// In en, this message translates to:
-  /// **'AI-Powered Party Game\nVersion 1.0.0'**
+  /// **'Version 1.0.0'**
   String get version;
 }
 

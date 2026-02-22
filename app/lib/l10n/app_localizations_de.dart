@@ -287,7 +287,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get appSubtitle => 'Das KI-gestützte Partyspiel';
+  String get appSubtitle => 'Das Partyspiel';
 
   @override
   String get playOffline => 'Offline spielen';
@@ -312,5 +312,5 @@ class AppLocalizationsDe extends AppLocalizations {
   String get legal => 'RECHTLICHES';
 
   @override
-  String get version => 'KI-gestütztes Partyspiel\nVersion 1.0.0';
+  String get version => 'Version 1.0.0';
 }

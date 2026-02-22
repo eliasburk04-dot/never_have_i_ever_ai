@@ -83,7 +83,7 @@ class PremiumScreen extends StatelessWidget {
                   .copyWith(color: AppColors.secondary)),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Enjoy unlimited rounds,\nlonger games & ad-free play.',
+            'Enjoy unlimited rounds\nand longer games.',
             style:
                 AppTypography.body.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
@@ -163,9 +163,6 @@ class PremiumScreen extends StatelessWidget {
                             const _FeatureRow(
                                 icon: Icons.timer,
                                 text: 'Up to 100 rounds per game'),
-                            const _FeatureRow(
-                                icon: Icons.block,
-                                text: 'Ad-free experience'),
                           ],
                         ),
                       ).animate().fadeIn(delay: 300.ms, duration: 400.ms),

@@ -1,4 +1,4 @@
-package com.nhie.nhie_app
+package com.eliasburk.Guilty
 
 import io.flutter.embedding.android.FlutterActivity
 

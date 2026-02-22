@@ -64,21 +64,33 @@ class HomeScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Pressable(
-                                    onPressed: () => context.push('/premium'),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.secondary
-                                            .withValues(alpha: 0.15),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.star_rounded,
-                                        color: AppColors.secondary,
-                                        size: 22,
-                                      ),
-                                    ),
+                                  BlocBuilder<PremiumCubit, PremiumState>(
+                                    builder: (context, state) {
+                                      final isPremium = state.isPremium;
+                                      return Pressable(
+                                        onPressed: () => context.push('/premium'),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: isPremium 
+                                                ? AppColors.secondary.withValues(alpha: 0.15)
+                                                : Colors.transparent,
+                                            shape: BoxShape.circle,
+                                            boxShadow: isPremium ? [
+                                              BoxShadow(
+                                                color: AppColors.secondary.withValues(alpha: 0.2),
+                                                blurRadius: 12,
+                                              )
+                                            ] : null,
+                                          ),
+                                          child: Icon(
+                                            Icons.star_rounded,
+                                            color: isPremium ? AppColors.secondary : AppColors.textPrimary,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   ),
                                   const SizedBox(width: AppSpacing.xs),
                                   Pressable(

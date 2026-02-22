@@ -40,17 +40,17 @@ class AppButton extends StatelessWidget {
         height: 56,
         padding: EdgeInsets.zero,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        color: isPrimary ? AppColors.primary.withValues(alpha: 0.3) : AppColors.surface.withValues(alpha: 0.4),
+        color: isPrimary ? AppColors.accent : AppColors.surface.withValues(alpha: 0.6),
         borderWidth: isPrimary ? 0 : 1.5,
         intensity: isLoading || onPressed == null ? 0.4 : 1.0,
         child: Center(
           child: isLoading
-              ? const SizedBox(
+              ? SizedBox(
                   height: 22,
                   width: 22,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    color: Colors.white,
+                    color: isPrimary ? AppColors.background : Colors.white,
                   ),
                 )
               : Row(
@@ -60,14 +60,15 @@ class AppButton extends StatelessWidget {
                       Icon(
                         icon,
                         size: 20,
-                        color: Colors.white,
+                        color: isPrimary ? AppColors.background : Colors.white,
                       ),
                       const SizedBox(width: AppSpacing.sm),
                     ],
                     Text(
                       label,
                       style: AppTypography.button.copyWith(
-                        color: Colors.white,
+                        color: isPrimary ? AppColors.background : Colors.white,
+                        fontWeight: isPrimary ? FontWeight.w700 : FontWeight.w600,
                       ),
                     ),
                   ],

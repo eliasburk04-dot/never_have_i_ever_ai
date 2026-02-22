@@ -287,7 +287,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get appSubtitle => 'El juego de fiesta con IA';
+  String get appSubtitle => 'El juego de fiesta';
 
   @override
   String get playOffline => 'Jugar sin conexión';
@@ -311,5 +311,5 @@ class AppLocalizationsEs extends AppLocalizations {
   String get legal => 'LEGAL';
 
   @override
-  String get version => 'Juego de fiesta con IA\nVersion 1.0.0';
+  String get version => 'Version 1.0.0';
 }

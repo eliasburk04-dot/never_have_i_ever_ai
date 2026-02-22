@@ -15,7 +15,7 @@ class NativeIapService {
   late StreamSubscription<List<PurchaseDetails>> _subscription;
 
   // The actual Product ID configured in App Store Connect / Google Play Console
-  static const String premiumProductId = 'nhie.premium.lifetime';
+  static const String premiumProductId = 'exposed_premium_lifetime';
 
   final _isAvailableController = StreamController<bool>.broadcast();
   final _purchasesController = StreamController<List<PurchaseDetails>>.broadcast();

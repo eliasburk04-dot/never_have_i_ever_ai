@@ -287,7 +287,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get appSubtitle => 'The AI-powered party game';
+  String get appSubtitle => 'The party game';
 
   @override
   String get playOffline => 'Play Offline';
@@ -311,5 +311,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legal => 'LEGAL';
 
   @override
-  String get version => 'AI-Powered Party Game\nVersion 1.0.0';
+  String get version => 'Version 1.0.0';
 }

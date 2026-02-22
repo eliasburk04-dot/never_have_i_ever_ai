@@ -95,14 +95,6 @@ class _SplashScreenState extends State<SplashScreen> {
                     .animate()
                     .fadeIn(duration: 600.ms)
                     .slideY(begin: 0.15, end: 0, curve: Curves.easeOutCubic),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  'AI-powered party game',
-                  style: AppTypography.bodySmall.copyWith(
-                    color: AppColors.textTertiary,
-                    letterSpacing: 1.5,
-                  ),
-                ).animate().fadeIn(delay: 400.ms, duration: 500.ms),
                 const SizedBox(height: AppSpacing.xxl),
                 SizedBox(
                   width: 24,
