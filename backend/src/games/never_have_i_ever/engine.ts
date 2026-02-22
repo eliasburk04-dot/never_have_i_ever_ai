@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 import { z } from 'zod';
 import type pg from 'pg';
 
@@ -16,8 +16,6 @@ import {
   type ToneLevel,
 } from './escalation.js';
 
-const MAX_GROQ_TIMEOUT_MS = 5000;
-const MAX_AI_CALLS_FREE = 10;
 const EARLY_ROUND_LIMIT = 20;
 const EARLY_MIN_CATEGORIES = 5;
 const EARLY_MIN_ENERGIES = 3;
@@ -29,52 +27,6 @@ const SettingsSchema = z.object({
   displayName: z.string().min(1).max(40).optional(),
   avatarEmoji: z.string().min(1).max(16).optional(),
 });
-
-interface GroqResponse {
-  selected_question_id: string | null;
-  question_text: string;
-  was_modified: boolean;
-  was_generated: boolean;
-  category?: string;
-  subcategory?: string;
-  intensity?: number;
-  is_nsfw?: boolean;
-  shock_factor?: number;
-  vulnerability_level?: number;
-  energy?: 'light' | 'medium' | 'heavy';
-  text_en?: string;
-  text_de?: string;
-  text_es?: string;
-  reasoning?: string;
-}
-
-const SYSTEM_PROMPT = `You are a game question engine for "Never Have I Ever".
-Return ONLY valid JSON.
-
-RULES:
-1) Respect language, intensity range, and NSFW mode.
-2) Keep tone social and party-friendly.
-3) No minors, no explicit pornographic detail, no illegal instructions, no violence/hate.
-4) If rephrasing, keep original intent and metadata compatibility.
-5) If generating, provide valid metadata fields.
-
-RESPONSE FORMAT:
-{
-  "selected_question_id": "id-or-null",
-  "question_text": "Never have I ever ...",
-  "was_modified": true,
-  "was_generated": false,
-  "category": "social",
-  "subcategory": "habits",
-  "intensity": 4,
-  "is_nsfw": false,
-  "shock_factor": 0.4,
-  "vulnerability_level": 0.3,
-  "energy": "medium",
-  "text_en": "Never have I ever ...",
-  "text_de": "Ich hab noch nie ...",
-  "text_es": "Yo nunca nunca ..."
-}`;
 
 export interface LobbyRow {
   id: string;
@@ -287,81 +239,6 @@ function recentWindow(history: any[]): {
   };
 }
 
-async function canUseAi(client: pg.PoolClient, hostId: string): Promise<boolean> {
-  const prem = await client.query('SELECT is_premium FROM premium_status WHERE user_id = $1', [hostId]);
-  if (prem.rows[0]?.is_premium) return true;
-
-  const rate = await client.query('SELECT daily_ai_calls, last_reset_date FROM ai_rate_limits WHERE user_id = $1', [hostId]);
-  const row = rate.rows[0];
-  if (!row) return true;
-
-  const today = new Date().toISOString().slice(0, 10);
-  const last = typeof row.last_reset_date === 'string' ? row.last_reset_date : row.last_reset_date?.toISOString?.().slice(0, 10);
-  if (last && last !== today) return true;
-  return (row.daily_ai_calls ?? 0) < MAX_AI_CALLS_FREE;
-}
-
-async function incrementAiCalls(client: pg.PoolClient, userId: string): Promise<void> {
-  await client.query(
-    `INSERT INTO ai_rate_limits (user_id, daily_ai_calls, last_reset_date, lifetime_ai_calls)
-     VALUES ($1, 1, CURRENT_DATE, 1)
-     ON CONFLICT (user_id) DO UPDATE SET
-       daily_ai_calls = CASE WHEN ai_rate_limits.last_reset_date < CURRENT_DATE THEN 1 ELSE ai_rate_limits.daily_ai_calls + 1 END,
-       last_reset_date = CURRENT_DATE,
-       lifetime_ai_calls = ai_rate_limits.lifetime_ai_calls + 1`,
-    [userId],
-  );
-}
-
-async function callGroq(gameState: any, candidates: CandidateQuestion[], instruction: string): Promise<GroqResponse | null> {
-  if (!env.GROQ_API_KEY) return null;
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), MAX_GROQ_TIMEOUT_MS);
-
-  try {
-    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          {
-            role: 'user',
-            content: `GAME STATE:\n${JSON.stringify(gameState, null, 2)}\n\nCANDIDATES:\n${JSON.stringify(candidates, null, 2)}\n\nINSTRUCTION:\n${instruction}`,
-          },
-        ],
-        temperature: 0.7,
-        top_p: 0.9,
-        max_tokens: 450,
-        frequency_penalty: 0.2,
-        response_format: { type: 'json_object' },
-      }),
-    });
-
-    clearTimeout(timeout);
-
-    if (!resp.ok) return null;
-    const result: any = await resp.json();
-    const content = result?.choices?.[0]?.message?.content;
-    if (typeof content !== 'string') return null;
-
-    const parsed: GroqResponse = JSON.parse(content);
-    if (!parsed?.question_text || typeof parsed.question_text !== 'string') return null;
-    if (!passesSafetyFilter(parsed.question_text, gameState.nsfwEnabled)) return null;
-
-    return parsed;
-  } catch {
-    clearTimeout(timeout);
-    return null;
-  }
-}
-
 async function countEligiblePool(
   client: pg.PoolClient,
   opts: { gameKey: string; nsfwEnabled: boolean },
@@ -559,82 +436,7 @@ export const engine = {
     let selectedEnergy: 'light' | 'medium' | 'heavy' = 'medium';
     let selectedIntensity = intensityChosen;
 
-    const candidateInstruction =
-      candidates.length > 0
-        ? 'Select the best candidate from pool and keep metadata valid.'
-        : 'Generate a new question and return full metadata + translations.';
 
-    const aiAllowed = await canUseAi(client, lobby.host_id);
-    const gameState = {
-      language: lobby.language,
-      round: opts.nextRoundNumber,
-      maxRounds: lobby.max_rounds,
-      nsfwEnabled: lobby.nsfw_enabled,
-      tone: newTone,
-      intensityMin,
-      intensityMax,
-      yesTrend,
-      escalationMultiplier,
-      vulnerabilityBias,
-      playerCount: opts.playerCount,
-    };
-
-    if (aiAllowed && candidates.length > 0) {
-      const ai = await callGroq(gameState, candidates.slice(0, 12), candidateInstruction);
-      if (ai) {
-        await incrementAiCalls(client, lobby.host_id);
-        questionText = validatePrefix(lobby.language, ai.question_text);
-
-        if (ai.selected_question_id) {
-          const matched = candidates.find((c) => c.id === ai.selected_question_id);
-          if (matched) {
-            questionSourceId = matched.id;
-            selectedCategory = matched.category;
-            selectedSubcategory = matched.subcategory;
-            selectedEnergy = matched.energy;
-            selectedIntensity = matched.intensity;
-          }
-        }
-
-        if (!questionSourceId && ai.was_generated) {
-          selectedCategory = String(ai.category ?? 'social');
-          selectedSubcategory = String(ai.subcategory ?? 'generated');
-          selectedEnergy = isValidEnergy(ai.energy) ? ai.energy : toEnergyForIntensity(intensityChosen);
-          selectedIntensity = Number.isInteger(ai.intensity)
-            ? Math.max(intensityMin, Math.min(intensityMax, Number(ai.intensity)))
-            : intensityChosen;
-
-          const shouldPersist = process.env.NHIE_PERSIST_AI_GENERATED === 'true';
-          if (shouldPersist && ai.text_en && ai.text_de && ai.text_es) {
-            const generatedId = `ai_${randomUUID()}`;
-            await client.query(
-              `INSERT INTO questions (
-                id, game_key, text_en, text_de, text_es, category, subcategory,
-                intensity, is_nsfw, is_premium, shock_factor, vulnerability_level, energy, status
-              ) VALUES (
-                $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,'active'
-              )`,
-              [
-                generatedId,
-                lobby.game_key,
-                ai.text_en,
-                ai.text_de,
-                ai.text_es,
-                selectedCategory,
-                selectedSubcategory,
-                selectedIntensity,
-                Boolean(ai.is_nsfw ?? lobby.nsfw_enabled),
-                Boolean(ai.is_nsfw ?? lobby.nsfw_enabled),
-                Number.isFinite(ai.shock_factor) ? Number(ai.shock_factor) : 0.5,
-                Number.isFinite(ai.vulnerability_level) ? Number(ai.vulnerability_level) : 0.5,
-                selectedEnergy,
-              ],
-            );
-            questionSourceId = generatedId;
-          }
-        }
-      }
-    }
 
     if (!questionText) {
       fallbackUsed = true;

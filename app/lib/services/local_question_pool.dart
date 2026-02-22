@@ -443,41 +443,7 @@ class LocalQuestionPool {
     return pool.last;
   }
 
-  /// Return up to [limit] candidate questions as JSON maps for the Groq API.
-  List<Map<String, dynamic>> candidatesForGroq({
-    required String language,
-    required int intensityMin,
-    required int intensityMax,
-    required bool nsfwEnabled,
-    required List<String> usedIds,
-    int limit = 10,
-  }) {
-    List<LocalQuestion> candidates = [];
-    for (int i = intensityMin; i <= intensityMax; i++) {
-      candidates.addAll(_byIntensity[i] ?? []);
-    }
-    if (!nsfwEnabled) {
-      candidates = candidates.where((q) => !q.isNsfw).toList();
-    }
-    final unused = candidates.where((q) => !usedIds.contains(q.id)).toList();
-    unused.shuffle(_random);
-    return unused
-        .take(limit)
-        .map(
-          (q) => {
-            'id': q.id,
-            'text': q.textForLanguage(language),
-            'category': q.category,
-            'subcategory': q.subcategory,
-            'intensity': q.intensity,
-            'is_nsfw': q.isNsfw,
-            'shock_factor': q.shockFactor,
-            'vulnerability_level': q.vulnerabilityLevel,
-            'energy': q.energy,
-          },
-        )
-        .toList();
-  }
+
 }
 
 /// Result of a question selection.

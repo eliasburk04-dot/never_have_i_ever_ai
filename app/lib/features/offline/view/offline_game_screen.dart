@@ -212,7 +212,6 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
               text: s.currentQuestionText ?? '',
               tone: tone,
               isRecycled: s.currentQuestionRecycled,
-              isAiGenerated: s.isAiGenerated,
             ),
 
             const Spacer(),
@@ -304,13 +303,11 @@ class _OfflineQuestionCard extends StatelessWidget {
     required this.text,
     required this.tone,
     required this.isRecycled,
-    this.isAiGenerated = false,
   });
 
   final String text;
   final String tone;
   final bool isRecycled;
-  final bool isAiGenerated;
 
   Color get _glowColor {
     switch (tone) {
@@ -405,24 +402,6 @@ class _OfflineQuestionCard extends StatelessWidget {
               }),
             ),
           ],
-          if (isAiGenerated) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: AppColors.accent.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Builder(builder: (context) {
-                final l10n = AppLocalizations.of(context)!;
-                return Text(
-                  l10n.aiGenerated,
-                  style: AppTypography.bodySmall
-                      .copyWith(color: AppColors.accent, fontSize: 12),
-                );
-              }),
-            ),
           ],
         ],
       ),

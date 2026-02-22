@@ -60,7 +60,7 @@ class PremiumScreen extends StatelessWidget {
                   .copyWith(color: AppColors.secondary)),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Enjoy unlimited AI rounds,\nlonger games & ad-free play.',
+            'Enjoy unlimited rounds,\nlonger games & ad-free play.',
             style:
                 AppTypography.body.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
@@ -141,13 +141,10 @@ class PremiumScreen extends StatelessWidget {
                           children: [
                             _FeatureRow(
                                 icon: Icons.all_inclusive,
-                                text: 'Unlimited AI rounds'),
+                                text: 'Unlimited offline rounds'),
                             _FeatureRow(
                                 icon: Icons.timer,
                                 text: 'Up to 100 rounds per game'),
-                            _FeatureRow(
-                                icon: Icons.auto_awesome,
-                                text: 'Priority AI generation'),
                             _FeatureRow(
                                 icon: Icons.block,
                                 text: 'Ad-free experience'),
