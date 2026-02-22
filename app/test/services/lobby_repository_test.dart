@@ -2,13 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:nhie_app/domain/entities/lobby.dart';
-import 'package:nhie_app/domain/entities/player.dart';
-import 'package:nhie_app/domain/repositories/i_lobby_repository.dart';
 import 'package:nhie_app/services/backend_api_service.dart';
 import 'package:nhie_app/services/backend_session_service.dart';
 import 'package:nhie_app/data/repositories/lobby_repository.dart';
-
-import '../fixtures.dart';
 
 // ─── Mocks ──────────────────────────────────────────
 

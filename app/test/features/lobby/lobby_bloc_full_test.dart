@@ -502,4 +502,68 @@ void main() {
       ],
     );
   });
+
+  // ─── Entity + State unit tests (merged from lobby_bloc_test) ──
+
+  group('LobbyState copyWith', () {
+    test('copyWith preserves fields', () {
+      final state = const LobbyState().copyWith(
+        status: LobbyBlocStatus.loaded,
+        lobby: TestFixtures.testLobby,
+        players: TestFixtures.twoPlayers,
+      );
+      expect(state.status, LobbyBlocStatus.loaded);
+      expect(state.lobby?.code, 'ABC123');
+      expect(state.players.length, 2);
+    });
+
+    test('error state includes message', () {
+      final state = const LobbyState().copyWith(
+        status: LobbyBlocStatus.error,
+        errorMessage: 'Network error',
+      );
+      expect(state.status, LobbyBlocStatus.error);
+      expect(state.errorMessage, 'Network error');
+    });
+  });
+
+  group('Lobby entity', () {
+    test('fromMap parses correctly', () {
+      final map = {
+        'id': 'lobby-1',
+        'code': 'XYZ789',
+        'host_id': 'user-1',
+        'status': 'waiting',
+        'language': 'de',
+        'max_rounds': 30,
+        'current_round': 5,
+        'nsfw_enabled': true,
+        'boldness_score': 0.45,
+        'current_tone': 'deeper',
+        'round_timeout_seconds': 30,
+      };
+      final lobby = Lobby.fromMap(map);
+      expect(lobby.code, 'XYZ789');
+      expect(lobby.language, 'de');
+      expect(lobby.nsfwEnabled, true);
+      expect(lobby.currentTone, ToneLevel.deeper);
+      expect(lobby.boldnessScore, 0.45);
+    });
+
+    test('status enum values', () {
+      expect(LobbyStatus.waiting.name, 'waiting');
+      expect(LobbyStatus.playing.name, 'playing');
+      expect(LobbyStatus.finished.name, 'finished');
+      expect(LobbyStatus.cancelled.name, 'cancelled');
+    });
+  });
+
+  group('Player entity', () {
+    test('two players fixture', () {
+      final players = TestFixtures.twoPlayers;
+      expect(players.length, 2);
+      expect(players[0].isHost, true);
+      expect(players[1].isHost, false);
+    });
+  });
 }
