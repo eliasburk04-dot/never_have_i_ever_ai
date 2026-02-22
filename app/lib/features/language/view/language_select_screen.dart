@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/service_locator.dart';
 import '../../../core/theme/app_colors.dart';
@@ -9,6 +9,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/pressable.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../offline/cubit/game_config_cubit.dart';
 
 /// Language selector — dark glass tiles with flag + label.
 ///
@@ -19,8 +20,8 @@ class LanguageSelectScreen extends StatelessWidget {
 
   Future<void> _selectLanguage(
       BuildContext context, String langCode, String label) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language', langCode);
+    // Update GameConfigCubit — this drives the app locale
+    context.read<GameConfigCubit>().setLanguage(langCode);
 
     final authRepo = getIt<IAuthRepository>();
     await authRepo.updateProfile(preferredLanguage: langCode);

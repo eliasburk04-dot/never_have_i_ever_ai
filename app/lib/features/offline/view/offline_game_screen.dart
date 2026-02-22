@@ -9,6 +9,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../l10n/app_localizations.dart';
 import '../cubit/offline_game_cubit.dart';
 
 /// Offline pass-and-play — escalation-aware dark UI.
@@ -55,19 +56,20 @@ class OfflineGameScreen extends StatelessWidget {
   }
 
   void _showExitDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('End Game?',
+        title: Text(l10n.endGameTitle,
             style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
         content: Text(
-          'Your progress will be saved. You can resume later.',
+          l10n.endGameBody,
           style: AppTypography.body.copyWith(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Keep Playing',
+            child: Text(l10n.keepPlaying,
                 style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
@@ -77,7 +79,7 @@ class OfflineGameScreen extends StatelessWidget {
               context.go('/home');
             },
             child:
-                Text('End Game', style: TextStyle(color: AppColors.error)),
+                Text(l10n.endGame, style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -112,19 +114,20 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
   }
 
   void _showExitConfirm(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('End Game?',
+        title: Text(l10n.endGameTitle,
             style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
         content: Text(
-          'Your progress will be saved. You can resume later.',
+          l10n.endGameBody,
           style: AppTypography.body.copyWith(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Keep Playing',
+            child: Text(l10n.keepPlaying,
                 style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
@@ -134,7 +137,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
               GoRouter.of(context).go('/home');
             },
             child:
-                Text('End Game', style: TextStyle(color: AppColors.error)),
+                Text(l10n.endGame, style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -146,6 +149,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
     final s = widget.state;
     final playerCount = s.playerCount;
     final tone = s.currentTone;
+    final l10n = AppLocalizations.of(context)!;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 800),
@@ -170,7 +174,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
                         BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                   child: Text(
-                    'Round ${s.roundNumber} / ${s.maxRounds}',
+                    '${l10n.rounds} ${s.roundNumber} / ${s.maxRounds}',
                     style: AppTypography.label
                         .copyWith(color: AppColors.textSecondary),
                   ),
@@ -188,7 +192,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
                           BorderRadius.circular(AppSpacing.radiusFull),
                     ),
                     child: Text(
-                      'End Game',
+                      l10n.endGame,
                       style: AppTypography.label
                           .copyWith(color: AppColors.textTertiary),
                     ),
@@ -215,7 +219,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
 
             // "How many said I have?" picker
             Text(
-              'How many said "I have"?',
+              l10n.howManySaidIHave,
               style: AppTypography.body,
             ),
             const SizedBox(height: AppSpacing.md),
@@ -271,7 +275,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'out of $playerCount players',
+              l10n.outOfPlayers(playerCount),
               style: AppTypography.bodySmall
                   .copyWith(color: AppColors.textTertiary),
             ),
@@ -281,7 +285,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
             SizedBox(
               width: double.infinity,
               child: AppButton(
-                label: 'Next',
+                label: l10n.next,
                 onPressed: _submitAndAdvance,
                 icon: Icons.arrow_forward_rounded,
               ),
@@ -366,13 +370,16 @@ class _OfflineQuestionCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(
-            'NEVER HAVE I EVER',
-            style: AppTypography.overline.copyWith(
-              color: AppColors.accentLight.withValues(alpha: 0.6),
-              letterSpacing: 3,
-            ),
-          ),
+          Builder(builder: (context) {
+            final l10n = AppLocalizations.of(context)!;
+            return Text(
+              l10n.neverHaveIEver,
+              style: AppTypography.overline.copyWith(
+                color: AppColors.accentLight.withValues(alpha: 0.6),
+                letterSpacing: 3,
+              ),
+            );
+          }),
           const SizedBox(height: AppSpacing.md),
           Text(
             text,
@@ -388,11 +395,14 @@ class _OfflineQuestionCard extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Text(
-                '🔄 Recycled',
-                style: AppTypography.bodySmall
-                    .copyWith(color: AppColors.textTertiary, fontSize: 12),
-              ),
+              child: Builder(builder: (context) {
+                final l10n = AppLocalizations.of(context)!;
+                return Text(
+                  l10n.recycled,
+                  style: AppTypography.bodySmall
+                      .copyWith(color: AppColors.textTertiary, fontSize: 12),
+                );
+              }),
             ),
           ],
           if (isAiGenerated) ...[
@@ -404,11 +414,14 @@ class _OfflineQuestionCard extends StatelessWidget {
                 color: AppColors.accent.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Text(
-                '🤖 AI Generated',
-                style: AppTypography.bodySmall
-                    .copyWith(color: AppColors.accent, fontSize: 12),
-              ),
+              child: Builder(builder: (context) {
+                final l10n = AppLocalizations.of(context)!;
+                return Text(
+                  l10n.aiGenerated,
+                  style: AppTypography.bodySmall
+                      .copyWith(color: AppColors.accent, fontSize: 12),
+                );
+              }),
             ),
           ],
         ],

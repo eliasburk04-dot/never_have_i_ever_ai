@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../l10n/app_localizations.dart';
 import '../cubit/offline_game_cubit.dart';
 
 class OfflineResultsScreen extends StatelessWidget {
@@ -14,6 +15,7 @@ class OfflineResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -22,7 +24,7 @@ class OfflineResultsScreen extends StatelessWidget {
             final session = state.session;
             if (session == null) {
               return Center(
-                child: Text('No game data',
+                child: Text(l10n.noGameData,
                     style: AppTypography.body
                         .copyWith(color: AppColors.textSecondary)),
               );
@@ -35,7 +37,7 @@ class OfflineResultsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: AppSpacing.md),
-                  Text('Game Over', style: AppTypography.display)
+                  Text(l10n.gameOver, style: AppTypography.display)
                       .animate()
                       .fadeIn(duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
@@ -51,7 +53,7 @@ class OfflineResultsScreen extends StatelessWidget {
                           borderRadius:
                               BorderRadius.circular(AppSpacing.radiusFull),
                         ),
-                        child: Text('${rounds.length} rounds',
+                        child: Text(l10n.roundsCount(rounds.length),
                             style: AppTypography.label
                                 .copyWith(color: AppColors.accent)),
                       ),
@@ -60,7 +62,7 @@ class OfflineResultsScreen extends StatelessWidget {
                           style: AppTypography.body
                               .copyWith(color: AppColors.textTertiary)),
                       const SizedBox(width: AppSpacing.sm),
-                      Text('${session.playerCount} players',
+                      Text(l10n.playersCount(session.playerCount),
                           style: AppTypography.bodySmall
                               .copyWith(color: AppColors.textSecondary)),
                     ],
@@ -187,7 +189,7 @@ class OfflineResultsScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: AppButton(
-                      label: 'Play Again',
+                      label: l10n.playAgain,
                       onPressed: () => context.go('/offline/setup'),
                       icon: Icons.replay_rounded,
                     ),
@@ -196,7 +198,7 @@ class OfflineResultsScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: AppButton(
-                      label: 'Back to Home',
+                      label: l10n.backToHome,
                       isPrimary: false,
                       onPressed: () => context.go('/home'),
                       icon: Icons.home_rounded,

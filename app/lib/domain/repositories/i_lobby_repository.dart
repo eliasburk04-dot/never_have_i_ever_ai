@@ -18,6 +18,7 @@ abstract class ILobbyRepository {
   });
 
   Future<Lobby?> getLobby(String lobbyId);
+  String? codeForLobbyId(String lobbyId);
   Future<List<Player>> getPlayers(String lobbyId);
   Future<void> updatePlayerStatus(String lobbyId, String status);
   Future<void> leaveLobby(String lobbyId);

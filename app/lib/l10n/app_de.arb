@@ -88,5 +88,53 @@
     "cancel": "Abbrechen",
     "confirm": "Bestätigen",
     "error": "Fehler",
-    "ok": "OK"
+    "ok": "OK",
+    "offlineMode": "Offline Modus",
+    "players": "SPIELER",
+    "addPlayer": "Spieler hinzufügen",
+    "playerHint": "Spieler {index}",
+    "@playerHint": {
+        "placeholders": {
+            "index": {"type": "int"}
+        }
+    },
+    "allPlayersNeedName": "Alle Spieler brauchen einen Namen!",
+    "playerNamesMustBeUnique": "Spielernamen müssen einzigartig sein!",
+    "nsfwLabel": "NSFW",
+    "howManySaidIHave": "Wie viele haben \"Hab ich\" gesagt?",
+    "outOfPlayers": "von {count} Spielern",
+    "@outOfPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "next": "Weiter",
+    "endGame": "Spiel beenden",
+    "endGameTitle": "Spiel beenden?",
+    "endGameBody": "Dein Fortschritt wird gespeichert. Du kannst später weitermachen.",
+    "keepPlaying": "Weiterspielen",
+    "neverHaveIEver": "ICH HAB NOCH NIE",
+    "recycled": "🔄 Wiederholt",
+    "aiGenerated": "✨ KI",
+    "roundsCount": "{count} Runden",
+    "@roundsCount": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "playersCount": "{count} Spieler",
+    "@playersCount": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "appSubtitle": "Das KI-gestützte Partyspiel",
+    "playOffline": "Offline spielen",
+    "resumeOfflineGame": "Offline Spiel fortsetzen",
+    "noGameData": "Keine Spieldaten",
+    "chooseYourLanguage": "Wähle deine\nSprache",
+    "changeLanguageLater": "Du kannst dies später in den Einstellungen ändern",
+    "account": "KONTO",
+    "legal": "RECHTLICHES",
+    "version": "KI-gestütztes Partyspiel\nVersion 1.0.0"
 }

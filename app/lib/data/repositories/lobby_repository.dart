@@ -18,6 +18,9 @@ class LobbyRepository implements ILobbyRepository {
 
   String? _codeForLobbyId(String lobbyId) => _lobbyIdToCode[lobbyId];
 
+  @override
+  String? codeForLobbyId(String lobbyId) => _codeForLobbyId(lobbyId);
+
   void _rememberLobby(Lobby lobby) {
     _lobbyIdToCode[lobby.id] = lobby.code;
   }
@@ -111,17 +114,26 @@ class LobbyRepository implements ILobbyRepository {
 
   @override
   Future<void> updatePlayerStatus(String lobbyId, String status) async {
-    // No explicit endpoint yet; the server uses websocket presence.
+    // Server manages player status via WebSocket presence.
   }
 
   @override
   Future<void> leaveLobby(String lobbyId) async {
-    // No explicit endpoint yet; the server uses websocket presence.
+    final code = _codeForLobbyId(lobbyId);
+    if (code == null) return;
+    try {
+      await _api.postJson('/lobby/$code/leave');
+    } catch (e) {
+      _log.e('leaveLobby failed', error: e);
+    }
+    _lobbyIdToCode.remove(lobbyId);
   }
 
   @override
   Future<void> startGame(String lobbyId) async {
-    // Backend auto-starts when the second player joins.
+    final code = _codeForLobbyId(lobbyId);
+    if (code == null) throw Exception('No code for lobby $lobbyId');
+    await _session.ensureSession();
+    await _api.postJson('/lobby/$code/start');
   }
 }
-

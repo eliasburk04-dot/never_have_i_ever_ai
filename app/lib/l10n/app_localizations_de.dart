@@ -219,4 +219,98 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get offlineMode => 'Offline Modus';
+
+  @override
+  String get players => 'SPIELER';
+
+  @override
+  String get addPlayer => 'Spieler hinzufügen';
+
+  @override
+  String playerHint(int index) {
+    return 'Spieler $index';
+  }
+
+  @override
+  String get allPlayersNeedName => 'Alle Spieler brauchen einen Namen!';
+
+  @override
+  String get playerNamesMustBeUnique => 'Spielernamen müssen einzigartig sein!';
+
+  @override
+  String get nsfwLabel => 'NSFW';
+
+  @override
+  String get howManySaidIHave => 'Wie viele haben \"Hab ich\" gesagt?';
+
+  @override
+  String outOfPlayers(int count) {
+    return 'von $count Spielern';
+  }
+
+  @override
+  String get next => 'Weiter';
+
+  @override
+  String get endGame => 'Spiel beenden';
+
+  @override
+  String get endGameTitle => 'Spiel beenden?';
+
+  @override
+  String get endGameBody =>
+      'Dein Fortschritt wird gespeichert. Du kannst später weitermachen.';
+
+  @override
+  String get keepPlaying => 'Weiterspielen';
+
+  @override
+  String get neverHaveIEver => 'ICH HAB NOCH NIE';
+
+  @override
+  String get recycled => '🔄 Wiederholt';
+
+  @override
+  String get aiGenerated => '✨ KI';
+
+  @override
+  String roundsCount(int count) {
+    return '$count Runden';
+  }
+
+  @override
+  String playersCount(int count) {
+    return '$count Spieler';
+  }
+
+  @override
+  String get appSubtitle => 'Das KI-gestützte Partyspiel';
+
+  @override
+  String get playOffline => 'Offline spielen';
+
+  @override
+  String get resumeOfflineGame => 'Offline Spiel fortsetzen';
+
+  @override
+  String get noGameData => 'Keine Spieldaten';
+
+  @override
+  String get chooseYourLanguage => 'Wähle deine\nSprache';
+
+  @override
+  String get changeLanguageLater =>
+      'Du kannst dies später in den Einstellungen ändern';
+
+  @override
+  String get account => 'KONTO';
+
+  @override
+  String get legal => 'RECHTLICHES';
+
+  @override
+  String get version => 'KI-gestütztes Partyspiel\nVersion 1.0.0';
 }

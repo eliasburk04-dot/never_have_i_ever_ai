@@ -112,3 +112,84 @@ Flutter App ←──Socket.IO WebSocket──→ Self-hosted Backend (Raspberry
 All 50 seed questions are pre-translated. AI generates in the lobby's language.
 
 ---
+
+## Question Engine (2026 Update)
+
+### Escalation logic
+
+- Boldness is still tracked with EMA (`alpha = 0.3`) using prior `HAVE` ratio.
+- New YES/NO trend signal (`last 4 rounds`) adjusts effective intensity pressure:
+  - YES-heavy: higher chance of stronger intensity + higher shock weighting.
+  - NO-heavy: stabilizes/de-escalates to avoid abrupt pressure.
+- Intensity jumps are smoothed relative to previous round (bounded step changes).
+- Early rounds (`1-20`) are clamped to intensity `1-4`.
+
+### Diversity logic
+
+- First 20 rounds enforce early-session variety:
+  - target at least 5 distinct categories
+  - target at least 3 distinct energies
+- Hard cap on consecutive repetition:
+  - no same subcategory back-to-back.
+- Diversity bonuses prefer not-recent categories/energies.
+
+### Selection weight formula
+
+Current weighted pick formula (offline + backend parity):
+
+```
+weight =
+  base_weight
+  + (shock_factor * escalation_multiplier)
+  + (vulnerability_level * vulnerability_bias)
+  + diversity_bonus
+  - repetition_penalty
+```
+
+Recycling controls:
+
+- only after 70% pool exhaustion
+- never within first 10 rounds
+- when recycling, low `shock_factor` candidates are preferred.
+
+### Randomization
+
+- Session-specific seed originates from secure randomness.
+- Debug mode can set deterministic seed for reproducible sequences.
+
+### Data expansion + sync
+
+- Source seed file (stable baseline): `app/assets/questions.seed.json`
+- Generated expanded pool: `app/assets/questions.json` (1600 entries)
+- DB schema migration: `backend/sql/2026_02_21_questions_expansion.sql`
+- DB seed output: `backend/sql/questions_seed.sql`
+
+### Add / regenerate questions
+
+From `scripts/`:
+
+```bash
+npm run generate:questions
+npm run validate:content
+npm run validate:pool
+npm run seed:questions:sql
+```
+
+### Validation + tests
+
+From `scripts/`:
+
+```bash
+npm run validate
+npm test
+```
+
+From `app/`:
+
+```bash
+flutter test test/engine/question_selector_test.dart \
+  test/engine/escalation_engine_test.dart \
+  test/engine/question_pool_simulation_test.dart
+```
+
+---

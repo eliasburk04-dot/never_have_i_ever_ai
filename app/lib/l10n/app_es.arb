@@ -88,5 +88,53 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "error": "Error",
-    "ok": "OK"
+    "ok": "OK",
+    "offlineMode": "Modo sin conexión",
+    "players": "JUGADORES",
+    "addPlayer": "Agregar jugador",
+    "playerHint": "Jugador {index}",
+    "@playerHint": {
+        "placeholders": {
+            "index": {"type": "int"}
+        }
+    },
+    "allPlayersNeedName": "¡Todos los jugadores necesitan un nombre!",
+    "playerNamesMustBeUnique": "¡Los nombres deben ser únicos!",
+    "nsfwLabel": "NSFW",
+    "howManySaidIHave": "¿Cuántos dijeron \"Yo sí\"?",
+    "outOfPlayers": "de {count} jugadores",
+    "@outOfPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "next": "Siguiente",
+    "endGame": "Terminar juego",
+    "endGameTitle": "¿Terminar juego?",
+    "endGameBody": "Tu progreso se guardará. Puedes continuar después.",
+    "keepPlaying": "Seguir jugando",
+    "neverHaveIEver": "YO NUNCA NUNCA",
+    "recycled": "🔄 Repetida",
+    "aiGenerated": "✨ IA",
+    "roundsCount": "{count} rondas",
+    "@roundsCount": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "playersCount": "{count} jugadores",
+    "@playersCount": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "appSubtitle": "El juego de fiesta con IA",
+    "playOffline": "Jugar sin conexión",
+    "resumeOfflineGame": "Continuar juego sin conexión",
+    "noGameData": "Sin datos del juego",
+    "chooseYourLanguage": "Elige tu\nidioma",
+    "changeLanguageLater": "Puedes cambiarlo más tarde en ajustes",
+    "account": "CUENTA",
+    "legal": "LEGAL",
+    "version": "Juego de fiesta con IA\nVersion 1.0.0"
 }

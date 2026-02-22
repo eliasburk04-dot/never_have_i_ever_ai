@@ -88,5 +88,53 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "error": "Error",
-    "ok": "OK"
+    "ok": "OK",
+    "offlineMode": "Offline Mode",
+    "players": "PLAYERS",
+    "addPlayer": "Add Player",
+    "playerHint": "Player {index}",
+    "@playerHint": {
+        "placeholders": {
+            "index": {"type": "int"}
+        }
+    },
+    "allPlayersNeedName": "All players need a name!",
+    "playerNamesMustBeUnique": "Player names must be unique!",
+    "nsfwLabel": "NSFW",
+    "howManySaidIHave": "How many said \"I have\"?",
+    "outOfPlayers": "out of {count} players",
+    "@outOfPlayers": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "next": "Next",
+    "endGame": "End Game",
+    "endGameTitle": "End Game?",
+    "endGameBody": "Your progress will be saved. You can resume later.",
+    "keepPlaying": "Keep Playing",
+    "neverHaveIEver": "NEVER HAVE I EVER",
+    "recycled": "🔄 Recycled",
+    "aiGenerated": "✨ AI",
+    "roundsCount": "{count} rounds",
+    "@roundsCount": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "playersCount": "{count} players",
+    "@playersCount": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "appSubtitle": "The AI-powered party game",
+    "playOffline": "Play Offline",
+    "resumeOfflineGame": "Resume Offline Game",
+    "noGameData": "No game data",
+    "chooseYourLanguage": "Choose your\nlanguage",
+    "changeLanguageLater": "You can change this later in settings",
+    "account": "ACCOUNT",
+    "legal": "LEGAL",
+    "version": "AI-Powered Party Game\nVersion 1.0.0"
 }

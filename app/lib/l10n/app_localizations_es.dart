@@ -219,4 +219,97 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get offlineMode => 'Modo sin conexión';
+
+  @override
+  String get players => 'JUGADORES';
+
+  @override
+  String get addPlayer => 'Agregar jugador';
+
+  @override
+  String playerHint(int index) {
+    return 'Jugador $index';
+  }
+
+  @override
+  String get allPlayersNeedName => '¡Todos los jugadores necesitan un nombre!';
+
+  @override
+  String get playerNamesMustBeUnique => '¡Los nombres deben ser únicos!';
+
+  @override
+  String get nsfwLabel => 'NSFW';
+
+  @override
+  String get howManySaidIHave => '¿Cuántos dijeron \"Yo sí\"?';
+
+  @override
+  String outOfPlayers(int count) {
+    return 'de $count jugadores';
+  }
+
+  @override
+  String get next => 'Siguiente';
+
+  @override
+  String get endGame => 'Terminar juego';
+
+  @override
+  String get endGameTitle => '¿Terminar juego?';
+
+  @override
+  String get endGameBody =>
+      'Tu progreso se guardará. Puedes continuar después.';
+
+  @override
+  String get keepPlaying => 'Seguir jugando';
+
+  @override
+  String get neverHaveIEver => 'YO NUNCA NUNCA';
+
+  @override
+  String get recycled => '🔄 Repetida';
+
+  @override
+  String get aiGenerated => '✨ IA';
+
+  @override
+  String roundsCount(int count) {
+    return '$count rondas';
+  }
+
+  @override
+  String playersCount(int count) {
+    return '$count jugadores';
+  }
+
+  @override
+  String get appSubtitle => 'El juego de fiesta con IA';
+
+  @override
+  String get playOffline => 'Jugar sin conexión';
+
+  @override
+  String get resumeOfflineGame => 'Continuar juego sin conexión';
+
+  @override
+  String get noGameData => 'Sin datos del juego';
+
+  @override
+  String get chooseYourLanguage => 'Elige tu\nidioma';
+
+  @override
+  String get changeLanguageLater => 'Puedes cambiarlo más tarde en ajustes';
+
+  @override
+  String get account => 'CUENTA';
+
+  @override
+  String get legal => 'LEGAL';
+
+  @override
+  String get version => 'Juego de fiesta con IA\nVersion 1.0.0';
 }

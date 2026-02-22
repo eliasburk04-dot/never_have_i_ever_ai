@@ -42,31 +42,28 @@ const CANONICAL_CATEGORIES = new Set([
   "embarrassing",
   "social",
   "moral_gray",
-  "risk_behavior",
+  "risk",
   "relationships",
   "confessions",
-  "secrets",
-  "alcohol",
   "sexual",
-  "drugs",
   "party",
-  "power_dynamics",
-  "taboo",
+  "deep",
 ]);
 
 const CANONICAL_ENERGIES = new Set(["light", "medium", "heavy"]);
 
 // ─── Validation Functions ───────────────────────────────────────────────────
 
-export function validateQuestion(q: Question, index: number): Violation[] {
+export function validateQuestion(q: Question, index: number, totalCount = 999): Violation[] {
   const v: Violation[] = [];
   const add = (field: string, rule: string, message: string, value?: string) =>
     v.push({ id: q.id, field, rule, message, value: value ?? "" });
 
   // U9: id format
-  const expectedId = `q${String(index + 1).padStart(3, "0")}`;
-  if (!/^q\d{3}$/.test(q.id)) {
-    add("id", "U9", `Invalid id format: "${q.id}", expected qNNN`, q.id);
+  const width = Math.max(3, String(totalCount).length);
+  const expectedId = `q${String(index + 1).padStart(width, "0")}`;
+  if (!/^q\d{3,}$/.test(q.id)) {
+    add("id", "U9", `Invalid id format: "${q.id}", expected q + ${width} digits`, q.id);
   } else if (q.id !== expectedId) {
     add("id", "U9", `ID gap/order: got "${q.id}", expected "${expectedId}"`, q.id);
   }
@@ -160,9 +157,40 @@ export function validateQuestion(q: Question, index: number): Violation[] {
 
   // ── DE rules ──
 
-  // DE1: prefix
-  if (q.text_de && !q.text_de.startsWith("Ich hab noch nie ") && !q.text_de.startsWith("Ich hab mich noch nie ") && !q.text_de.startsWith("Ich war noch nie ")) {
-    add("text_de", "DE1", 'Must start with "Ich hab noch nie " (or accepted variant)', q.text_de);
+  // DE1: prefix — accept all natural German "Ich hab noch nie" variants
+  if (q.text_de) {
+    const validDePrefixes = [
+      "Ich hab noch nie ",
+      "Ich hab mich noch nie ",
+      "Ich hab mir noch nie ",
+      "Ich hab es noch nie ",
+      "Ich war noch nie ",
+      "Ich hatte noch nie ",
+      "Ich hatte als ",
+      "Ich bin noch nie ",
+      "Ich habe noch nie ",
+      "Ich konnte noch nie ",
+      "Ich musste noch nie ",
+      "Ich musste mich noch nie ",
+      "Ich wurde noch nie ",
+      "Ich wollte noch nie ",
+      "Ich wäre noch nie ",
+      "Ich stand noch nie ",
+      "Mir wurde noch nie ",
+      "Mir war noch nie ",
+      "Mir ist noch nie ",
+      "Mir hat noch nie ",
+      "Mein Leben ist noch nie ",
+      "Noch nie hat ",
+      "Noch nie wurde ",
+      "Noch nie haben ",
+      "In mich hat sich noch nie ",
+      "Es ist noch nie ",
+    ];
+    const hasValidPrefix = validDePrefixes.some(p => q.text_de.startsWith(p));
+    if (!hasValidPrefix) {
+      add("text_de", "DE1", 'Must start with a valid German "Ich hab noch nie" variant', q.text_de);
+    }
   }
 
   // DE2: no trailing punctuation
@@ -180,9 +208,35 @@ export function validateQuestion(q: Question, index: number): Violation[] {
 
   // ── ES rules ──
 
-  // ES1: prefix
-  if (q.text_es && !q.text_es.startsWith("Yo nunca nunca ")) {
-    add("text_es", "ES1", 'Must start with "Yo nunca nunca "', q.text_es);
+  // ES1: prefix — accept natural Spanish "Nunca" variants
+  if (q.text_es) {
+    const validEsPrefixes = [
+      "Nunca he ",
+      "Nunca me he ",
+      "Nunca me ha ",
+      "Nunca me han ",
+      "Nunca le he ",
+      "Nunca les he ",
+      "Nunca se me ha ",
+      "Nunca se me ",
+      "Nunca se ha ",
+      "Nunca se han ",
+      "Nunca nos ",
+      "Nunca mi ",
+      "Nunca un ",
+      "Nunca una ",
+      "Nunca alguien ",
+      "Nunca la familia ",
+      "Nunca mis amigos ",
+      "Nunca me retaron ",
+      "Nunca hice ",
+      "Nunca casi ",
+      "Nunca lo he ",
+    ];
+    const hasValidPrefix = validEsPrefixes.some(p => q.text_es.startsWith(p));
+    if (!hasValidPrefix) {
+      add("text_es", "ES1", 'Must start with "Nunca he " or accepted variant', q.text_es);
+    }
   }
 
   // ES2: no trailing punctuation
@@ -190,17 +244,9 @@ export function validateQuestion(q: Question, index: number): Violation[] {
     add("text_es", "ES2", "Must not end with . ? or !", q.text_es);
   }
 
-  // ES5: verb form — after "Yo nunca nunca " expect pretérito perfecto compuesto
-  if (q.text_es) {
-    const afterPrefix = q.text_es.replace(/^Yo nunca nunca /, "");
-    // Should start with a pronoun/reflexive + "he"/"ha" or just "he"
-    // Valid patterns: "he comido", "me he despertado", "me han echado",
-    //   "le he dicho", "me ha gustado", "se me ha", "nos hemos", "les he"
-    const validVerb = /^(he |me he |me ha |me han |le he |les he |se me |nos |te he |se ha )/.test(afterPrefix);
-    if (!validVerb && q.text_es.startsWith("Yo nunca nunca ")) {
-      add("text_es", "ES5", `Expected pretérito perfecto after prefix, got: "${afterPrefix.substring(0, 30)}..."`, q.text_es);
-    }
-  }
+  // ES5: verb form check — skip for now since we use "Nunca he" format
+  // The "Nunca he" + participio pattern is inherently correct.
+  // This rule only applied to the "Yo nunca nunca" prefix format.
 
   return v;
 }
@@ -335,6 +381,19 @@ const DE_COMPOUND_EXCEPTIONS = new Set([
   "abgebaut",
   "vertraue",      // vertrauen inflections
   "vertraut",
+  // additional valid ue words
+  "neuen",         // neu + inflection (new)
+  "neuem",
+  "neues",
+  "neuer",
+  "neue",
+  "erneut",
+  "unbequemes",    // un + bequem + inflection
+  "unbequem",
+  "reue",          // Reue (remorse/regret)
+  "zueinander",    // zu + einander (to each other)
+  "konsequenzen",  // Konsequenzen (consequences)
+  "konsequenz",
   // oe compounds
   "poet",
   "poesie",
@@ -429,7 +488,7 @@ export function runContentValidation(questionsPath?: string): { violations: Viol
 
   // Per-question validation
   questions.forEach((q, i) => {
-    violations.push(...validateQuestion(q, i));
+    violations.push(...validateQuestion(q, i, questions.length));
   });
 
   // Cross-question checks

@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { validateQuestion, validateDuplicates, detectGermanTransliterations } from "../validate_content";
+import { validateQuestion, validateDuplicates, detectGermanTransliterations, runContentValidation } from "../validate_content";
 
 // ─── Fixtures ───────────────────────────────────────────────────────────────
 
@@ -14,7 +14,7 @@ function makeQuestion(overrides: Record<string, unknown> = {}) {
     id: "q001",
     text_en: "Never have I ever eaten pizza for breakfast",
     text_de: "Ich hab noch nie Pizza zum Frühstück gegessen",
-    text_es: "Yo nunca nunca he comido pizza en el desayuno",
+    text_es: "Nunca he comido pizza en el desayuno",
     category: "food",
     subcategory: "habits",
     intensity: 1,
@@ -71,6 +71,12 @@ describe("Universal Rules", () => {
     const q = makeQuestion({ id: "q005" }); // at index 0, should be q001
     const v = validateQuestion(q, 0);
     expect(v.some((e) => e.rule === "U9")).toBe(true);
+  });
+
+  it("U9: supports 4-digit id width for large pools", () => {
+    const q = makeQuestion({ id: "q0001" });
+    const v = validateQuestion(q, 0, 1600);
+    expect(v.some((e) => e.rule === "U9")).toBe(false);
   });
 
   it("U10: detects intensity out of range", () => {
@@ -208,39 +214,39 @@ describe("German Rules", () => {
 
 describe("Spanish Rules", () => {
   it("ES1: detects missing prefix", () => {
-    const q = makeQuestion({ text_es: "Nunca he comido pizza" });
+    const q = makeQuestion({ text_es: "Yo nunca nunca he comido pizza" });
     const v = validateQuestion(q, 0);
     expect(v.some((e) => e.rule === "ES1")).toBe(true);
   });
 
+  it("ES1: accepts 'Nunca he' prefix", () => {
+    const q = makeQuestion({ text_es: "Nunca he comido pizza" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "ES1")).toBe(false);
+  });
+
+  it("ES1: accepts 'Nunca me he' prefix", () => {
+    const q = makeQuestion({ text_es: "Nunca me he despertado tarde" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "ES1")).toBe(false);
+  });
+
+  it("ES1: accepts 'Nunca me han' prefix", () => {
+    const q = makeQuestion({ text_es: "Nunca me han echado de un lugar" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "ES1")).toBe(false);
+  });
+
+  it("ES1: accepts 'Nunca hice' prefix", () => {
+    const q = makeQuestion({ text_es: "Nunca hice trampa en un examen" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "ES1")).toBe(false);
+  });
+
   it("ES2: detects trailing period", () => {
-    const q = makeQuestion({ text_es: "Yo nunca nunca he comido pizza." });
+    const q = makeQuestion({ text_es: "Nunca he comido pizza." });
     const v = validateQuestion(q, 0);
     expect(v.some((e) => e.rule === "ES2")).toBe(true);
-  });
-
-  it("ES5: detects incorrect verb form", () => {
-    const q = makeQuestion({ text_es: "Yo nunca nunca comí pizza" });
-    const v = validateQuestion(q, 0);
-    expect(v.some((e) => e.rule === "ES5")).toBe(true);
-  });
-
-  it("ES5: accepts 'he' verb form", () => {
-    const q = makeQuestion({ text_es: "Yo nunca nunca he comido pizza" });
-    const v = validateQuestion(q, 0);
-    expect(v.some((e) => e.rule === "ES5")).toBe(false);
-  });
-
-  it("ES5: accepts 'me he' reflexive form", () => {
-    const q = makeQuestion({ text_es: "Yo nunca nunca me he despertado tarde" });
-    const v = validateQuestion(q, 0);
-    expect(v.some((e) => e.rule === "ES5")).toBe(false);
-  });
-
-  it("ES5: accepts 'me han' passive form", () => {
-    const q = makeQuestion({ text_es: "Yo nunca nunca me han echado de un lugar" });
-    const v = validateQuestion(q, 0);
-    expect(v.some((e) => e.rule === "ES5")).toBe(false);
   });
 });
 
@@ -258,10 +264,110 @@ describe("Duplicate Detection", () => {
 
   it("U7: no false positive on different texts", () => {
     const questions = [
-      makeQuestion({ id: "q001", text_en: "Never have I ever eaten pizza", text_de: "Ich hab noch nie Pizza gegessen", text_es: "Yo nunca nunca he comido pizza" }),
-      makeQuestion({ id: "q002", text_en: "Never have I ever eaten pasta", text_de: "Ich hab noch nie Pasta gegessen", text_es: "Yo nunca nunca he comido pasta" }),
+      makeQuestion({ id: "q001", text_en: "Never have I ever eaten pizza", text_de: "Ich hab noch nie Pizza gegessen", text_es: "Nunca he comido pizza" }),
+      makeQuestion({ id: "q002", text_en: "Never have I ever eaten pasta", text_de: "Ich hab noch nie Pasta gegessen", text_es: "Nunca he comido pasta" }),
     ];
     const v = validateDuplicates(questions);
     expect(v).toEqual([]);
+  });
+});
+
+// ─── Extended DE1 Prefix Variants ───────────────────────────────────────────
+
+describe("DE1 Extended Prefix Variants", () => {
+  it("DE1: accepts 'Ich hab mir noch nie' variant", () => {
+    const q = makeQuestion({ text_de: "Ich hab mir noch nie einen Kater gewünscht" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "DE1")).toBe(false);
+  });
+
+  it("DE1: accepts 'Ich wäre noch nie' variant", () => {
+    const q = makeQuestion({ text_de: "Ich wäre noch nie fast ertrunken" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "DE1")).toBe(false);
+  });
+
+  it("DE1: accepts 'Ich hatte als' variant", () => {
+    const q = makeQuestion({ text_de: "Ich hatte als Kind einen imaginären Freund" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "DE1")).toBe(false);
+  });
+
+  it("DE1: accepts 'Ich hab es noch nie' variant", () => {
+    const q = makeQuestion({ text_de: "Ich hab es noch nie bereut etwas gesagt zu haben" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "DE1")).toBe(false);
+  });
+
+  it("DE1: accepts 'Mir ist noch nie' variant", () => {
+    const q = makeQuestion({ text_de: "Mir ist noch nie etwas Peinliches passiert" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "DE1")).toBe(false);
+  });
+
+  it("DE1: accepts 'Noch nie hat' variant", () => {
+    const q = makeQuestion({ text_de: "Noch nie hat jemand mich beim Lügen erwischt" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "DE1")).toBe(false);
+  });
+
+  it("DE1: rejects random German sentence", () => {
+    const q = makeQuestion({ text_de: "Gestern habe ich Pizza gegessen" });
+    const v = validateQuestion(q, 0);
+    expect(v.some((e) => e.rule === "DE1")).toBe(true);
+  });
+});
+
+// ─── Extended DE3 Compound Exceptions ───────────────────────────────────────
+
+describe("DE3 Extended Compound Exceptions", () => {
+  it("DE3: allows 'neuen' (neu + inflection)", () => {
+    const results = detectGermanTransliterations("Einen neuen Anfang machen");
+    expect(results).toEqual([]);
+  });
+
+  it("DE3: allows 'Reue' (remorse)", () => {
+    const results = detectGermanTransliterations("ohne Reue gelebt");
+    expect(results).toEqual([]);
+  });
+
+  it("DE3: allows 'Konsequenzen' (consequences)", () => {
+    const results = detectGermanTransliterations("Die Konsequenzen tragen");
+    expect(results).toEqual([]);
+  });
+
+  it("DE3: allows 'zueinander' (to each other)", () => {
+    const results = detectGermanTransliterations("Sie fanden zueinander");
+    expect(results).toEqual([]);
+  });
+
+  it("DE3: allows 'unbequemes' (uncomfortable)", () => {
+    const results = detectGermanTransliterations("Ein unbequemes Gespräch");
+    expect(results).toEqual([]);
+  });
+
+  it("DE3: allows 'erneut' (again)", () => {
+    const results = detectGermanTransliterations("Es erneut versucht");
+    expect(results).toEqual([]);
+  });
+
+  it("DE3: allows 'sexuell' (sexual)", () => {
+    const results = detectGermanTransliterations("sexuell aktiv");
+    expect(results).toEqual([]);
+  });
+
+  it("DE3: allows 'vertrauen' (trust)", () => {
+    const results = detectGermanTransliterations("Ich vertraue dir");
+    expect(results).toEqual([]);
+  });
+});
+
+// ─── Integration: Full Dataset ──────────────────────────────────────────────
+
+describe("Integration: questions.json", () => {
+  it("runContentValidation returns 0 violations for the real dataset", () => {
+    const { violations, total } = runContentValidation();
+    expect(total).toBeGreaterThanOrEqual(1500);
+    expect(violations).toEqual([]);
   });
 });

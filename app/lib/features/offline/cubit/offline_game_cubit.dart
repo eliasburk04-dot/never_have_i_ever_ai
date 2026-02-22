@@ -57,6 +57,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     required String language,
     required bool nsfwEnabled,
     required bool isPremium,
+    int? debugSeed,
   }) async {
     // TODO: Restore after testing
     // _isPremium = isPremium;
@@ -76,10 +77,9 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     await _sessionRepo.saveSession(session);
     await _sessionRepo.setActiveSessionId(session.id);
 
-    emit(state.copyWith(
-      phase: OfflineGamePhase.idle,
-      session: session,
-    ));
+    _questionPool.beginSession(debugSeed: debugSeed);
+
+    emit(state.copyWith(phase: OfflineGamePhase.idle, session: session));
 
     // Immediately advance to round 1
     await advanceRound();
@@ -94,10 +94,9 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     // TODO: Restore after testing
     // _isPremium = _readCachedPremium();
 
-    emit(state.copyWith(
-      phase: OfflineGamePhase.idle,
-      session: session,
-    ));
+    _questionPool.beginSession();
+
+    emit(state.copyWith(phase: OfflineGamePhase.idle, session: session));
 
     await advanceRound();
     return true;
@@ -131,11 +130,15 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     // Build category tracking from session history
     final recentCategories = _recentCategories(session, count: 2);
     final recentSubcategories = _recentSubcategories(session, count: 3);
+    final recentEnergies = _recentEnergies(session, count: 3);
+    final earlyCategoriesSeen = _earlyWindowCategories(session);
+    final earlyEnergiesSeen = _earlyWindowEnergies(session);
+    final recentQuestionIds = _recentQuestionIds(session, count: 10);
 
     String questionText;
     bool recycled = false;
     int intensity;
-    bool aiGenerated = false;
+    OfflineQuestionSource questionSource = OfflineQuestionSource.localPool;
     String? questionCategory;
     String? questionSubcategory;
 
@@ -149,15 +152,22 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       // isPremium: _isPremium,
       isPremium: true, // TEMP: bypassed for NSFW testing
       usedIds: session.usedQuestionIds,
+      roundNumber: nextRound,
       recentCategories: recentCategories,
       recentSubcategories: recentSubcategories,
+      recentEnergies: recentEnergies,
+      categoriesSeenInEarlyWindow: earlyCategoriesSeen,
+      energiesSeenInEarlyWindow: earlyEnergiesSeen,
+      recentlyUsedIds: recentQuestionIds,
+      escalationMultiplier: result.escalationMultiplier,
+      vulnerabilityBias: result.vulnerabilityBias,
     );
 
     if (selection != null) {
       questionText = selection.text;
       recycled = selection.recycled;
       intensity = selection.question.intensity;
-      aiGenerated = false;
+      questionSource = OfflineQuestionSource.localPool;
       _pendingQuestionId = selection.question.id;
       _pendingCategory = selection.question.category;
       _pendingSubcategory = selection.question.subcategory;
@@ -169,7 +179,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
           _emergencyQuestions[session.language] ?? _emergencyQuestions['en']!;
       questionText = pool[nextRound % pool.length];
       intensity = result.intensityMin;
-      aiGenerated = false;
+      questionSource = OfflineQuestionSource.emergencyFallback;
       _pendingQuestionId = null;
       _pendingCategory = null;
       _pendingSubcategory = null;
@@ -187,17 +197,19 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
 
     await _sessionRepo.saveSession(updatedSession);
 
-    emit(state.copyWith(
-      phase: OfflineGamePhase.showingQuestion,
-      session: updatedSession,
-      currentQuestionText: questionText,
-      currentQuestionRecycled: recycled,
-      currentIntensity: intensity,
-      isAiGenerated: aiGenerated,
-      currentCategory: questionCategory,
-      currentSubcategory: questionSubcategory,
-      errorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        phase: OfflineGamePhase.showingQuestion,
+        session: updatedSession,
+        currentQuestionText: questionText,
+        currentQuestionRecycled: recycled,
+        currentIntensity: intensity,
+        currentQuestionSource: questionSource,
+        currentCategory: questionCategory,
+        currentSubcategory: questionSubcategory,
+        errorMessage: null,
+      ),
+    );
   }
 
   /// Submit the "I have" count for the current round and immediately advance.
@@ -222,9 +234,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       subcategory: _pendingSubcategory,
     );
 
-    final updatedSession = session.copyWith(
-      rounds: [...session.rounds, round],
-    );
+    final updatedSession = session.copyWith(rounds: [...session.rounds, round]);
 
     await _sessionRepo.saveSession(updatedSession);
 
@@ -269,6 +279,52 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
         .toList();
   }
 
+  /// Extract last N energies from played rounds.
+  List<String> _recentEnergies(OfflineSession session, {int count = 3}) {
+    final rounds = session.rounds;
+    if (rounds.isEmpty) return [];
+    final recent = rounds.length >= count
+        ? rounds.sublist(rounds.length - count)
+        : rounds;
+    return recent.map((r) => _energyForIntensity(r.intensity)).toList();
+  }
+
+  /// Distinct categories seen in the first 20 played rounds.
+  List<String> _earlyWindowCategories(OfflineSession session) {
+    final seen = <String>{};
+    for (final round in session.rounds.take(20)) {
+      final category = round.category;
+      if (category != null && category.isNotEmpty) {
+        seen.add(category);
+      }
+    }
+    return seen.toList();
+  }
+
+  /// Distinct energies seen in the first 20 played rounds.
+  List<String> _earlyWindowEnergies(OfflineSession session) {
+    final seen = <String>{};
+    for (final round in session.rounds.take(20)) {
+      seen.add(_energyForIntensity(round.intensity));
+    }
+    return seen.toList();
+  }
+
+  /// Last N asked question IDs, used to prevent immediate recycling loops.
+  List<String> _recentQuestionIds(OfflineSession session, {int count = 10}) {
+    final ids = session.rounds
+        .where((r) => r.questionId != null && r.questionId!.isNotEmpty)
+        .map((r) => r.questionId!)
+        .toList();
+    if (ids.isEmpty) return [];
+    return ids.length > count ? ids.sublist(ids.length - count) : ids;
+  }
+
+  String _energyForIntensity(int intensity) {
+    if (intensity >= 8) return 'heavy';
+    if (intensity >= 4) return 'medium';
+    return 'light';
+  }
 
   Future<void> _finishGame() async {
     final session = state.session;
@@ -278,10 +334,12 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     await _sessionRepo.saveSession(finishedSession);
     await _sessionRepo.setActiveSessionId(null);
 
-    emit(state.copyWith(
-      phase: OfflineGamePhase.complete,
-      session: finishedSession,
-    ));
+    emit(
+      state.copyWith(
+        phase: OfflineGamePhase.complete,
+        session: finishedSession,
+      ),
+    );
   }
 
   // TODO: Restore after testing

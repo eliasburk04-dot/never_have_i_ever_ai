@@ -507,6 +507,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @offlineMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline Mode'**
+  String get offlineMode;
+
+  /// No description provided for @players.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAYERS'**
+  String get players;
+
+  /// No description provided for @addPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Player'**
+  String get addPlayer;
+
+  /// No description provided for @playerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Player {index}'**
+  String playerHint(int index);
+
+  /// No description provided for @allPlayersNeedName.
+  ///
+  /// In en, this message translates to:
+  /// **'All players need a name!'**
+  String get allPlayersNeedName;
+
+  /// No description provided for @playerNamesMustBeUnique.
+  ///
+  /// In en, this message translates to:
+  /// **'Player names must be unique!'**
+  String get playerNamesMustBeUnique;
+
+  /// No description provided for @nsfwLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'NSFW'**
+  String get nsfwLabel;
+
+  /// No description provided for @howManySaidIHave.
+  ///
+  /// In en, this message translates to:
+  /// **'How many said \"I have\"?'**
+  String get howManySaidIHave;
+
+  /// No description provided for @outOfPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'out of {count} players'**
+  String outOfPlayers(int count);
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @endGame.
+  ///
+  /// In en, this message translates to:
+  /// **'End Game'**
+  String get endGame;
+
+  /// No description provided for @endGameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'End Game?'**
+  String get endGameTitle;
+
+  /// No description provided for @endGameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will be saved. You can resume later.'**
+  String get endGameBody;
+
+  /// No description provided for @keepPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Playing'**
+  String get keepPlaying;
+
+  /// No description provided for @neverHaveIEver.
+  ///
+  /// In en, this message translates to:
+  /// **'NEVER HAVE I EVER'**
+  String get neverHaveIEver;
+
+  /// No description provided for @recycled.
+  ///
+  /// In en, this message translates to:
+  /// **'🔄 Recycled'**
+  String get recycled;
+
+  /// No description provided for @aiGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'✨ AI'**
+  String get aiGenerated;
+
+  /// No description provided for @roundsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} rounds'**
+  String roundsCount(int count);
+
+  /// No description provided for @playersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} players'**
+  String playersCount(int count);
+
+  /// No description provided for @appSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI-powered party game'**
+  String get appSubtitle;
+
+  /// No description provided for @playOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Play Offline'**
+  String get playOffline;
+
+  /// No description provided for @resumeOfflineGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Offline Game'**
+  String get resumeOfflineGame;
+
+  /// No description provided for @noGameData.
+  ///
+  /// In en, this message translates to:
+  /// **'No game data'**
+  String get noGameData;
+
+  /// No description provided for @chooseYourLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your\nlanguage'**
+  String get chooseYourLanguage;
+
+  /// No description provided for @changeLanguageLater.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this later in settings'**
+  String get changeLanguageLater;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'ACCOUNT'**
+  String get account;
+
+  /// No description provided for @legal.
+  ///
+  /// In en, this message translates to:
+  /// **'LEGAL'**
+  String get legal;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-Powered Party Game\nVersion 1.0.0'**
+  String get version;
 }
 
 class _AppLocalizationsDelegate

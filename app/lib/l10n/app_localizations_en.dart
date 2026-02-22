@@ -219,4 +219,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get offlineMode => 'Offline Mode';
+
+  @override
+  String get players => 'PLAYERS';
+
+  @override
+  String get addPlayer => 'Add Player';
+
+  @override
+  String playerHint(int index) {
+    return 'Player $index';
+  }
+
+  @override
+  String get allPlayersNeedName => 'All players need a name!';
+
+  @override
+  String get playerNamesMustBeUnique => 'Player names must be unique!';
+
+  @override
+  String get nsfwLabel => 'NSFW';
+
+  @override
+  String get howManySaidIHave => 'How many said \"I have\"?';
+
+  @override
+  String outOfPlayers(int count) {
+    return 'out of $count players';
+  }
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get endGame => 'End Game';
+
+  @override
+  String get endGameTitle => 'End Game?';
+
+  @override
+  String get endGameBody =>
+      'Your progress will be saved. You can resume later.';
+
+  @override
+  String get keepPlaying => 'Keep Playing';
+
+  @override
+  String get neverHaveIEver => 'NEVER HAVE I EVER';
+
+  @override
+  String get recycled => '🔄 Recycled';
+
+  @override
+  String get aiGenerated => '✨ AI';
+
+  @override
+  String roundsCount(int count) {
+    return '$count rounds';
+  }
+
+  @override
+  String playersCount(int count) {
+    return '$count players';
+  }
+
+  @override
+  String get appSubtitle => 'The AI-powered party game';
+
+  @override
+  String get playOffline => 'Play Offline';
+
+  @override
+  String get resumeOfflineGame => 'Resume Offline Game';
+
+  @override
+  String get noGameData => 'No game data';
+
+  @override
+  String get chooseYourLanguage => 'Choose your\nlanguage';
+
+  @override
+  String get changeLanguageLater => 'You can change this later in settings';
+
+  @override
+  String get account => 'ACCOUNT';
+
+  @override
+  String get legal => 'LEGAL';
+
+  @override
+  String get version => 'AI-Powered Party Game\nVersion 1.0.0';
 }

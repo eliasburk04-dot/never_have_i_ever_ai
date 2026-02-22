@@ -14,6 +14,8 @@ import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/pressable.dart';
 import '../../../domain/entities/offline_player.dart';
 import '../../../features/premium/cubit/premium_cubit.dart';
+import '../../../l10n/app_localizations.dart';
+import '../cubit/game_config_cubit.dart';
 import '../cubit/offline_game_cubit.dart';
 
 /// Random emojis assigned to players.
@@ -31,14 +33,9 @@ class OfflineSetupScreen extends StatefulWidget {
 }
 
 class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
-  final _controllers = <TextEditingController>[
-    TextEditingController(),
-    TextEditingController(),
-  ];
+  final _controllers = <TextEditingController>[];
   final _emojis = <String>[];
-  int _maxRounds = AppConstants.defaultRounds;
-  bool _nsfwEnabled = false;
-  String _language = 'en';
+  bool _initialized = false;
 
   final _random = Random();
   final _usedEmojis = <String>{};
@@ -46,7 +43,30 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   @override
   void initState() {
     super.initState();
-    _emojis.addAll([_randomEmoji(), _randomEmoji()]);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      final config = context.read<GameConfigCubit>().state;
+      if (config.players.isNotEmpty) {
+        // Restore persisted players
+        for (final p in config.players) {
+          _controllers.add(TextEditingController(text: p.name));
+          _emojis.add(p.emoji);
+          _usedEmojis.add(p.emoji);
+        }
+      } else {
+        // Default: 2 empty players
+        _controllers.addAll([
+          TextEditingController(),
+          TextEditingController(),
+        ]);
+        _emojis.addAll([_randomEmoji(), _randomEmoji()]);
+      }
+    }
   }
 
   String _randomEmoji() {
@@ -89,12 +109,15 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   }
 
   void _startGame() {
+    final l10n = AppLocalizations.of(context)!;
+    final config = context.read<GameConfigCubit>();
+
     // Validate names
     final names = _controllers.map((c) => c.text.trim()).toList();
     if (names.any((n) => n.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('All players need a name!',
+          content: Text(l10n.allPlayersNeedName,
               style: TextStyle(color: AppColors.textPrimary)),
           backgroundColor: AppColors.surfaceElevated,
         ),
@@ -106,7 +129,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
     if (names.toSet().length != names.length) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Player names must be unique!',
+          content: Text(l10n.playerNamesMustBeUnique,
               style: TextStyle(color: AppColors.textPrimary)),
           backgroundColor: AppColors.surfaceElevated,
         ),
@@ -119,14 +142,17 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
       (i) => OfflinePlayer(name: names[i], emoji: _emojis[i]),
     );
 
+    // Persist settings for "Play Again"
+    config.setPlayers(players);
+
     // TODO: Restore after testing
     // final isPremium = context.read<PremiumCubit>().state.isPremium;
 
     context.read<OfflineGameCubit>().startGame(
           players: players,
-          maxRounds: _maxRounds,
-          language: _language,
-          nsfwEnabled: _nsfwEnabled,
+          maxRounds: config.state.maxRounds,
+          language: config.state.language,
+          nsfwEnabled: config.state.nsfwEnabled,
           // TODO: Restore after testing
           // isPremium: isPremium,
           isPremium: true, // TEMP: bypassed for NSFW testing
@@ -140,12 +166,14 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
     final isPremium = context.watch<PremiumCubit>().state.isPremium;
     final maxRoundsLimit =
         isPremium ? AppConstants.maxRoundsPremium : AppConstants.maxRoundsFree;
+    final l10n = AppLocalizations.of(context)!;
+    final config = context.watch<GameConfigCubit>().state;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text('Offline Mode',
+        title: Text(l10n.offlineMode,
             style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
       ),
       body: SafeArea(
@@ -158,7 +186,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // PLAYERS section
-                  Text('PLAYERS',
+                  Text(l10n.players,
                       style: AppTypography.overline
                           .copyWith(color: AppColors.textTertiary)),
                   const SizedBox(height: AppSpacing.sm),
@@ -202,7 +230,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                                 style: AppTypography.body
                                     .copyWith(color: AppColors.textPrimary),
                                 decoration: InputDecoration(
-                                  hintText: 'Player ${index + 1}',
+                                  hintText: l10n.playerHint(index + 1),
                                   counterText: '',
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
@@ -248,7 +276,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                             Icon(Icons.add_rounded,
                                 color: AppColors.accent, size: 20),
                             const SizedBox(width: AppSpacing.xs),
-                            Text('Add Player',
+                            Text(l10n.addPlayer,
                                 style: AppTypography.label
                                     .copyWith(color: AppColors.accent)),
                           ],
@@ -260,14 +288,14 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
               const SizedBox(height: AppSpacing.sm),
 
               // ROUNDS
-              Text('ROUNDS',
+              Text(l10n.rounds,
                   style: AppTypography.overline
                       .copyWith(color: AppColors.textTertiary)),
               const SizedBox(height: AppSpacing.xs),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('$_maxRounds rounds', style: AppTypography.body),
+                  Text('${config.maxRounds} rounds', style: AppTypography.body),
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 4),
@@ -276,7 +304,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                       borderRadius:
                           BorderRadius.circular(AppSpacing.radiusFull),
                     ),
-                    child: Text('$_maxRounds',
+                    child: Text('${config.maxRounds}',
                         style: AppTypography.label
                             .copyWith(color: AppColors.accent)),
                   ),
@@ -290,18 +318,18 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                   overlayColor: AppColors.accent.withValues(alpha: 0.12),
                 ),
                 child: Slider(
-                  value: _maxRounds.toDouble(),
+                  value: config.maxRounds.toDouble(),
                   min: 5,
                   max: maxRoundsLimit.toDouble(),
                   divisions: (maxRoundsLimit - 5) ~/ 5,
-                  label: '$_maxRounds',
+                  label: '${config.maxRounds}',
                   onChanged: (v) =>
-                      setState(() => _maxRounds = v.round()),
+                      context.read<GameConfigCubit>().setMaxRounds(v.round()),
                 ),
               ),
 
               // LANGUAGE
-              Text('LANGUAGE',
+              Text(l10n.language,
                   style: AppTypography.overline
                       .copyWith(color: AppColors.textTertiary)),
               const SizedBox(height: AppSpacing.xs),
@@ -315,7 +343,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                   border: Border.all(color: AppColors.divider),
                 ),
                 child: DropdownButton<String>(
-                  value: _language,
+                  value: config.language,
                   isExpanded: true,
                   underline: const SizedBox.shrink(),
                   dropdownColor: AppColors.surfaceElevated,
@@ -326,8 +354,11 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                     DropdownMenuItem(value: 'de', child: Text('🇩🇪 Deutsch')),
                     DropdownMenuItem(value: 'es', child: Text('🇪🇸 Español')),
                   ],
-                  onChanged: (v) =>
-                      setState(() => _language = v ?? 'en'),
+                  onChanged: (v) {
+                    if (v != null) {
+                      context.read<GameConfigCubit>().setLanguage(v);
+                    }
+                  },
                 ),
               ),
 
@@ -350,7 +381,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('NSFW', style: AppTypography.label),
+                        Text(l10n.nsfwLabel, style: AppTypography.label),
                         // TODO: Restore premium lock icon after testing
                         // if (!isPremium) ...[
                         //   const SizedBox(width: AppSpacing.xs),
@@ -360,13 +391,14 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                       ],
                     ),
                     Switch(
-                      value: _nsfwEnabled,
+                      value: config.nsfwEnabled,
                       activeTrackColor: AppColors.accent,
                       // TODO: Restore premium gating after testing
                       // onChanged: isPremium
-                      //     ? (v) => setState(() => _nsfwEnabled = v)
+                      //     ? (v) => context.read<GameConfigCubit>().setNsfwEnabled(v)
                       //     : (_) => context.push('/premium'),
-                      onChanged: (v) => setState(() => _nsfwEnabled = v),
+                      onChanged: (v) =>
+                          context.read<GameConfigCubit>().setNsfwEnabled(v),
                     ),
                   ],
                 ),
@@ -378,7 +410,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
               SizedBox(
                 width: double.infinity,
                 child: AppButton(
-                  label: 'Start Game',
+                  label: l10n.startGame,
                   onPressed: _startGame,
                   icon: Icons.play_arrow_rounded,
                 ),

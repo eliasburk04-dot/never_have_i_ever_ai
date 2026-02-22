@@ -1,40 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../offline/cubit/game_config_cubit.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
-
-  @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  String _language = 'en';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _language = prefs.getString('language') ?? 'en';
-    });
-  }
-
-  Future<void> _setLanguage(String lang) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language', lang);
-    setState(() => _language = lang);
-  }
 
   String _languageLabel(String code) {
     switch (code) {
@@ -49,18 +25,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final config = context.watch<GameConfigCubit>().state;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text('Settings',
+        title: Text(l10n.settings,
             style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           // LANGUAGE
-          Text('LANGUAGE',
+          Text(l10n.language,
               style: AppTypography.overline
                   .copyWith(color: AppColors.textTertiary)),
           const SizedBox(height: AppSpacing.sm),
@@ -73,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               border: Border.all(color: AppColors.divider),
             ),
             child: DropdownButton<String>(
-              value: _language,
+              value: config.language,
               isExpanded: true,
               underline: const SizedBox.shrink(),
               dropdownColor: AppColors.surfaceElevated,
@@ -90,7 +69,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ))
                   .toList(),
               onChanged: (v) {
-                if (v != null) _setLanguage(v);
+                if (v != null) {
+                  context.read<GameConfigCubit>().setLanguage(v);
+                }
               },
             ),
           ),
@@ -98,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: AppSpacing.xl),
 
           // ACCOUNT
-          Text('ACCOUNT',
+          Text(l10n.account,
               style: AppTypography.overline
                   .copyWith(color: AppColors.textTertiary)),
           const SizedBox(height: AppSpacing.sm),
@@ -154,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text('Never Have I Ever', style: AppTypography.body),
                 const SizedBox(height: 4),
                 Text(
-                  'AI-Powered Party Game\nVersion 1.0.0',
+                  l10n.version,
                   style: AppTypography.bodySmall
                       .copyWith(color: AppColors.textTertiary),
                 ),
@@ -165,19 +146,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: AppSpacing.xl),
 
           // LEGAL
-          Text('LEGAL',
+          Text(l10n.legal,
               style: AppTypography.overline
                   .copyWith(color: AppColors.textTertiary)),
           const SizedBox(height: AppSpacing.sm),
           _LegalLink(
-            label: 'Privacy Policy',
+            label: l10n.privacyPolicy,
             onTap: () {
               // TODO: Open privacy policy URL
             },
           ),
           const SizedBox(height: AppSpacing.xs),
           _LegalLink(
-            label: 'Terms of Service',
+            label: l10n.termsOfService,
             onTap: () {
               // TODO: Open terms of service URL
             },

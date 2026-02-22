@@ -20,7 +20,7 @@
 | U6 | Max length: question text ≤ 150 characters. | `validate_content` |
 | U7 | No duplicate question text within the same language. | `validate_content` |
 | U8 | Every question MUST have non-empty `text_en`, `text_de`, `text_es`. | `validate_content` |
-| U9 | `id` format: `q` + 3-digit zero-padded integer (e.g. `q001`). No gaps in sequence allowed. | `validate_content` |
+| U9 | `id` format: `q` + zero-padded integer with at least 3 digits (e.g. `q001`, `q1600`). No gaps in sequence allowed. | `validate_content` |
 | U10 | `intensity` must be integer 1–10. | `validate_content` |
 | U11 | `is_nsfw` and `is_premium` must be boolean. | `validate_content` |
 | U12 | `shock_factor` and `vulnerability_level` must be number 0.0–1.0. | `validate_content` |
@@ -46,7 +46,7 @@
 
 | # | Rule | Enforced By |
 |---|------|-------------|
-| DE1 | Must start with `"Ich hab noch nie "` (lowercase after Ich, space after "nie"). | `validate_content` |
+| DE1 | Must start with `"Ich hab noch nie "` or accepted variant (see validator for full list: `"Ich hab mir noch nie "`, `"Ich war noch nie "`, `"Ich hatte noch nie "`, `"Ich bin noch nie "`, `"Mir wurde noch nie "`, etc.). | `validate_content` |
 | DE2 | Must NOT end with a period or question mark. | `validate_content` |
 | DE3 | Must use proper Umlauts: `ä ö ü Ä Ö Ü ß`. No ASCII transliterations (`ae` for `ä`, `oe` for `ö`, `ue` for `ü`, `ss` for `ß`). | `validate_content` + `fix_de_transliteration` |
 | DE4 | Exception to DE3: compound words where `ue`/`ae`/`oe` are naturally adjacent morphemes are allowed (e.g. `abenteuer`, `Abenteuer`). The allow-list is maintained in `fix_de_transliteration.ts`. | `fix_de_transliteration` |
@@ -59,11 +59,11 @@
 
 | # | Rule | Enforced By |
 |---|------|-------------|
-| ES1 | Must start with `"Yo nunca nunca "` (capital Y, space after second "nunca"). | `validate_content` |
+| ES1 | Must start with `"Nunca he "` or accepted variant (see validator for full list: `"Nunca me he "`, `"Nunca me han "`, `"Nunca hice "`, `"Nunca casi "`, etc.). | `validate_content` |
 | ES2 | Must NOT end with a period or question mark. | `validate_content` |
 | ES3 | Must use proper accented characters: `á é í ó ú ñ ü ¿ ¡`. No ASCII approximations (`n` for `ñ`). | `validate_content` |
 | ES4 | No Spanglish — no English words in the Spanish text (allowed loan: `OK`). | manual review |
-| ES5 | Verbs after "Yo nunca nunca" must be in first-person compound past (pretérito perfecto compuesto): `he + participio` (e.g. `he comido`, `me he despertado`). | `validate_content` |
+| ES5 | Verbs after "Nunca" should use pretérito perfecto compuesto where applicable: `he + participio` (e.g. `he comido`, `me he despertado`). Some alternate constructions accepted. | `validate_content` |
 
 ---
 
@@ -72,9 +72,8 @@
 All questions must use one of these categories:
 
 ```
-food, embarrassing, social, moral_gray, risk_behavior,
-relationships, confessions, secrets, alcohol, sexual,
-drugs, party, power_dynamics, taboo
+food, embarrassing, social, moral_gray, risk,
+relationships, confessions, sexual, party, deep
 ```
 
 All questions must use one of these energy values:

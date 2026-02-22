@@ -8,6 +8,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../offline/cubit/offline_game_cubit.dart';
 
 /// Home screen — dark immersive hub with ambient glow behind title.
@@ -20,6 +21,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -108,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                                       curve: Curves.easeOutCubic),
                               const SizedBox(height: AppSpacing.sm),
                               Text(
-                                'The AI-powered party game',
+                                l10n.appSubtitle,
                                 style: AppTypography.bodySmall.copyWith(
                                   color: AppColors.textTertiary,
                                 ),
@@ -127,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                     Column(
                       children: [
                         AppButton(
-                          label: 'Create Lobby',
+                          label: l10n.createLobby,
                           onPressed: () => context.push('/lobby/create'),
                           icon: Icons.add_rounded,
                         )
@@ -136,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                             .slideY(begin: 0.12),
                         const SizedBox(height: AppSpacing.md),
                         AppButton(
-                          label: 'Join Lobby',
+                          label: l10n.joinLobby,
                           onPressed: () => context.push('/lobby/join'),
                           isPrimary: false,
                           icon: Icons.login_rounded,
@@ -146,7 +148,7 @@ class HomeScreen extends StatelessWidget {
                             .slideY(begin: 0.12),
                         const SizedBox(height: AppSpacing.md),
                         AppButton(
-                          label: 'Play Offline',
+                          label: l10n.playOffline,
                           onPressed: () => context.push('/offline/setup'),
                           isPrimary: false,
                           icon: Icons.wifi_off_rounded,
@@ -199,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                                         size: 20),
                                     const SizedBox(width: AppSpacing.xs),
                                     Text(
-                                      'Resume Offline Game',
+                                      l10n.resumeOfflineGame,
                                       style: AppTypography.buttonSmall
                                           .copyWith(
                                               color:

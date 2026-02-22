@@ -6,8 +6,11 @@
   "scripts": {
     "validate:content": "npx tsx validate_content.ts",
     "validate:i18n": "npx tsx validate_i18n.ts",
+    "validate:pool": "npx tsx validate_question_pool.ts",
+    "generate:questions": "npx tsx generate_questions_pool.ts",
+    "seed:questions:sql": "npx tsx generate_questions_seed_sql.ts",
     "fix:de": "npx tsx fix_de_transliteration.ts",
-    "validate": "npm run validate:content && npm run validate:i18n",
+    "validate": "npm run validate:content && npm run validate:i18n && npm run validate:pool",
     "test": "npx vitest run"
   },
   "devDependencies": {

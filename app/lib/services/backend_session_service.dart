@@ -38,6 +38,9 @@ class BackendSessionService {
   SharedPreferences? _prefs;
   BackendSession? _cached;
 
+  /// The currently cached userId (available after [ensureSession]).
+  String? get cachedUserId => _cached?.userId;
+
   Future<SharedPreferences> _getPrefs() async {
     _prefs ??= await SharedPreferences.getInstance();
     return _prefs!;

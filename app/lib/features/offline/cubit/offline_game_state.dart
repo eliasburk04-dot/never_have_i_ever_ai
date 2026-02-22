@@ -14,6 +14,9 @@ enum OfflineGamePhase {
   complete,
 }
 
+/// Source of the currently displayed question.
+enum OfflineQuestionSource { localPool, aiGenerated, emergencyFallback }
+
 /// State for the offline pass-and-play game.
 class OfflineGameState extends Equatable {
   const OfflineGameState({
@@ -22,7 +25,7 @@ class OfflineGameState extends Equatable {
     this.currentQuestionText,
     this.currentQuestionRecycled = false,
     this.currentIntensity = 1,
-    this.isAiGenerated = false,
+    this.currentQuestionSource = OfflineQuestionSource.localPool,
     this.currentCategory,
     this.currentSubcategory,
     this.errorMessage,
@@ -33,7 +36,7 @@ class OfflineGameState extends Equatable {
   final String? currentQuestionText;
   final bool currentQuestionRecycled;
   final int currentIntensity;
-  final bool isAiGenerated;
+  final OfflineQuestionSource currentQuestionSource;
   final String? currentCategory;
   final String? currentSubcategory;
   final String? errorMessage;
@@ -42,6 +45,8 @@ class OfflineGameState extends Equatable {
   int get maxRounds => session?.maxRounds ?? 0;
   int get playerCount => session?.playerCount ?? 0;
   String get currentTone => session?.currentTone ?? 'safe';
+  bool get isAiGenerated =>
+      currentQuestionSource == OfflineQuestionSource.aiGenerated;
 
   OfflineGameState copyWith({
     OfflineGamePhase? phase,
@@ -49,7 +54,7 @@ class OfflineGameState extends Equatable {
     String? currentQuestionText,
     bool? currentQuestionRecycled,
     int? currentIntensity,
-    bool? isAiGenerated,
+    OfflineQuestionSource? currentQuestionSource,
     String? currentCategory,
     String? currentSubcategory,
     String? errorMessage,
@@ -61,7 +66,8 @@ class OfflineGameState extends Equatable {
       currentQuestionRecycled:
           currentQuestionRecycled ?? this.currentQuestionRecycled,
       currentIntensity: currentIntensity ?? this.currentIntensity,
-      isAiGenerated: isAiGenerated ?? this.isAiGenerated,
+      currentQuestionSource:
+          currentQuestionSource ?? this.currentQuestionSource,
       currentCategory: currentCategory ?? this.currentCategory,
       currentSubcategory: currentSubcategory ?? this.currentSubcategory,
       errorMessage: errorMessage,
@@ -70,14 +76,14 @@ class OfflineGameState extends Equatable {
 
   @override
   List<Object?> get props => [
-        phase,
-        session,
-        currentQuestionText,
-        currentQuestionRecycled,
-        currentIntensity,
-        isAiGenerated,
-        currentCategory,
-        currentSubcategory,
-        errorMessage,
-      ];
+    phase,
+    session,
+    currentQuestionText,
+    currentQuestionRecycled,
+    currentIntensity,
+    currentQuestionSource,
+    currentCategory,
+    currentSubcategory,
+    errorMessage,
+  ];
 }
