@@ -62,6 +62,7 @@ class HomeScreen extends StatelessWidget {
                             GlassContainer(
                               padding: const EdgeInsets.all(AppSpacing.xs),
                               borderRadius: BorderRadius.circular(30),
+                              color: AppColors.surface.withValues(alpha: 0.5), // Increased opacity
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -84,10 +85,10 @@ class HomeScreen extends StatelessWidget {
                                                     BoxShadow(
                                                       color: AppColors.premiumGold
                                                           .withValues(
-                                                            alpha: 0.3,
+                                                            alpha: 0.6,
                                                           ),
-                                                      blurRadius: 16,
-                                                      spreadRadius: 2,
+                                                      blurRadius: 20,
+                                                      spreadRadius: 4,
                                                     ),
                                                   ]
                                                 : null,
@@ -149,8 +150,19 @@ class HomeScreen extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                        'Never Have\nI Ever',
-                                        style: AppTypography.display,
+                                        'EXPOSED',
+                                        style: AppTypography.display.copyWith(
+                                          shadows: [
+                                            Shadow(
+                                              color: Colors.black.withValues(alpha: 0.7),
+                                              blurRadius: 8,
+                                            ),
+                                            Shadow(
+                                              color: Colors.black.withValues(alpha: 0.4),
+                                              blurRadius: 20,
+                                            ),
+                                          ],
+                                        ),
                                         textAlign: TextAlign.center,
                                       )
                                       .animate()
@@ -164,6 +176,16 @@ class HomeScreen extends StatelessWidget {
                                     l10n.appSubtitle,
                                     style: AppTypography.bodySmall.copyWith(
                                       color: AppColors.textTertiary,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black.withValues(alpha: 0.6),
+                                          blurRadius: 6,
+                                        ),
+                                        Shadow(
+                                          color: Colors.black.withValues(alpha: 0.3),
+                                          blurRadius: 16,
+                                        ),
+                                      ],
                                     ),
                                     textAlign: TextAlign.center,
                                   ).animate().fadeIn(

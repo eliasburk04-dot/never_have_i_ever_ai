@@ -28,25 +28,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
   String? _pendingCategory;
   String? _pendingSubcategory;
 
-  // ─── Emergency fallback questions ────────────────────
-
-  static const _emergencyQuestions = {
-    'en': [
-      'Never have I ever done something I regret',
-      'Never have I ever kept a secret from everyone',
-      'Never have I ever pretended to be someone else',
-    ],
-    'de': [
-      'Ich hab noch nie etwas getan das ich bereue',
-      'Ich hab noch nie ein Geheimnis vor allen bewahrt',
-      'Ich hab noch nie so getan als wäre ich jemand anderes',
-    ],
-    'es': [
-      'Yo nunca nunca he hecho algo de lo que me arrepiento',
-      'Yo nunca nunca he guardado un secreto de todos',
-      'Yo nunca nunca he fingido ser otra persona',
-    ],
-  };
 
   // ─── Public API ──────────────────────────────────────
 
@@ -59,6 +40,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     required bool isPremium,
     required bool isDrinkingGame,
     required List<String> customQuestions,
+    required List<String> categories,
     int? debugSeed,
   }) async {
     // TODO: Restore after testing
@@ -183,6 +165,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       intensityMin: result.intensityMin,
       intensityMax: result.intensityMax,
       nsfwEnabled: session.nsfwEnabled,
+      categories: state.categories,
       // TODO: Restore premium gating after testing
       // isPremium: _isPremium,
       isPremium: true, // TEMP: bypassed for NSFW testing
@@ -209,15 +192,9 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       questionCategory = selection.question.category;
       questionSubcategory = selection.question.subcategory;
     } else {
-      // Emergency fallback
-      final pool =
-          _emergencyQuestions[session.language] ?? _emergencyQuestions['en']!;
-      questionText = pool[nextRound % pool.length];
-      intensity = result.intensityMin;
-      questionSource = OfflineQuestionSource.emergencyFallback;
-      _pendingQuestionId = null;
-      _pendingCategory = null;
-      _pendingSubcategory = null;
+      // No question found — this should not happen with 1600+ questions.
+      // Emit an error or skip the round.
+      return;
     }
     }
 
@@ -384,64 +361,19 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
 
   static const Map<String, Map<String, List<String>>> _drinkingRules = {
     'en': {
-      'heavy': [
-        'Take 2 sips.',
-        'Give out 3 sips.',
-        'Finish your drink!',
-        'Everyone else takes 1 sip.',
-        'Take a shot.',
-      ],
-      'medium': [
-        'Take 1 sip.',
-        'Give out 2 sips.',
-        'Cheers! Everyone drinks.',
-        'Take 2 sips.',
-      ],
-      'light': [
-        'Give out 1 sip.',
-        'Take 1 sip.',
-        'Choose someone to drink.',
-      ],
+      'heavy': ['Take 2 sip(s).'],
+      'medium': ['Take 1 sip(s).'],
+      'light': ['Take 1 sip(s).'],
     },
     'de': {
-      'heavy': [
-        'Nimm 2 Schlücke.',
-        'Verteile 3 Schlücke.',
-        'Ex dein Getränk!',
-        'Alle anderen: 1 Schluck.',
-        'Nimm einen Shot.',
-      ],
-      'medium': [
-        'Nimm 1 Schluck.',
-        'Verteile 2 Schlücke.',
-        'Prost! Alle trinken.',
-        'Nimm 2 Schlücke.',
-      ],
-      'light': [
-        'Verteile 1 Schluck.',
-        'Nimm 1 Schluck.',
-        'Wähle jemanden zum Trinken.',
-      ],
+      'heavy': ['Trink 2 Schluck.'],
+      'medium': ['Trink 1 Schluck.'],
+      'light': ['Trink 1 Schluck.'],
     },
     'es': {
-      'heavy': [
-        'Toma 2 tragos.',
-        'Reparte 3 tragos.',
-        '¡Termina tu bebida!',
-        'Los demás: 1 trago.',
-        'Toma un shot.',
-      ],
-      'medium': [
-        'Toma 1 trago.',
-        'Reparte 2 tragos.',
-        '¡Salud! Todos beben.',
-        'Toma 2 tragos.',
-      ],
-      'light': [
-        'Reparte 1 trago.',
-        'Toma 1 trago.',
-        'Elige a alguien para beber.',
-      ],
+      'heavy': ['Toma 2 trago(s).'],
+      'medium': ['Toma 1 trago(s).'],
+      'light': ['Toma 1 trago(s).'],
     },
   };
 

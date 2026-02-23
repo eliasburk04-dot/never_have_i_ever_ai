@@ -14,6 +14,7 @@ class GameConfigState extends Equatable {
     this.language = 'en',
     this.isDrinkingGame = false,
     this.customQuestions = const [],
+    this.categories = const ['social', 'party', 'food', 'embarrassing'],
   });
 
   final List<OfflinePlayer> players;
@@ -22,6 +23,7 @@ class GameConfigState extends Equatable {
   final String language;
   final bool isDrinkingGame;
   final List<String> customQuestions;
+  final List<String> categories;
 
   GameConfigState copyWith({
     List<OfflinePlayer>? players,
@@ -30,6 +32,7 @@ class GameConfigState extends Equatable {
     String? language,
     bool? isDrinkingGame,
     List<String>? customQuestions,
+    List<String>? categories,
   }) {
     return GameConfigState(
       players: players ?? this.players,
@@ -38,11 +41,12 @@ class GameConfigState extends Equatable {
       language: language ?? this.language,
       isDrinkingGame: isDrinkingGame ?? this.isDrinkingGame,
       customQuestions: customQuestions ?? this.customQuestions,
+      categories: categories ?? this.categories,
     );
   }
 
   @override
-  List<Object?> get props => [players, maxRounds, nsfwEnabled, language, isDrinkingGame, customQuestions];
+  List<Object?> get props => [players, maxRounds, nsfwEnabled, language, isDrinkingGame, customQuestions, categories];
 }
 
 // ─── Cubit ─────────────────────────────────────────────────
@@ -62,6 +66,7 @@ class GameConfigCubit extends Cubit<GameConfigState> {
     final nsfwEnabled = prefs.getBool('nsfwEnabled') ?? false;
     final isDrinkingGame = prefs.getBool('isDrinkingGame') ?? false;
     final customQuestions = prefs.getStringList('customQuestions') ?? [];
+    final categories = prefs.getStringList('categories') ?? ['social', 'party', 'food', 'embarrassing'];
 
     // Restore player names if available
     final playerNames = prefs.getStringList('playerNames') ?? [];
@@ -85,6 +90,7 @@ class GameConfigCubit extends Cubit<GameConfigState> {
       language: language,
       isDrinkingGame: isDrinkingGame,
       customQuestions: customQuestions,
+      categories: categories,
     ));
   }
 
@@ -106,6 +112,13 @@ class GameConfigCubit extends Cubit<GameConfigState> {
   void setIsDrinkingGame(bool enabled) {
     emit(state.copyWith(isDrinkingGame: enabled));
     _persist();
+  }
+
+  void setCategories(List<String> categories) {
+    // Ensure at least one category is selected
+    if (categories.isEmpty) return;
+    emit(state.copyWith(categories: categories));
+    _persistCategories(categories);
   }
 
   void setPlayers(List<OfflinePlayer> players) {
@@ -156,5 +169,10 @@ class GameConfigCubit extends Cubit<GameConfigState> {
   Future<void> _persistCustomQuestions(List<String> questions) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('customQuestions', questions);
+  }
+
+  Future<void> _persistCategories(List<String> categories) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('categories', categories);
   }
 }

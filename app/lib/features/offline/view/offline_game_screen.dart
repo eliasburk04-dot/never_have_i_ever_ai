@@ -420,11 +420,19 @@ class _OfflineQuestionCard extends StatelessWidget {
                 vertical: AppSpacing.sm,
               ),
               decoration: BoxDecoration(
-                color: AppColors.warning.withValues(alpha: 0.12),
+                color: AppColors.warning.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 border: Border.all(
-                  color: AppColors.warning.withValues(alpha: 0.3),
+                  color: AppColors.warning.withValues(alpha: 0.6),
+                  width: 1.5,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.warning.withValues(alpha: 0.15),
+                    blurRadius: 12,
+                    spreadRadius: 2,
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -435,8 +443,14 @@ class _OfflineQuestionCard extends StatelessWidget {
                     child: Text(
                       drinkingRule!,
                       style: AppTypography.body.copyWith(
-                        color: AppColors.warning,
-                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        shadows: [
+                          Shadow(
+                            color: AppColors.warning.withValues(alpha: 0.8),
+                            blurRadius: 4,
+                          ),
+                        ],
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -484,23 +498,28 @@ class _ToneBadge extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: color.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
+        border: Border.all(color: color.withValues(alpha: 0.8), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.12),
-            blurRadius: 12,
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 16,
+            spreadRadius: 2,
           ),
         ],
       ),
       child: Text(
         label.toUpperCase(),
         style: AppTypography.overline.copyWith(
-          color: color,
+          color: Colors.white,
+          fontWeight: FontWeight.w900,
           letterSpacing: 1.5,
+          shadows: [
+            Shadow(color: color.withValues(alpha: 0.8), blurRadius: 4),
+          ],
         ),
       ),
     );

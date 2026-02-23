@@ -18,15 +18,17 @@ class CreateLobbyRequested extends LobbyEvent {
     required this.maxRounds,
     required this.nsfwEnabled,
     required this.language,
+    required this.categories,
   });
 
   final String hostName;
   final int maxRounds;
   final bool nsfwEnabled;
   final String language;
+  final List<String> categories;
 
   @override
-  List<Object?> get props => [hostName, maxRounds, nsfwEnabled, language];
+  List<Object?> get props => [hostName, maxRounds, nsfwEnabled, language, categories];
 }
 
 class JoinLobbyRequested extends LobbyEvent {

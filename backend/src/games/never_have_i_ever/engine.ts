@@ -26,6 +26,7 @@ const SettingsSchema = z.object({
   nsfwEnabled: z.boolean().default(false),
   displayName: z.string().min(1).max(40).optional(),
   avatarEmoji: z.string().min(1).max(16).optional(),
+  categories: z.array(z.string()).optional(),
 });
 
 export interface LobbyRow {
@@ -41,6 +42,7 @@ export interface LobbyRow {
   current_tone: ToneLevel;
   escalation_history: any[];
   used_question_ids: string[];
+  categories?: string[];
 }
 
 export interface RoundRow {
@@ -241,15 +243,16 @@ function recentWindow(history: any[]): {
 
 async function countEligiblePool(
   client: pg.PoolClient,
-  opts: { gameKey: string; nsfwEnabled: boolean },
+  opts: { gameKey: string; nsfwEnabled: boolean; categories?: string[] },
 ): Promise<number> {
   const res = await client.query(
     `SELECT COUNT(*)::int AS c
      FROM questions
      WHERE game_key = $1
        AND status = 'active'
-       AND ($2::boolean OR is_nsfw = false)`,
-    [opts.gameKey, opts.nsfwEnabled],
+       AND ($2::boolean OR is_nsfw = false)
+       AND ($3::text[] IS NULL OR category = ANY($3::text[]))`,
+    [opts.gameKey, opts.nsfwEnabled, opts.categories && opts.categories.length > 0 ? opts.categories : null],
   );
   return res.rows[0]?.c ?? 0;
 }
@@ -264,12 +267,22 @@ async function fetchCandidateRows(
     usedIds: string[];
     allowUsed: boolean;
     limit: number;
+    categories?: string[];
   },
 ): Promise<any[]> {
-  const usedClause = opts.allowUsed ? '' : 'AND NOT (id = ANY($6::text[]))';
-  const params = opts.allowUsed
-    ? [opts.gameKey, opts.intensityMin, opts.intensityMax, opts.nsfwEnabled, opts.limit]
-    : [opts.gameKey, opts.intensityMin, opts.intensityMax, opts.nsfwEnabled, opts.limit, opts.usedIds];
+  const usedClause = opts.allowUsed ? '' : 'AND NOT (id = ANY($7::text[]))';
+  const params: any[] = [
+    opts.gameKey,
+    opts.intensityMin,
+    opts.intensityMax,
+    opts.nsfwEnabled,
+    opts.limit,
+    opts.categories && opts.categories.length > 0 ? opts.categories : null,
+  ];
+
+  if (!opts.allowUsed) {
+    params.push(opts.usedIds);
+  }
 
   const rows = await client.query(
     `SELECT id, text_en, text_de, text_es, category, subcategory, intensity, is_nsfw,
@@ -279,6 +292,7 @@ async function fetchCandidateRows(
        AND status = 'active'
        AND intensity >= $2 AND intensity <= $3
        AND ($4::boolean OR is_nsfw = false)
+       AND ($6::text[] IS NULL OR category = ANY($6::text[]))
        ${usedClause}
      ORDER BY intensity, category
      LIMIT $5`,
@@ -395,6 +409,7 @@ export const engine = {
       usedIds,
       allowUsed: false,
       limit: 300,
+      categories: lobby.categories,
     });
 
     if (candidateRows.length === 0) {
@@ -406,6 +421,7 @@ export const engine = {
         usedIds,
         allowUsed: false,
         limit: 300,
+        categories: lobby.categories,
       });
     }
 
@@ -460,6 +476,7 @@ export const engine = {
         const totalEligible = await countEligiblePool(client, {
           gameKey: lobby.game_key,
           nsfwEnabled: lobby.nsfw_enabled,
+          categories: lobby.categories,
         });
         const exhaustedRatio = totalEligible > 0 ? usedIds.length / totalEligible : 0;
         const canRecycle = opts.nextRoundNumber >= 10 && exhaustedRatio >= 0.7;
@@ -473,6 +490,7 @@ export const engine = {
             usedIds,
             allowUsed: true,
             limit: 250,
+            categories: lobby.categories,
           });
 
           const recycleCandidates = mapRowsToCandidates(recycleRows, lobby.language)

@@ -538,21 +538,26 @@ class _EscalationBadge extends StatelessWidget {
         vertical: AppSpacing.xs + 2,
       ),
       decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.12),
+        color: _color.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-        border: Border.all(color: _color.withValues(alpha: 0.35), width: 1),
+        border: Border.all(color: _color.withValues(alpha: 0.8), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: _color.withValues(alpha: 0.12),
-            blurRadius: 12,
+            color: _color.withValues(alpha: 0.4),
+            blurRadius: 16,
+            spreadRadius: 2,
           ),
         ],
       ),
       child: Text(
         label.toUpperCase(),
         style: AppTypography.overline.copyWith(
-          color: _color,
+          color: Colors.white,
+          fontWeight: FontWeight.w900,
           letterSpacing: 1.5,
+          shadows: [
+            Shadow(color: _color.withValues(alpha: 0.8), blurRadius: 4),
+          ],
         ),
       ),
     );

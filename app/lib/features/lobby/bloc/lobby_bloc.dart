@@ -41,6 +41,7 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
         maxRounds: event.maxRounds,
         nsfwEnabled: event.nsfwEnabled,
         language: event.language,
+        categories: event.categories,
       );
       emit(state.copyWith(status: LobbyBlocStatus.loaded, lobby: lobby));
       add(LobbySubscriptionStarted(lobby.id));

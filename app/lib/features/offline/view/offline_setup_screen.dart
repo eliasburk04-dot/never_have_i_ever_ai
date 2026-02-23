@@ -79,6 +79,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
       isPremium: true,
       isDrinkingGame: config.isDrinkingGame,
       customQuestions: const [],
+      categories: config.categories,
     );
 
     context.go('/offline/game');
@@ -124,15 +125,16 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return SingleChildScrollView(
+            return Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight - (AppSpacing.lg * 2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                     Text(
                       l10n.players,
                       style: AppTypography.overline.copyWith(
@@ -242,24 +244,55 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                         inactiveTrackColor: AppColors.surface,
                         thumbColor: AppColors.accent,
                         overlayColor: AppColors.accent.withValues(alpha: 0.12),
+                        trackHeight: 6,
+                        thumbShape: const RoundSliderThumbShape(
+                          enabledThumbRadius: 10,
+                          elevation: 4,
+                        ),
+                        overlayShape: const RoundSliderOverlayShape(
+                          overlayRadius: 20,
+                        ),
                       ),
                       child: Slider(
                         value: config.maxRounds.toDouble(),
                         min: AppConstants.minRounds.toDouble(),
                         max: maxRoundsLimit.toDouble(),
-                        divisions:
-                            (maxRoundsLimit - AppConstants.minRounds) ~/ 5,
-                        label: '${config.maxRounds}',
-                        onChanged: (v) => context
-                            .read<GameConfigCubit>()
-                            .setMaxRounds(v.round()),
+                        onChanged: (v) {
+                          final rounded = (v / 5).round() * 5;
+                          context
+                              .read<GameConfigCubit>()
+                              .setMaxRounds(rounded.clamp(AppConstants.minRounds, maxRoundsLimit));
+                        },
                       ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      l10n.categoriesLabel,
+                      style: AppTypography.overline.copyWith(
+                        color: AppColors.textTertiary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _CategoryGrid(
+                      selectedCategories: config.categories,
+                      isPremium: isPremium,
+                      onCategoryToggled: (category) {
+                        final current = List<String>.from(config.categories);
+                        if (current.contains(category)) {
+                          current.remove(category);
+                          context.read<GameConfigCubit>().setCategories(current);
+                        } else {
+                          current.add(category);
+                          context.read<GameConfigCubit>().setCategories(current);
+                        }
+                      },
+                      onPremiumLockedTapped: () => context.push('/premium'),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
                       l10n.premiumRules,
                       style: AppTypography.overline.copyWith(
-                        color: AppColors.secondary,
+                        color: AppColors.premiumGold,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -352,20 +385,173 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.xl),
-                    AppButton(
-                      label: l10n.startGame,
-                      onPressed: _startGame,
-                      isPrimary: true,
-                      icon: Icons.play_arrow_rounded,
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  AppButton(
+                    label: l10n.startGame,
+                    onPressed: _startGame,
+                    isPrimary: true,
+                    icon: Icons.play_arrow_rounded,
+                  ),
+                ],
               ),
             );
           },
         ),
       ),
+    );
+  }
+}
+
+class _CategoryGrid extends StatelessWidget {
+  const _CategoryGrid({
+    required this.selectedCategories,
+    required this.isPremium,
+    required this.onCategoryToggled,
+    required this.onPremiumLockedTapped,
+  });
+
+  final List<String> selectedCategories;
+  final bool isPremium;
+  final ValueChanged<String> onCategoryToggled;
+  final VoidCallback onPremiumLockedTapped;
+
+  // Free vs Premium Categories
+  static const _freeCategories = ['social', 'party', 'food', 'embarrassing'];
+  static const _premiumCategories = [
+    'relationships',
+    'confessions',
+    'risk',
+    'moral_gray',
+    'deep',
+    'sexual'
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    String getL10nLabel(String cat) {
+      return switch (cat) {
+        'social' => l10n.catSocial,
+        'party' => l10n.catParty,
+        'food' => l10n.catFood,
+        'embarrassing' => l10n.catEmbarrassing,
+        'relationships' => l10n.catRelationships,
+        'confessions' => l10n.catConfessions,
+        'risk' => l10n.catRisk,
+        'moral_gray' => l10n.catMoralGray,
+        'deep' => l10n.catDeep,
+        'sexual' => l10n.catSexual,
+        _ => cat,
+      };
+    }
+
+    String getL10nDesc(String cat) {
+      return switch (cat) {
+        'social' => l10n.catDescSocial,
+        'party' => l10n.catDescParty,
+        'food' => l10n.catDescFood,
+        'embarrassing' => l10n.catDescEmbarrassing,
+        'relationships' => l10n.catDescRelationships,
+        'confessions' => l10n.catDescConfessions,
+        'risk' => l10n.catDescRisk,
+        'moral_gray' => l10n.catDescMoralGray,
+        'deep' => l10n.catDescDeep,
+        'sexual' => l10n.catDescSexual,
+        _ => '',
+      };
+    }
+
+    Widget buildChip(String category, bool isPremiumOnly) {
+      final isSelected = selectedCategories.contains(category);
+      final isLocked = isPremiumOnly && !isPremium;
+
+      return GestureDetector(
+        onLongPress: () {
+          final desc = getL10nDesc(category);
+          if (desc.isNotEmpty) {
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${getL10nLabel(category)}: $desc',
+                  style: AppTypography.bodySmall.copyWith(color: Colors.white),
+                ),
+                backgroundColor: AppColors.surface,
+                duration: const Duration(seconds: 3),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            );
+          }
+        },
+        child: ActionChip(
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                getL10nLabel(category),
+                style: AppTypography.bodySmall.copyWith(
+                  color: isSelected
+                      ? AppColors.background
+                      : (isLocked ? AppColors.textTertiary : AppColors.textSecondary),
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+              if (isLocked) ...[
+                const SizedBox(width: 4),
+                Icon(Icons.lock_rounded, size: 14, color: AppColors.textTertiary),
+              ]
+            ],
+          ),
+          backgroundColor: isSelected
+              ? AppColors.primary
+              : AppColors.surface.withValues(alpha: 0.5),
+          side: isLocked
+              ? BorderSide(color: AppColors.divider.withValues(alpha: 0.2))
+              : isSelected
+                  ? BorderSide(color: AppColors.primary)
+                  : BorderSide(color: AppColors.divider),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          onPressed: () {
+            if (isLocked) {
+              onPremiumLockedTapped();
+              return;
+            }
+            HapticFeedback.selectionClick();
+            onCategoryToggled(category);
+          },
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: [
+            ..._freeCategories.map((c) => buildChip(c, false)),
+            ..._premiumCategories.map((c) => buildChip(c, true)),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l10n.doubleTapHint,
+          style: AppTypography.bodySmall.copyWith(
+            color: AppColors.textTertiary.withValues(alpha: 0.6),
+            fontSize: 11,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
     );
   }
 }

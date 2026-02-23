@@ -139,20 +139,22 @@ class OfflineResultsScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(6),
                                 child: Row(
                                   children: [
-                                    Expanded(
-                                      flex: havePercent.clamp(1, 99),
-                                      child: Container(
-                                        height: 6,
-                                        color: AppColors.accent,
+                                    if (havePercent > 0)
+                                      Expanded(
+                                        flex: havePercent,
+                                        child: Container(
+                                          height: 6,
+                                          color: AppColors.accent,
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: (100 - havePercent).clamp(1, 99),
-                                      child: Container(
-                                        height: 6,
-                                        color: AppColors.iHaveNot,
+                                    if (havePercent < 100)
+                                      Expanded(
+                                        flex: 100 - havePercent,
+                                        child: Container(
+                                          height: 6,
+                                          color: AppColors.iHaveNot,
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -162,12 +164,12 @@ class OfflineResultsScreen extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '✋ $havePercent%',
+                                    '$havePercent%',
                                     style: AppTypography.bodySmall
                                         .copyWith(color: AppColors.accent),
                                   ),
                                   Text(
-                                    '🙅 ${100 - havePercent}%',
+                                    '${100 - havePercent}%',
                                     style: AppTypography.bodySmall.copyWith(
                                         color: AppColors.textTertiary),
                                   ),

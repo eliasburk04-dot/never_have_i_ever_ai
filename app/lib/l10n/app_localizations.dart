@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Never Have I Ever'**
+  /// **'EXPOSED'**
   String get appTitle;
 
   /// No description provided for @iHave.
@@ -163,7 +163,7 @@ abstract class AppLocalizations {
   /// No description provided for @nsfwMode.
   ///
   /// In en, this message translates to:
-  /// **'Spicy Mode 🌶️'**
+  /// **'NSFW Mode 🌶️'**
   String get nsfwMode;
 
   /// No description provided for @premium.
@@ -595,7 +595,7 @@ abstract class AppLocalizations {
   /// No description provided for @neverHaveIEver.
   ///
   /// In en, this message translates to:
-  /// **'NEVER HAVE I EVER'**
+  /// **'EXPOSED'**
   String get neverHaveIEver;
 
   /// No description provided for @recycled.
@@ -841,7 +841,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumEnjoy.
   ///
   /// In en, this message translates to:
-  /// **'Enjoy unlimited rounds\nand longer games.'**
+  /// **'You have access to all Premium Categories\n& the Drinking Game Mode.'**
   String get premiumEnjoy;
 
   /// No description provided for @unlimitedOfflineRounds.
@@ -856,6 +856,18 @@ abstract class AppLocalizations {
   /// **'Up to 100 rounds per game'**
   String get upTo100Rounds;
 
+  /// No description provided for @allCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock all 10 topics (18+, Deep)'**
+  String get allCategories;
+
+  /// No description provided for @categoriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'CATEGORIES'**
+  String get categoriesLabel;
+
   /// No description provided for @goPremium.
   ///
   /// In en, this message translates to:
@@ -865,50 +877,140 @@ abstract class AppLocalizations {
   /// No description provided for @drinkSips.
   ///
   /// In en, this message translates to:
-  /// **'Take {count} sips.'**
+  /// **'Take {count} sip(s).'**
   String drinkSips(int count);
 
-  /// No description provided for @giveSips.
+  /// No description provided for @catSocial.
   ///
   /// In en, this message translates to:
-  /// **'Give out {count} sips.'**
-  String giveSips(int count);
+  /// **'Social'**
+  String get catSocial;
 
-  /// No description provided for @finishDrink.
+  /// No description provided for @catParty.
   ///
   /// In en, this message translates to:
-  /// **'Finish your drink!'**
-  String get finishDrink;
+  /// **'Party'**
+  String get catParty;
 
-  /// No description provided for @everyoneDrinks.
+  /// No description provided for @catFood.
   ///
   /// In en, this message translates to:
-  /// **'Cheers! Everyone drinks.'**
-  String get everyoneDrinks;
+  /// **'Food'**
+  String get catFood;
 
-  /// No description provided for @chooseSomeone.
+  /// No description provided for @catEmbarrassing.
   ///
   /// In en, this message translates to:
-  /// **'Choose someone to drink.'**
-  String get chooseSomeone;
+  /// **'Embarrassing'**
+  String get catEmbarrassing;
 
-  /// No description provided for @takeAShot.
+  /// No description provided for @catRelationships.
   ///
   /// In en, this message translates to:
-  /// **'Take a shot.'**
-  String get takeAShot;
+  /// **'Relationships'**
+  String get catRelationships;
 
-  /// No description provided for @everyoneElseSips.
+  /// No description provided for @catConfessions.
   ///
   /// In en, this message translates to:
-  /// **'Everyone else takes 1 sip.'**
-  String get everyoneElseSips;
+  /// **'Confessions'**
+  String get catConfessions;
+
+  /// No description provided for @catRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk'**
+  String get catRisk;
+
+  /// No description provided for @catMoralGray.
+  ///
+  /// In en, this message translates to:
+  /// **'Moral Gray'**
+  String get catMoralGray;
+
+  /// No description provided for @catDeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep'**
+  String get catDeep;
+
+  /// No description provided for @catSexual.
+  ///
+  /// In en, this message translates to:
+  /// **'Intimate'**
+  String get catSexual;
 
   /// No description provided for @about2.
   ///
   /// In en, this message translates to:
   /// **'ABOUT'**
   String get about2;
+
+  /// No description provided for @doubleTapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press a category for details'**
+  String get doubleTapHint;
+
+  /// No description provided for @catDescSocial.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendships, social media & everyday interactions'**
+  String get catDescSocial;
+
+  /// No description provided for @catDescParty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nightlife, celebrations & wild moments'**
+  String get catDescParty;
+
+  /// No description provided for @catDescFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Eating habits, cooking fails & food adventures'**
+  String get catDescFood;
+
+  /// No description provided for @catDescEmbarrassing.
+  ///
+  /// In en, this message translates to:
+  /// **'Awkward moments & cringe-worthy stories'**
+  String get catDescEmbarrassing;
+
+  /// No description provided for @catDescRelationships.
+  ///
+  /// In en, this message translates to:
+  /// **'Love, dating, heartbreak & romance'**
+  String get catDescRelationships;
+
+  /// No description provided for @catDescConfessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden secrets & things you never told anyone'**
+  String get catDescConfessions;
+
+  /// No description provided for @catDescRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Dares, adrenaline & risky decisions'**
+  String get catDescRisk;
+
+  /// No description provided for @catDescMoralGray.
+  ///
+  /// In en, this message translates to:
+  /// **'Ethical dilemmas & morally questionable choices'**
+  String get catDescMoralGray;
+
+  /// No description provided for @catDescDeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Life, identity, fears & philosophical questions'**
+  String get catDescDeep;
+
+  /// No description provided for @catDescSexual.
+  ///
+  /// In en, this message translates to:
+  /// **'Intimate & sexual experiences (18+)'**
+  String get catDescSexual;
 }
 
 class _AppLocalizationsDelegate

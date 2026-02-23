@@ -17,7 +17,7 @@ class Env {
     if (kIsWeb) return 'http://localhost:8080';
     return const String.fromEnvironment(
       'API_URL',
-      defaultValue: 'http://192.168.178.143',
+      defaultValue: 'https://api.burk-solutions.de',
     );
   }
 

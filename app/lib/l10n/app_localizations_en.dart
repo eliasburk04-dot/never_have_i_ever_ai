@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Never Have I Ever';
+  String get appTitle => 'EXPOSED';
 
   @override
   String get iHave => 'I Have';
@@ -43,7 +43,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startGame => 'Start Game';
 
   @override
-  String get nsfwMode => 'Spicy Mode 🌶️';
+  String get nsfwMode => 'NSFW Mode 🌶️';
 
   @override
   String get premium => 'Go Premium';
@@ -268,7 +268,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get keepPlaying => 'Keep Playing';
 
   @override
-  String get neverHaveIEver => 'NEVER HAVE I EVER';
+  String get neverHaveIEver => 'EXPOSED';
 
   @override
   String get recycled => '🔄 Recycled';
@@ -401,7 +401,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youArePremium => 'You\'re Premium';
 
   @override
-  String get premiumEnjoy => 'Enjoy unlimited rounds\nand longer games.';
+  String get premiumEnjoy =>
+      'You have access to all Premium Categories\n& the Drinking Game Mode.';
 
   @override
   String get unlimitedOfflineRounds => 'Unlimited offline rounds';
@@ -410,33 +411,85 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upTo100Rounds => 'Up to 100 rounds per game';
 
   @override
+  String get allCategories => 'Unlock all 10 topics (18+, Deep)';
+
+  @override
+  String get categoriesLabel => 'CATEGORIES';
+
+  @override
   String get goPremium => 'Go Premium';
 
   @override
   String drinkSips(int count) {
-    return 'Take $count sips.';
+    return 'Take $count sip(s).';
   }
 
   @override
-  String giveSips(int count) {
-    return 'Give out $count sips.';
-  }
+  String get catSocial => 'Social';
 
   @override
-  String get finishDrink => 'Finish your drink!';
+  String get catParty => 'Party';
 
   @override
-  String get everyoneDrinks => 'Cheers! Everyone drinks.';
+  String get catFood => 'Food';
 
   @override
-  String get chooseSomeone => 'Choose someone to drink.';
+  String get catEmbarrassing => 'Embarrassing';
 
   @override
-  String get takeAShot => 'Take a shot.';
+  String get catRelationships => 'Relationships';
 
   @override
-  String get everyoneElseSips => 'Everyone else takes 1 sip.';
+  String get catConfessions => 'Confessions';
+
+  @override
+  String get catRisk => 'Risk';
+
+  @override
+  String get catMoralGray => 'Moral Gray';
+
+  @override
+  String get catDeep => 'Deep';
+
+  @override
+  String get catSexual => 'Intimate';
 
   @override
   String get about2 => 'ABOUT';
+
+  @override
+  String get doubleTapHint => 'Long-press a category for details';
+
+  @override
+  String get catDescSocial =>
+      'Friendships, social media & everyday interactions';
+
+  @override
+  String get catDescParty => 'Nightlife, celebrations & wild moments';
+
+  @override
+  String get catDescFood => 'Eating habits, cooking fails & food adventures';
+
+  @override
+  String get catDescEmbarrassing => 'Awkward moments & cringe-worthy stories';
+
+  @override
+  String get catDescRelationships => 'Love, dating, heartbreak & romance';
+
+  @override
+  String get catDescConfessions =>
+      'Hidden secrets & things you never told anyone';
+
+  @override
+  String get catDescRisk => 'Dares, adrenaline & risky decisions';
+
+  @override
+  String get catDescMoralGray =>
+      'Ethical dilemmas & morally questionable choices';
+
+  @override
+  String get catDescDeep => 'Life, identity, fears & philosophical questions';
+
+  @override
+  String get catDescSexual => 'Intimate & sexual experiences (18+)';
 }

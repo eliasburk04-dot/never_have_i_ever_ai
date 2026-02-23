@@ -124,10 +124,10 @@ function createLobbyHandler(fixedGameKey?: string) {
       }
 
       const lobbyRes = await client.query(
-        `INSERT INTO lobbies (game_key, code, host_id, language, max_rounds, nsfw_enabled)
-         VALUES ($1,$2,$3,$4,$5,$6)
+        `INSERT INTO lobbies (game_key, code, host_id, language, max_rounds, nsfw_enabled, categories)
+         VALUES ($1,$2,$3,$4,$5,$6,$7)
          RETURNING *`,
-        [gameKey, code, hostId, body.language, body.maxRounds, body.nsfwEnabled],
+        [gameKey, code, hostId, body.language, body.maxRounds, body.nsfwEnabled, body.categories ?? []],
       );
       const lobby = lobbyRes.rows[0];
 

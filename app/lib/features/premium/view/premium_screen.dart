@@ -62,28 +62,35 @@ class PremiumScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Gold glow icon
+          // Glowing golden star
           Container(
             width: 88,
             height: 88,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.premiumGold.withValues(alpha: 0.1),
+              gradient: RadialGradient(
+                colors: [
+                  AppColors.premiumGold.withValues(alpha: 0.25),
+                  AppColors.premiumGold.withValues(alpha: 0.05),
+                  Colors.transparent,
+                ],
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.premiumGold.withValues(alpha: 0.3),
-                  blurRadius: 32,
+                  color: AppColors.premiumGold.withValues(alpha: 0.5),
+                  blurRadius: 40,
+                  spreadRadius: 5,
                 ),
               ],
             ),
             child: const Icon(Icons.star_rounded,
-                color: AppColors.premiumGold, size: 48),
+                color: AppColors.premiumGold, size: 52),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(l10n.youArePremium,
               style: AppTypography.display
                   .copyWith(color: AppColors.premiumGold)),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.md),
           Text(
             l10n.premiumEnjoy,
             style:
@@ -160,6 +167,9 @@ class PremiumScreen extends StatelessWidget {
                         color: AppColors.surface.withValues(alpha: 0.3),
                         child: Column(
                           children: [
+                            const _FeatureRow(
+                                icon: Icons.category_rounded,
+                                textKey: 'allCategories'),
                             const _FeatureRow(
                                 icon: Icons.all_inclusive,
                                 textKey: 'unlimitedOfflineRounds'),
@@ -270,6 +280,7 @@ class _FeatureRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final text = switch (textKey) {
+      'allCategories' => l10n.allCategories,
       'unlimitedOfflineRounds' => l10n.unlimitedOfflineRounds,
       'upTo100Rounds' => l10n.upTo100Rounds,
       _ => textKey,

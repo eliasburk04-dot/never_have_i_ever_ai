@@ -1,6 +1,6 @@
 {
     "@@locale": "de",
-    "appTitle": "Ich hab noch nie",
+    "appTitle": "EXPOSED",
     "iHave": "Hab ich",
     "iHaveNot": "Hab ich nicht",
     "createLobby": "Lobby erstellen",
@@ -21,7 +21,7 @@
         }
     },
     "startGame": "Spiel starten",
-    "nsfwMode": "NSFW Modus 🌶️",
+    "nsfwMode": "NSFW Mode 🌶️",
     "premium": "Premium holen",
     "premiumUnlock": "Für 4,99 € freischalten",
     "premiumLifetime": "Einmaliger Kauf",
@@ -63,10 +63,10 @@
     "notEnoughPlayers": "Nicht genug Spieler",
     "minPlayersRequired": "Mindestens 2 Spieler erforderlich",
     "rounds": "Runden",
-    "safe": "Harmlos",
-    "deeper": "Tiefer",
-    "secretive": "Geheimnisvoll",
-    "freaky": "Gewagt",
+    "safe": "Safe",
+    "deeper": "Deeper",
+    "secretive": "Secretive",
+    "freaky": "Freaky",
     "free": "Kostenlos",
     "premiumLabel": "Premium",
     "unlimitedAi": "Unbegrenzte KI",
@@ -113,7 +113,7 @@
     "endGameTitle": "Spiel beenden?",
     "endGameBody": "Dein Fortschritt wird gespeichert. Du kannst später weitermachen.",
     "keepPlaying": "Weiterspielen",
-    "neverHaveIEver": "ICH HAB NOCH NIE",
+    "neverHaveIEver": "EXPOSED",
     "recycled": "🔄 Wiederholt",
     "aiGenerated": "✨ KI",
     "roundsCount": "{count} Runden",
@@ -179,26 +179,38 @@
     "purchasePremium": "Premium kaufen",
     "lifetimeOneTime": "Lebenslang · Einmalkauf",
     "youArePremium": "Du bist Premium",
-    "premiumEnjoy": "Genieße unbegrenzte Runden\nund längere Spiele.",
+    "premiumEnjoy": "Du hast Zugriff auf sämtliche Premium-Inhalte,\n einschließlich Trinkspiel- und NSFW-Modus.",
     "unlimitedOfflineRounds": "Unbegrenzte Offline-Runden",
     "upTo100Rounds": "Bis zu 100 Runden pro Spiel",
+    "allCategories": "Alle 10 Themen (18+, Deep) freischalten",
+    "categoriesLabel": "KATEGORIEN",
     "goPremium": "Premium holen",
-    "drinkSips": "Nimm {count} Schlücke.",
+    "drinkSips": "Trink {count} Schluck.",
     "@drinkSips": {
         "placeholders": {
             "count": {"type": "int"}
         }
     },
-    "giveSips": "Verteile {count} Schlücke.",
-    "@giveSips": {
-        "placeholders": {
-            "count": {"type": "int"}
-        }
-    },
-    "finishDrink": "Ex dein Getränk!",
-    "everyoneDrinks": "Prost! Alle trinken.",
-    "chooseSomeone": "Wähle jemanden zum Trinken.",
-    "takeAShot": "Nimm einen Shot.",
-    "everyoneElseSips": "Alle anderen: 1 Schluck.",
-    "about2": "ÜBER"
+    "catSocial": "Soziales",
+    "catParty": "Party",
+    "catFood": "Essen",
+    "catEmbarrassing": "Peinlich",
+    "catRelationships": "Beziehungen",
+    "catConfessions": "Geheimnisse",
+    "catRisk": "Risiko",
+    "catMoralGray": "Moralisch",
+    "catDeep": "Deep",
+    "catSexual": "Intim",
+    "about2": "ÜBER",
+    "doubleTapHint": "Kategorie gedrückt halten für Details",
+    "catDescSocial": "Freundschaften, Social Media & Alltagssituationen",
+    "catDescParty": "Nachtleben, Feiern & wilde Momente",
+    "catDescFood": "Essgewohnheiten, Koch-Fails & Food-Abenteuer",
+    "catDescEmbarrassing": "Peinliche Momente & Cringe-Geschichten",
+    "catDescRelationships": "Liebe, Dating, Herzschmerz & Romantik",
+    "catDescConfessions": "Verborgene Geheimnisse & ungesagte Wahrheiten",
+    "catDescRisk": "Mutproben, Adrenalin & riskante Entscheidungen",
+    "catDescMoralGray": "Ethische Dilemmas & moralisch fragwürdige Entscheidungen",
+    "catDescDeep": "Leben, Identität, Ängste & philosophische Fragen",
+    "catDescSexual": "Intime & sexuelle Erfahrungen (18+)"
 }

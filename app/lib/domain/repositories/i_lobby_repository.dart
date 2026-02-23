@@ -9,6 +9,7 @@ abstract class ILobbyRepository {
     required bool nsfwEnabled,
     required String displayName,
     required String avatarEmoji,
+    required List<String> categories,
   });
 
   Future<Lobby?> joinLobby({

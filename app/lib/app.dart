@@ -32,7 +32,7 @@ class NhieApp extends StatelessWidget {
         buildWhen: (prev, curr) => prev.language != curr.language,
         builder: (context, configState) {
           return MaterialApp.router(
-            title: 'Never Have I Ever',
+            title: 'EXPOSED',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.dark,
             routerConfig: appRouter,

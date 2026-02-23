@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "appTitle": "Never Have I Ever",
+    "appTitle": "EXPOSED",
     "iHave": "I Have",
     "iHaveNot": "I Have Not",
     "createLobby": "Create Lobby",
@@ -21,7 +21,7 @@
         }
     },
     "startGame": "Start Game",
-    "nsfwMode": "Spicy Mode 🌶️",
+    "nsfwMode": "NSFW Mode 🌶️",
     "premium": "Go Premium",
     "premiumUnlock": "Unlock for $4.99",
     "premiumLifetime": "One-time purchase",
@@ -113,7 +113,7 @@
     "endGameTitle": "End Game?",
     "endGameBody": "Your progress will be saved. You can resume later.",
     "keepPlaying": "Keep Playing",
-    "neverHaveIEver": "NEVER HAVE I EVER",
+    "neverHaveIEver": "EXPOSED",
     "recycled": "🔄 Recycled",
     "aiGenerated": "✨ AI",
     "roundsCount": "{count} rounds",
@@ -179,26 +179,39 @@
     "purchasePremium": "Purchase Premium",
     "lifetimeOneTime": "Lifetime · One-time purchase",
     "youArePremium": "You're Premium",
-    "premiumEnjoy": "Enjoy unlimited rounds\nand longer games.",
+    "premiumEnjoy": "You have access to all Premium Categories\n& the Drinking Game Mode.",
     "unlimitedOfflineRounds": "Unlimited offline rounds",
     "upTo100Rounds": "Up to 100 rounds per game",
+    "allCategories": "Unlock all 10 topics (18+, Deep)",
+    "categoriesLabel": "CATEGORIES",
+    "@categoriesLabel": {},
     "goPremium": "Go Premium",
-    "drinkSips": "Take {count} sips.",
+    "drinkSips": "Take {count} sip(s).",
     "@drinkSips": {
         "placeholders": {
             "count": {"type": "int"}
         }
     },
-    "giveSips": "Give out {count} sips.",
-    "@giveSips": {
-        "placeholders": {
-            "count": {"type": "int"}
-        }
-    },
-    "finishDrink": "Finish your drink!",
-    "everyoneDrinks": "Cheers! Everyone drinks.",
-    "chooseSomeone": "Choose someone to drink.",
-    "takeAShot": "Take a shot.",
-    "everyoneElseSips": "Everyone else takes 1 sip.",
-    "about2": "ABOUT"
+    "catSocial": "Social",
+    "catParty": "Party",
+    "catFood": "Food",
+    "catEmbarrassing": "Embarrassing",
+    "catRelationships": "Relationships",
+    "catConfessions": "Confessions",
+    "catRisk": "Risk",
+    "catMoralGray": "Moral Gray",
+    "catDeep": "Deep",
+    "catSexual": "Intimate",
+    "about2": "ABOUT",
+    "doubleTapHint": "Long-press a category for details",
+    "catDescSocial": "Friendships, social media & everyday interactions",
+    "catDescParty": "Nightlife, celebrations & wild moments",
+    "catDescFood": "Eating habits, cooking fails & food adventures",
+    "catDescEmbarrassing": "Awkward moments & cringe-worthy stories",
+    "catDescRelationships": "Love, dating, heartbreak & romance",
+    "catDescConfessions": "Hidden secrets & things you never told anyone",
+    "catDescRisk": "Dares, adrenaline & risky decisions",
+    "catDescMoralGray": "Ethical dilemmas & morally questionable choices",
+    "catDescDeep": "Life, identity, fears & philosophical questions",
+    "catDescSexual": "Intimate & sexual experiences (18+)"
 }

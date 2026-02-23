@@ -9,7 +9,7 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get appTitle => 'Ich hab noch nie';
+  String get appTitle => 'EXPOSED';
 
   @override
   String get iHave => 'Hab ich';
@@ -43,7 +43,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get startGame => 'Spiel starten';
 
   @override
-  String get nsfwMode => 'NSFW Modus 🌶️';
+  String get nsfwMode => 'NSFW Mode 🌶️';
 
   @override
   String get premium => 'Premium holen';
@@ -143,16 +143,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get rounds => 'Runden';
 
   @override
-  String get safe => 'Harmlos';
+  String get safe => 'Safe';
 
   @override
-  String get deeper => 'Tiefer';
+  String get deeper => 'Deeper';
 
   @override
-  String get secretive => 'Geheimnisvoll';
+  String get secretive => 'Secretive';
 
   @override
-  String get freaky => 'Gewagt';
+  String get freaky => 'Freaky';
 
   @override
   String get free => 'Kostenlos';
@@ -268,7 +268,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get keepPlaying => 'Weiterspielen';
 
   @override
-  String get neverHaveIEver => 'ICH HAB NOCH NIE';
+  String get neverHaveIEver => 'EXPOSED';
 
   @override
   String get recycled => '🔄 Wiederholt';
@@ -402,7 +402,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get youArePremium => 'Du bist Premium';
 
   @override
-  String get premiumEnjoy => 'Genieße unbegrenzte Runden\nund längere Spiele.';
+  String get premiumEnjoy =>
+      'Du hast Zugriff auf sämtliche Premium-Inhalte,\n einschließlich Trinkspiel- und NSFW-Modus.';
 
   @override
   String get unlimitedOfflineRounds => 'Unbegrenzte Offline-Runden';
@@ -411,33 +412,85 @@ class AppLocalizationsDe extends AppLocalizations {
   String get upTo100Rounds => 'Bis zu 100 Runden pro Spiel';
 
   @override
+  String get allCategories => 'Alle 10 Themen (18+, Deep) freischalten';
+
+  @override
+  String get categoriesLabel => 'KATEGORIEN';
+
+  @override
   String get goPremium => 'Premium holen';
 
   @override
   String drinkSips(int count) {
-    return 'Nimm $count Schlücke.';
+    return 'Trink $count Schluck.';
   }
 
   @override
-  String giveSips(int count) {
-    return 'Verteile $count Schlücke.';
-  }
+  String get catSocial => 'Soziales';
 
   @override
-  String get finishDrink => 'Ex dein Getränk!';
+  String get catParty => 'Party';
 
   @override
-  String get everyoneDrinks => 'Prost! Alle trinken.';
+  String get catFood => 'Essen';
 
   @override
-  String get chooseSomeone => 'Wähle jemanden zum Trinken.';
+  String get catEmbarrassing => 'Peinlich';
 
   @override
-  String get takeAShot => 'Nimm einen Shot.';
+  String get catRelationships => 'Beziehungen';
 
   @override
-  String get everyoneElseSips => 'Alle anderen: 1 Schluck.';
+  String get catConfessions => 'Geheimnisse';
+
+  @override
+  String get catRisk => 'Risiko';
+
+  @override
+  String get catMoralGray => 'Moralisch';
+
+  @override
+  String get catDeep => 'Deep';
+
+  @override
+  String get catSexual => 'Intim';
 
   @override
   String get about2 => 'ÜBER';
+
+  @override
+  String get doubleTapHint => 'Kategorie gedrückt halten für Details';
+
+  @override
+  String get catDescSocial =>
+      'Freundschaften, Social Media & Alltagssituationen';
+
+  @override
+  String get catDescParty => 'Nachtleben, Feiern & wilde Momente';
+
+  @override
+  String get catDescFood => 'Essgewohnheiten, Koch-Fails & Food-Abenteuer';
+
+  @override
+  String get catDescEmbarrassing => 'Peinliche Momente & Cringe-Geschichten';
+
+  @override
+  String get catDescRelationships => 'Liebe, Dating, Herzschmerz & Romantik';
+
+  @override
+  String get catDescConfessions =>
+      'Verborgene Geheimnisse & ungesagte Wahrheiten';
+
+  @override
+  String get catDescRisk => 'Mutproben, Adrenalin & riskante Entscheidungen';
+
+  @override
+  String get catDescMoralGray =>
+      'Ethische Dilemmas & moralisch fragwürdige Entscheidungen';
+
+  @override
+  String get catDescDeep => 'Leben, Identität, Ängste & philosophische Fragen';
+
+  @override
+  String get catDescSexual => 'Intime & sexuelle Erfahrungen (18+)';
 }

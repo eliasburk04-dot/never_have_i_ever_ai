@@ -9,7 +9,7 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get appTitle => 'Yo Nunca Nunca';
+  String get appTitle => 'EXPOSED';
 
   @override
   String get iHave => 'Yo Sí';
@@ -43,7 +43,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get startGame => 'Iniciar juego';
 
   @override
-  String get nsfwMode => 'Modo Picante 🌶️';
+  String get nsfwMode => 'NSFW Mode 🌶️';
 
   @override
   String get premium => 'Obtener Premium';
@@ -143,16 +143,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get rounds => 'Rondas';
 
   @override
-  String get safe => 'Seguro';
+  String get safe => 'Safe';
 
   @override
-  String get deeper => 'Más profundo';
+  String get deeper => 'Deeper';
 
   @override
-  String get secretive => 'Secreto';
+  String get secretive => 'Secretive';
 
   @override
-  String get freaky => 'Atrevido';
+  String get freaky => 'Freaky';
 
   @override
   String get free => 'Gratis';
@@ -268,7 +268,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get keepPlaying => 'Seguir jugando';
 
   @override
-  String get neverHaveIEver => 'YO NUNCA NUNCA';
+  String get neverHaveIEver => 'EXPOSED';
 
   @override
   String get recycled => '🔄 Repetida';
@@ -402,7 +402,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get premiumEnjoy =>
-      'Disfruta de rondas ilimitadas\ny juegos más largos.';
+      'Tienes acceso a todos los temas Premium\n& el Modo Trago.';
 
   @override
   String get unlimitedOfflineRounds => 'Rondas sin conexión ilimitadas';
@@ -411,33 +411,87 @@ class AppLocalizationsEs extends AppLocalizations {
   String get upTo100Rounds => 'Hasta 100 rondas por juego';
 
   @override
+  String get allCategories => 'Desbloquea los 10 temas (18+, Profundo)';
+
+  @override
+  String get categoriesLabel => 'CATEGORÍAS';
+
+  @override
   String get goPremium => 'Obtener Premium';
 
   @override
   String drinkSips(int count) {
-    return 'Toma $count tragos.';
+    return 'Toma $count trago(s).';
   }
 
   @override
-  String giveSips(int count) {
-    return 'Reparte $count tragos.';
-  }
+  String get catSocial => 'Social';
 
   @override
-  String get finishDrink => '¡Termina tu bebida!';
+  String get catParty => 'Fiesta';
 
   @override
-  String get everyoneDrinks => '¡Salud! Todos beben.';
+  String get catFood => 'Comida';
 
   @override
-  String get chooseSomeone => 'Elige a alguien para beber.';
+  String get catEmbarrassing => 'Vergüenza';
 
   @override
-  String get takeAShot => 'Toma un shot.';
+  String get catRelationships => 'Relaciones';
 
   @override
-  String get everyoneElseSips => 'Los demás: 1 trago.';
+  String get catConfessions => 'Confesiones';
+
+  @override
+  String get catRisk => 'Riesgo';
+
+  @override
+  String get catMoralGray => 'Dilema';
+
+  @override
+  String get catDeep => 'Profundo';
+
+  @override
+  String get catSexual => 'Íntimo';
 
   @override
   String get about2 => 'ACERCA DE';
+
+  @override
+  String get doubleTapHint =>
+      'Mantén presionada una categoría para ver detalles';
+
+  @override
+  String get catDescSocial =>
+      'Amistades, redes sociales e interacciones diarias';
+
+  @override
+  String get catDescParty => 'Vida nocturna, celebraciones y momentos salvajes';
+
+  @override
+  String get catDescFood =>
+      'Hábitos alimenticios, fails cocinando y aventuras gastronómicas';
+
+  @override
+  String get catDescEmbarrassing => 'Momentos vergonzosos e historias cringe';
+
+  @override
+  String get catDescRelationships => 'Amor, citas, desamor y romance';
+
+  @override
+  String get catDescConfessions =>
+      'Secretos ocultos y cosas que nunca contaste';
+
+  @override
+  String get catDescRisk => 'Retos, adrenalina y decisiones arriesgadas';
+
+  @override
+  String get catDescMoralGray =>
+      'Dilemas éticos y decisiones moralmente cuestionables';
+
+  @override
+  String get catDescDeep => 'Vida, identidad, miedos y preguntas filosóficas';
+
+  @override
+  String get catDescSexual => 'Experiencias íntimas y sexuales (18+)';
 }

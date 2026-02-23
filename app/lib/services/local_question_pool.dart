@@ -131,6 +131,7 @@ class LocalQuestionPool {
     required bool nsfwEnabled,
     required bool isPremium,
     required List<String> usedIds,
+    required List<String> categories,
     int roundNumber = 999,
     List<String> recentCategories = const [],
     List<String> recentSubcategories = const [],
@@ -158,9 +159,15 @@ class LocalQuestionPool {
       candidates.addAll(_byIntensity[i] ?? []);
     }
 
-    // Step 2: Filter NSFW
-    if (!nsfwEnabled) {
-      candidates = candidates.where((q) => !q.isNsfw).toList();
+    // Step 2: Filter NSFW + categories as UNION
+    // NSFW adds all is_nsfw questions, categories add all questions from those
+    // categories. The final pool is the union of both sets.
+    if (nsfwEnabled || categories.isNotEmpty) {
+      candidates = candidates.where((q) {
+        if (nsfwEnabled && q.isNsfw) return true;
+        if (categories.isNotEmpty && categories.contains(q.category)) return true;
+        return false;
+      }).toList();
     }
 
     // Step 3: Filter premium
@@ -199,8 +206,15 @@ class LocalQuestionPool {
     for (int i = expandMin; i <= expandMax; i++) {
       expanded.addAll(_byIntensity[i] ?? []);
     }
-    if (!nsfwEnabled) expanded.removeWhere((q) => q.isNsfw);
+    if (nsfwEnabled || categories.isNotEmpty) {
+      expanded.removeWhere((q) {
+        if (nsfwEnabled && q.isNsfw) return false;
+        if (categories.isNotEmpty && categories.contains(q.category)) return false;
+        return true;
+      });
+    }
     if (!isPremium) expanded.removeWhere((q) => q.isPremium);
+    
     final expandedUnused = expanded
         .where((q) => !usedSet.contains(q.id))
         .toList();
@@ -229,6 +243,7 @@ class LocalQuestionPool {
     final eligibleCount = _eligiblePoolSize(
       nsfwEnabled: nsfwEnabled,
       isPremium: isPremium,
+      categories: categories,
     );
     final exhaustionRatio = eligibleCount == 0
         ? 1.0
@@ -267,9 +282,18 @@ class LocalQuestionPool {
     return null;
   }
 
-  int _eligiblePoolSize({required bool nsfwEnabled, required bool isPremium}) {
+  int _eligiblePoolSize({
+    required bool nsfwEnabled,
+    required bool isPremium,
+    required List<String> categories,
+  }) {
     return _all.where((q) {
-      if (!nsfwEnabled && q.isNsfw) return false;
+      // Union filter: must match NSFW or category
+      if (nsfwEnabled || categories.isNotEmpty) {
+        final matchesNsfw = nsfwEnabled && q.isNsfw;
+        final matchesCategory = categories.isNotEmpty && categories.contains(q.category);
+        if (!matchesNsfw && !matchesCategory) return false;
+      }
       if (!isPremium && q.isPremium) return false;
       return true;
     }).length;

@@ -88,8 +88,19 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                      'Never Have\nI Ever',
-                      style: AppTypography.display,
+                      'EXPOSED',
+                      style: AppTypography.display.copyWith(
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withValues(alpha: 0.7),
+                            blurRadius: 8,
+                          ),
+                          Shadow(
+                            color: Colors.black.withValues(alpha: 0.4),
+                            blurRadius: 20,
+                          ),
+                        ],
+                      ),
                       textAlign: TextAlign.center,
                     )
                     .animate()

@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "appTitle": "Yo Nunca Nunca",
+    "appTitle": "EXPOSED",
     "iHave": "Yo Sí",
     "iHaveNot": "Yo No",
     "createLobby": "Crear sala",
@@ -21,7 +21,7 @@
         }
     },
     "startGame": "Iniciar juego",
-    "nsfwMode": "Modo Picante 🌶️",
+    "nsfwMode": "NSFW Mode 🌶️",
     "premium": "Obtener Premium",
     "premiumUnlock": "Desbloquear por $4.99",
     "premiumLifetime": "Compra única",
@@ -63,10 +63,10 @@
     "notEnoughPlayers": "No hay suficientes jugadores",
     "minPlayersRequired": "Se necesitan al menos 2 jugadores",
     "rounds": "Rondas",
-    "safe": "Seguro",
-    "deeper": "Más profundo",
-    "secretive": "Secreto",
-    "freaky": "Atrevido",
+    "safe": "Safe",
+    "deeper": "Deeper",
+    "secretive": "Secretive",
+    "freaky": "Freaky",
     "free": "Gratis",
     "premiumLabel": "Premium",
     "unlimitedAi": "IA ilimitada",
@@ -113,7 +113,7 @@
     "endGameTitle": "¿Terminar juego?",
     "endGameBody": "Tu progreso se guardará. Puedes continuar después.",
     "keepPlaying": "Seguir jugando",
-    "neverHaveIEver": "YO NUNCA NUNCA",
+    "neverHaveIEver": "EXPOSED",
     "recycled": "🔄 Repetida",
     "aiGenerated": "✨ IA",
     "roundsCount": "{count} rondas",
@@ -179,26 +179,38 @@
     "purchasePremium": "Comprar Premium",
     "lifetimeOneTime": "De por vida · Compra única",
     "youArePremium": "Eres Premium",
-    "premiumEnjoy": "Disfruta de rondas ilimitadas\ny juegos más largos.",
+    "premiumEnjoy": "Tienes acceso a todos los temas Premium\n& el Modo Trago.",
     "unlimitedOfflineRounds": "Rondas sin conexión ilimitadas",
     "upTo100Rounds": "Hasta 100 rondas por juego",
+    "allCategories": "Desbloquea los 10 temas (18+, Profundo)",
+    "categoriesLabel": "CATEGORÍAS",
     "goPremium": "Obtener Premium",
-    "drinkSips": "Toma {count} tragos.",
+    "drinkSips": "Toma {count} trago(s).",
     "@drinkSips": {
         "placeholders": {
             "count": {"type": "int"}
         }
     },
-    "giveSips": "Reparte {count} tragos.",
-    "@giveSips": {
-        "placeholders": {
-            "count": {"type": "int"}
-        }
-    },
-    "finishDrink": "¡Termina tu bebida!",
-    "everyoneDrinks": "¡Salud! Todos beben.",
-    "chooseSomeone": "Elige a alguien para beber.",
-    "takeAShot": "Toma un shot.",
-    "everyoneElseSips": "Los demás: 1 trago.",
-    "about2": "ACERCA DE"
+    "catSocial": "Social",
+    "catParty": "Fiesta",
+    "catFood": "Comida",
+    "catEmbarrassing": "Vergüenza",
+    "catRelationships": "Relaciones",
+    "catConfessions": "Confesiones",
+    "catRisk": "Riesgo",
+    "catMoralGray": "Dilema",
+    "catDeep": "Profundo",
+    "catSexual": "Íntimo",
+    "about2": "ACERCA DE",
+    "doubleTapHint": "Mant\u00e9n presionada una categor\u00eda para ver detalles",
+    "catDescSocial": "Amistades, redes sociales e interacciones diarias",
+    "catDescParty": "Vida nocturna, celebraciones y momentos salvajes",
+    "catDescFood": "Hábitos alimenticios, fails cocinando y aventuras gastronómicas",
+    "catDescEmbarrassing": "Momentos vergonzosos e historias cringe",
+    "catDescRelationships": "Amor, citas, desamor y romance",
+    "catDescConfessions": "Secretos ocultos y cosas que nunca contaste",
+    "catDescRisk": "Retos, adrenalina y decisiones arriesgadas",
+    "catDescMoralGray": "Dilemas éticos y decisiones moralmente cuestionables",
+    "catDescDeep": "Vida, identidad, miedos y preguntas filosóficas",
+    "catDescSexual": "Experiencias íntimas y sexuales (18+)"
 }

@@ -32,6 +32,7 @@ class OfflineGameState extends Equatable {
     this.isDrinkingGame = false,
     this.currentDrinkingRule,
     this.customQuestions = const [],
+    this.categories = const ['social', 'party', 'food', 'embarrassing'],
   });
 
   final OfflineGamePhase phase;
@@ -53,6 +54,9 @@ class OfflineGameState extends Equatable {
   /// A list of custom questions injected by the players
   final List<String> customQuestions;
 
+  /// The categories selected for this session
+  final List<String> categories;
+
   int get roundNumber => session?.currentRound ?? 0;
   int get maxRounds => session?.maxRounds ?? 0;
   int get playerCount => session?.playerCount ?? 0;
@@ -73,6 +77,7 @@ class OfflineGameState extends Equatable {
     bool? isDrinkingGame,
     String? currentDrinkingRule,
     List<String>? customQuestions,
+    List<String>? categories,
   }) {
     return OfflineGameState(
       phase: phase ?? this.phase,
@@ -89,6 +94,7 @@ class OfflineGameState extends Equatable {
       isDrinkingGame: isDrinkingGame ?? this.isDrinkingGame,
       currentDrinkingRule: currentDrinkingRule ?? this.currentDrinkingRule,
       customQuestions: customQuestions ?? this.customQuestions,
+      categories: categories ?? this.categories,
     );
   }
 
@@ -106,5 +112,6 @@ class OfflineGameState extends Equatable {
     isDrinkingGame,
     currentDrinkingRule,
     customQuestions,
+    categories,
   ];
 }
