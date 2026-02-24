@@ -841,7 +841,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumEnjoy.
   ///
   /// In en, this message translates to:
-  /// **'You have access to all Premium Categories\n& the Drinking Game Mode.'**
+  /// **'You have access to all 1600+ questions,\nNSFW Mode, Drinking Game & more.'**
   String get premiumEnjoy;
 
   /// No description provided for @unlimitedOfflineRounds.
@@ -859,8 +859,26 @@ abstract class AppLocalizations {
   /// No description provided for @allCategories.
   ///
   /// In en, this message translates to:
-  /// **'Unlock all 10 topics (18+, Deep)'**
+  /// **'1600+ questions across all 10 categories'**
   String get allCategories;
+
+  /// No description provided for @premiumNsfwMode.
+  ///
+  /// In en, this message translates to:
+  /// **'NSFW Mode 🌶️ – 160+ explicit questions'**
+  String get premiumNsfwMode;
+
+  /// No description provided for @premiumDrinkingMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinking Game Mode 🍺'**
+  String get premiumDrinkingMode;
+
+  /// No description provided for @premiumUpTo20Players.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 20 players per lobby'**
+  String get premiumUpTo20Players;
 
   /// No description provided for @categoriesLabel.
   ///

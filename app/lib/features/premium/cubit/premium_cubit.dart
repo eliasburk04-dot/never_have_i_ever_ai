@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -58,8 +60,8 @@ class PremiumCubit extends Cubit<PremiumState> {
       final isNowPremium = await _iapService.checkLocalPremiumStatus();
       if (isNowPremium && !state.isPremium) {
         emit(state.copyWith(isPremium: true, isLoading: false, errorMessage: null));
-      } else if (!isNowPremium) {
-        // If it emits but we still aren't premium, it might have been an error or cancel.
+      } else {
+        // Purchase was cancelled, errored, or not premium — always stop loading.
         emit(state.copyWith(isLoading: false));
       }
     });
@@ -69,12 +71,19 @@ class PremiumCubit extends Cubit<PremiumState> {
   Future<void> checkPremium() async {
     emit(state.copyWith(isLoading: true));
     try {
+      // ── DEBUG: Force premium for screenshots ──
+      await _iapService.debugGrantPremium();
+      // ── END DEBUG ──
+
       final isPremium = await _iapService.checkLocalPremiumStatus();
       
       String priceText = '\$9.99'; // Fallback
       
       if (!isPremium) {
-        final product = await _iapService.getPremiumProduct();
+        // Timeout product query — on simulator the store may hang.
+        final product = await _iapService
+            .getPremiumProduct()
+            .timeout(const Duration(seconds: 5), onTimeout: () => null);
         if (product != null) {
           priceText = product.price;
         }
@@ -92,21 +101,34 @@ class PremiumCubit extends Cubit<PremiumState> {
 
   /// Initiate a purchase via StoreKit/PlayStore.
   Future<void> purchase() async {
+    if (state.isLoading) return; // Prevent double-tap
     emit(state.copyWith(isLoading: true, errorMessage: null));
+
+    // Listen for the NEXT purchase stream event to stop loading.
+    // If no event arrives within 10 seconds, assume the purchase
+    // dialog was dismissed or the store is unavailable.
+    _purchaseTimeout?.cancel();
+    _purchaseTimeout = Timer(const Duration(seconds: 10), () {
+      if (state.isLoading && !isClosed) {
+        emit(state.copyWith(isLoading: false));
+      }
+    });
+
     try {
       final product = await _iapService.getPremiumProduct();
       if (product == null) {
+        _purchaseTimeout?.cancel();
         emit(state.copyWith(
           isLoading: false,
           errorMessage: 'Premium product not found in the store.',
         ));
         return;
       }
-      
+
       // The actual result will come back asynchronously through the stream.
       await _iapService.buyPremium(product);
-      
     } catch (e) {
+      _purchaseTimeout?.cancel();
       emit(state.copyWith(
         isLoading: false,
         errorMessage: 'Purchase error: $e',
@@ -114,13 +136,25 @@ class PremiumCubit extends Cubit<PremiumState> {
     }
   }
 
+  Timer? _purchaseTimeout;
+
   /// Restore previous App Store purchases.
   Future<void> restore() async {
+    if (state.isLoading) return;
     emit(state.copyWith(isLoading: true, errorMessage: null));
+
+    _purchaseTimeout?.cancel();
+    _purchaseTimeout = Timer(const Duration(seconds: 10), () {
+      if (state.isLoading && !isClosed) {
+        emit(state.copyWith(isLoading: false));
+      }
+    });
+
     try {
       await _iapService.restorePurchases();
       // The actual result will come back asynchronously through the stream.
     } catch (e) {
+      _purchaseTimeout?.cancel();
       emit(state.copyWith(
         isLoading: false,
         errorMessage: 'Restore error: $e',
@@ -130,7 +164,7 @@ class PremiumCubit extends Cubit<PremiumState> {
 
   @override
   Future<void> close() {
-    // We don't dispose the singleton, just close the cubit.
+    _purchaseTimeout?.cancel();
     return super.close();
   }
 }

@@ -27,8 +27,13 @@ Future<void> main() async {
   // Setup dependency injection
   setupServiceLocator();
 
-  // Initialize native IAP service
-  await NativeIapService.instance.initialize();
+  // Initialize native IAP service (timeout so simulator doesn't block launch)
+  await NativeIapService.instance.initialize().timeout(
+    const Duration(seconds: 5),
+    onTimeout: () {
+      log.w('IAP initialization timed out — store may be unavailable');
+    },
+  );
 
   // Keep startup non-blocking so iOS never sits on a white launch screen.
   await _initializeStorage(log);

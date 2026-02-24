@@ -402,7 +402,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get premiumEnjoy =>
-      'Tienes acceso a todos los temas Premium\n& el Modo Trago.';
+      'Tienes acceso a las 1600+ preguntas,\nModo NSFW, Modo Trago y más.';
 
   @override
   String get unlimitedOfflineRounds => 'Rondas sin conexión ilimitadas';
@@ -411,7 +411,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get upTo100Rounds => 'Hasta 100 rondas por juego';
 
   @override
-  String get allCategories => 'Desbloquea los 10 temas (18+, Profundo)';
+  String get allCategories => '1600+ preguntas en las 10 categorías';
+
+  @override
+  String get premiumNsfwMode => 'Modo NSFW 🌶️ – 160+ preguntas explícitas';
+
+  @override
+  String get premiumDrinkingMode => 'Modo Trago 🍺';
+
+  @override
+  String get premiumUpTo20Players => 'Hasta 20 jugadores por sala';
 
   @override
   String get categoriesLabel => 'CATEGORÍAS';

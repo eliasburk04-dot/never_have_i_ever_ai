@@ -168,14 +168,20 @@ class PremiumScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             const _FeatureRow(
-                                icon: Icons.category_rounded,
+                                icon: Icons.quiz_rounded,
                                 textKey: 'allCategories'),
                             const _FeatureRow(
-                                icon: Icons.all_inclusive,
-                                textKey: 'unlimitedOfflineRounds'),
+                                icon: Icons.whatshot_rounded,
+                                textKey: 'premiumNsfwMode'),
                             const _FeatureRow(
-                                icon: Icons.timer,
+                                icon: Icons.local_bar_rounded,
+                                textKey: 'premiumDrinkingMode'),
+                            const _FeatureRow(
+                                icon: Icons.repeat_rounded,
                                 textKey: 'upTo100Rounds'),
+                            const _FeatureRow(
+                                icon: Icons.group_rounded,
+                                textKey: 'premiumUpTo20Players'),
                           ],
                         ),
                       ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
@@ -281,8 +287,11 @@ class _FeatureRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final text = switch (textKey) {
       'allCategories' => l10n.allCategories,
-      'unlimitedOfflineRounds' => l10n.unlimitedOfflineRounds,
+      'premiumNsfwMode' => l10n.premiumNsfwMode,
+      'premiumDrinkingMode' => l10n.premiumDrinkingMode,
       'upTo100Rounds' => l10n.upTo100Rounds,
+      'premiumUpTo20Players' => l10n.premiumUpTo20Players,
+      'unlimitedOfflineRounds' => l10n.unlimitedOfflineRounds,
       _ => textKey,
     };
 

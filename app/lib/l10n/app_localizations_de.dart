@@ -403,7 +403,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get premiumEnjoy =>
-      'Du hast Zugriff auf sämtliche Premium-Inhalte,\n einschließlich Trinkspiel- und NSFW-Modus.';
+      'Du hast Zugriff auf alle 1600+ Fragen,\nNSFW-Modus, Trinkspiel & mehr.';
 
   @override
   String get unlimitedOfflineRounds => 'Unbegrenzte Offline-Runden';
@@ -412,7 +412,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get upTo100Rounds => 'Bis zu 100 Runden pro Spiel';
 
   @override
-  String get allCategories => 'Alle 10 Themen (18+, Deep) freischalten';
+  String get allCategories => '1600+ Fragen aus allen 10 Kategorien';
+
+  @override
+  String get premiumNsfwMode => 'NSFW-Modus 🌶️ – 160+ explizite Fragen';
+
+  @override
+  String get premiumDrinkingMode => 'Trinkspiel-Modus 🍺';
+
+  @override
+  String get premiumUpTo20Players => 'Bis zu 20 Spieler pro Lobby';
 
   @override
   String get categoriesLabel => 'KATEGORIEN';

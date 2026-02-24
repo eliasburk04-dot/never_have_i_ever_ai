@@ -52,6 +52,9 @@ class NativeIapService {
     for (var purchaseDetails in purchaseDetailsList) {
       if (purchaseDetails.status == PurchaseStatus.pending) {
         debugPrint('[NativeIapService] Purchase pending...');
+      } else if (purchaseDetails.status == PurchaseStatus.canceled) {
+        debugPrint('[NativeIapService] Purchase canceled by user.');
+        // No completePurchase needed for cancellations.
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
           debugPrint('[NativeIapService] Purchase error: ${purchaseDetails.error}');
@@ -74,17 +77,24 @@ class NativeIapService {
   Future<ProductDetails?> getPremiumProduct() async {
     if (!_isAvailable) return null;
 
-    final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails({premiumProductId});
-    if (response.notFoundIDs.isNotEmpty) {
-      debugPrint('[NativeIapService] Premium product not found in store.');
+    try {
+      final ProductDetailsResponse response = await _inAppPurchase
+          .queryProductDetails({premiumProductId})
+          .timeout(const Duration(seconds: 5));
+      if (response.notFoundIDs.isNotEmpty) {
+        debugPrint('[NativeIapService] Premium product not found in store.');
+        return null;
+      }
+      if (response.error != null) {
+        debugPrint('[NativeIapService] Error fetching product: ${response.error}');
+        return null;
+      }
+      
+      return response.productDetails.isNotEmpty ? response.productDetails.first : null;
+    } catch (e) {
+      debugPrint('[NativeIapService] getPremiumProduct timed out or failed: $e');
       return null;
     }
-    if (response.error != null) {
-      debugPrint('[NativeIapService] Error fetching product: ${response.error}');
-      return null;
-    }
-    
-    return response.productDetails.isNotEmpty ? response.productDetails.first : null;
   }
 
   /// Initiate the purchase flow for the premium unlock.
@@ -108,6 +118,13 @@ class NativeIapService {
   Future<bool> checkLocalPremiumStatus() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('is_premium') ?? false;
+  }
+
+  /// DEBUG ONLY: Force premium status for screenshots.
+  Future<void> debugGrantPremium() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_premium', true);
+    debugPrint('[NativeIapService] DEBUG: Premium granted for screenshots');
   }
 
   void dispose() {
