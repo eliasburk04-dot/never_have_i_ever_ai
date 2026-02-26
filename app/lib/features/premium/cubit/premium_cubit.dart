@@ -71,10 +71,6 @@ class PremiumCubit extends Cubit<PremiumState> {
   Future<void> checkPremium() async {
     emit(state.copyWith(isLoading: true));
     try {
-      // ── DEBUG: Force premium for screenshots ──
-      await _iapService.debugGrantPremium();
-      // ── END DEBUG ──
-
       final isPremium = await _iapService.checkLocalPremiumStatus();
       
       String priceText = '\$9.99'; // Fallback

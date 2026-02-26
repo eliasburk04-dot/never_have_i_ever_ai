@@ -22,8 +22,10 @@ class PremiumScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
-        title: Text(AppLocalizations.of(context)!.premiumLabel,
-            style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
+        title: Text(
+          AppLocalizations.of(context)!.premiumLabel,
+          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+        ),
       ),
       body: Stack(
         children: [
@@ -83,18 +85,21 @@ class PremiumScreen extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(Icons.star_rounded,
-                color: AppColors.premiumGold, size: 52),
+            child: const Icon(
+              Icons.star_rounded,
+              color: AppColors.premiumGold,
+              size: 52,
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(l10n.youArePremium,
-              style: AppTypography.display
-                  .copyWith(color: AppColors.premiumGold)),
+          Text(
+            l10n.youArePremium,
+            style: AppTypography.display.copyWith(color: AppColors.premiumGold),
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             l10n.premiumEnjoy,
-            style:
-                AppTypography.body.copyWith(color: AppColors.textSecondary),
+            style: AppTypography.body.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -107,9 +112,9 @@ class PremiumScreen extends StatelessWidget {
     return BlocListener<PremiumCubit, PremiumState>(
       listener: (context, state) {
         if (state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
         }
       },
       child: LayoutBuilder(
@@ -134,30 +139,32 @@ class PremiumScreen extends StatelessWidget {
                         height: 88,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color:
-                              AppColors.premiumGold.withValues(alpha: 0.1),
+                          color: AppColors.premiumGold.withValues(alpha: 0.1),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.premiumGold
-                                  .withValues(alpha: 0.3),
+                              color: AppColors.premiumGold.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 32,
                             ),
                           ],
                         ),
-                        child: const Icon(Icons.star_rounded,
-                            color: AppColors.premiumGold, size: 48),
-                      )
-                          .animate()
-                          .scale(
-                            begin: const Offset(0.7, 0.7),
-                            end: const Offset(1, 1),
-                            duration: 600.ms,
-                            curve: Curves.elasticOut,
-                          ),
+                        child: const Icon(
+                          Icons.star_rounded,
+                          color: AppColors.premiumGold,
+                          size: 48,
+                        ),
+                      ).animate().scale(
+                        begin: const Offset(0.7, 0.7),
+                        end: const Offset(1, 1),
+                        duration: 600.ms,
+                        curve: Curves.elasticOut,
+                      ),
                       const SizedBox(height: AppSpacing.lg),
-                      Text(l10n.goPremium, style: AppTypography.display)
-                          .animate()
-                          .fadeIn(delay: 200.ms),
+                      Text(
+                        l10n.goPremium,
+                        style: AppTypography.display,
+                      ).animate().fadeIn(delay: 200.ms),
                       const SizedBox(height: AppSpacing.xl),
 
                       // Feature list — glass card
@@ -168,20 +175,25 @@ class PremiumScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             const _FeatureRow(
-                                icon: Icons.quiz_rounded,
-                                textKey: 'allCategories'),
+                              icon: Icons.quiz_rounded,
+                              textKey: 'allCategories',
+                            ),
                             const _FeatureRow(
-                                icon: Icons.whatshot_rounded,
-                                textKey: 'premiumNsfwMode'),
+                              icon: Icons.whatshot_rounded,
+                              textKey: 'premiumNsfwMode',
+                            ),
                             const _FeatureRow(
-                                icon: Icons.local_bar_rounded,
-                                textKey: 'premiumDrinkingMode'),
+                              icon: Icons.local_bar_rounded,
+                              textKey: 'premiumDrinkingMode',
+                            ),
                             const _FeatureRow(
-                                icon: Icons.repeat_rounded,
-                                textKey: 'upTo100Rounds'),
+                              icon: Icons.repeat_rounded,
+                              textKey: 'upTo100Rounds',
+                            ),
                             const _FeatureRow(
-                                icon: Icons.group_rounded,
-                                textKey: 'premiumUpTo20Players'),
+                              icon: Icons.group_rounded,
+                              textKey: 'premiumUpTo20Players',
+                            ),
                           ],
                         ),
                       ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
@@ -196,9 +208,12 @@ class PremiumScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(l10n.lifetimeOneTime,
-                          style: AppTypography.bodySmall
-                              .copyWith(color: AppColors.textTertiary)),
+                      Text(
+                        l10n.lifetimeOneTime,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.textTertiary,
+                        ),
+                      ),
                     ],
                   ),
 
@@ -209,12 +224,12 @@ class PremiumScreen extends StatelessWidget {
 
                       if (state.errorMessage != null)
                         Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: AppSpacing.md),
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
                           child: Text(
                             state.errorMessage!,
-                            style: AppTypography.bodySmall
-                                .copyWith(color: AppColors.error),
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.error,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -226,14 +241,14 @@ class PremiumScreen extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: state.isLoading
                               ? null
-                              : () =>
-                                  context.read<PremiumCubit>().purchase(),
+                              : () => context.read<PremiumCubit>().purchase(),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.premiumGold,
                             foregroundColor: Colors.black,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                  AppSpacing.radiusFull),
+                                AppSpacing.radiusFull,
+                              ),
                             ),
                             elevation: 0,
                           ),
@@ -243,25 +258,26 @@ class PremiumScreen extends StatelessWidget {
                                   height: 22,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2.5,
-                                    color:
-                                        Colors.black.withValues(alpha: 0.6),
+                                    color: Colors.black.withValues(alpha: 0.6),
                                   ),
                                 )
-                              : Text(l10n.purchasePremium,
+                              : Text(
+                                  l10n.purchasePremium,
                                   style: AppTypography.button.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700,
-                                  )),
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       TextButton(
-                        onPressed: () =>
-                            context.read<PremiumCubit>().restore(),
+                        onPressed: () => context.read<PremiumCubit>().restore(),
                         child: Text(
                           l10n.restorePurchases,
-                          style: AppTypography.bodySmall
-                              .copyWith(color: AppColors.textTertiary),
+                          style: AppTypography.bodySmall.copyWith(
+                            color: AppColors.textTertiary,
+                          ),
                         ),
                       ),
                     ],
@@ -309,7 +325,9 @@ class _FeatureRow extends StatelessWidget {
             child: Icon(icon, color: AppColors.premiumGold, size: 18),
           ),
           const SizedBox(width: AppSpacing.md),
-          Text(text, style: AppTypography.body),
+          Expanded(
+            child: Text(text, style: AppTypography.body, softWrap: true),
+          ),
         ],
       ),
     );

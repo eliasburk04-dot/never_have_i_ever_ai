@@ -152,16 +152,12 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           _LegalLink(
             label: l10n.privacyPolicy,
-            onTap: () {
-              // TODO: Open privacy policy URL
-            },
+            onTap: () => context.push('/privacy'),
           ),
           const SizedBox(height: AppSpacing.xs),
           _LegalLink(
             label: l10n.termsOfService,
-            onTap: () {
-              // TODO: Open terms of service URL
-            },
+            onTap: () => context.push('/terms'),
           ),
         ],
       ),
@@ -196,8 +192,8 @@ class _LegalLink extends StatelessWidget {
                   style: AppTypography.body
                       .copyWith(color: AppColors.textSecondary)),
             ),
-            Icon(Icons.open_in_new_rounded,
-                size: 16, color: AppColors.textTertiary),
+            Icon(Icons.chevron_right_rounded,
+                size: 20, color: AppColors.textTertiary),
           ],
         ),
       ),

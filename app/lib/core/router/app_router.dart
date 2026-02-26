@@ -15,6 +15,8 @@ import '../../features/offline/view/offline_game_screen.dart';
 import '../../features/offline/view/offline_results_screen.dart';
 import '../../features/premium/view/premium_screen.dart';
 import '../../features/settings/view/settings_screen.dart';
+import '../../features/settings/view/privacy_policy_screen.dart';
+import '../../features/settings/view/terms_of_service_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -100,6 +102,16 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/settings',
       pageBuilder: (_, state) => _buildPage(const SettingsScreen(), state),
+    ),
+    GoRoute(
+      path: '/privacy',
+      pageBuilder: (_, state) =>
+          _buildPage(const PrivacyPolicyScreen(), state),
+    ),
+    GoRoute(
+      path: '/terms',
+      pageBuilder: (_, state) =>
+          _buildPage(const TermsOfServiceScreen(), state),
     ),
     GoRoute(
       path: '/offline/setup',

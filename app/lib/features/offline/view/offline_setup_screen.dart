@@ -59,6 +59,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   void _startGame() {
     final configCubit = context.read<GameConfigCubit>();
     final config = configCubit.state;
+    final isPremium = context.read<PremiumCubit>().state.isPremium;
 
     final players = List.generate(
       _playerCount,
@@ -67,16 +68,12 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
 
     configCubit.setPlayers(players);
 
-    // TODO: Restore after testing
-    // final isPremium = context.read<PremiumCubit>().state.isPremium;
     context.read<OfflineGameCubit>().startGame(
       players: players,
       maxRounds: config.maxRounds,
       language: config.language,
       nsfwEnabled: config.nsfwEnabled,
-      // TODO: Restore after testing
-      // isPremium: isPremium,
-      isPremium: true,
+      isPremium: isPremium,
       isDrinkingGame: config.isDrinkingGame,
       customQuestions: const [],
       categories: config.categories,
@@ -135,256 +132,282 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                    Text(
-                      l10n.players,
-                      style: AppTypography.overline.copyWith(
-                        color: AppColors.textTertiary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.xs + 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusMd,
-                        ),
-                        border: Border.all(color: AppColors.divider),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(l10n.playerCount, style: AppTypography.label),
-                              const SizedBox(height: AppSpacing.xs),
-                              Text(
-                                isPremium
-                                    ? l10n.upToPlayers(AppConstants.maxPlayers)
-                                    : l10n.upToPlayersFree(5),
-                                style: AppTypography.bodySmall,
-                              ),
-                            ],
+                          Text(
+                            l10n.players,
+                            style: AppTypography.overline.copyWith(
+                              color: AppColors.textTertiary,
+                            ),
                           ),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: _decrementPlayers,
-                                icon: const Icon(
-                                  Icons.remove_circle_outline_rounded,
-                                ),
-                                color: AppColors.textTertiary,
+                          const SizedBox(height: AppSpacing.sm),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.xs + 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd,
                               ),
-                              SizedBox(
-                                width: 36,
+                              border: Border.all(color: AppColors.divider),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      l10n.playerCount,
+                                      style: AppTypography.label,
+                                    ),
+                                    const SizedBox(height: AppSpacing.xs),
+                                    Text(
+                                      isPremium
+                                          ? l10n.upToPlayers(
+                                              AppConstants.maxPlayers,
+                                            )
+                                          : l10n.upToPlayersFree(5),
+                                      style: AppTypography.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: _decrementPlayers,
+                                      icon: const Icon(
+                                        Icons.remove_circle_outline_rounded,
+                                      ),
+                                      color: AppColors.textTertiary,
+                                    ),
+                                    SizedBox(
+                                      width: 36,
+                                      child: Text(
+                                        '$_playerCount',
+                                        style: AppTypography.h3.copyWith(
+                                          color: AppColors.accent,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: _incrementPlayers,
+                                      icon: const Icon(
+                                        Icons.add_circle_outline_rounded,
+                                      ),
+                                      color: AppColors.accent,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Divider(color: AppColors.divider),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            l10n.rounds,
+                            style: AppTypography.overline.copyWith(
+                              color: AppColors.textTertiary,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                l10n.roundsCount(config.maxRounds),
+                                style: AppTypography.body,
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accent.withValues(
+                                    alpha: 0.12,
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusFull,
+                                  ),
+                                ),
                                 child: Text(
-                                  '$_playerCount',
-                                  style: AppTypography.h3.copyWith(
+                                  '${config.maxRounds}',
+                                  style: AppTypography.label.copyWith(
                                     color: AppColors.accent,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                              IconButton(
-                                onPressed: _incrementPlayers,
-                                icon: const Icon(
-                                  Icons.add_circle_outline_rounded,
-                                ),
-                                color: AppColors.accent,
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Divider(color: AppColors.divider),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      l10n.rounds,
-                      style: AppTypography.overline.copyWith(
-                        color: AppColors.textTertiary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          l10n.roundsCount(config.maxRounds),
-                          style: AppTypography.body,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.accent.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusFull,
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              activeTrackColor: AppColors.accent,
+                              inactiveTrackColor: AppColors.surface,
+                              thumbColor: AppColors.accent,
+                              overlayColor: AppColors.accent.withValues(
+                                alpha: 0.12,
+                              ),
+                              trackHeight: 6,
+                              thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 10,
+                                elevation: 4,
+                              ),
+                              overlayShape: const RoundSliderOverlayShape(
+                                overlayRadius: 20,
+                              ),
+                            ),
+                            child: Slider(
+                              value: config.maxRounds.toDouble(),
+                              min: AppConstants.minRounds.toDouble(),
+                              max: maxRoundsLimit.toDouble(),
+                              onChanged: (v) {
+                                final rounded = (v / 5).round() * 5;
+                                context.read<GameConfigCubit>().setMaxRounds(
+                                  rounded.clamp(
+                                    AppConstants.minRounds,
+                                    maxRoundsLimit,
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                          child: Text(
-                            '${config.maxRounds}',
-                            style: AppTypography.label.copyWith(
-                              color: AppColors.accent,
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            l10n.categoriesLabel,
+                            style: AppTypography.overline.copyWith(
+                              color: AppColors.textTertiary,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: AppColors.accent,
-                        inactiveTrackColor: AppColors.surface,
-                        thumbColor: AppColors.accent,
-                        overlayColor: AppColors.accent.withValues(alpha: 0.12),
-                        trackHeight: 6,
-                        thumbShape: const RoundSliderThumbShape(
-                          enabledThumbRadius: 10,
-                          elevation: 4,
-                        ),
-                        overlayShape: const RoundSliderOverlayShape(
-                          overlayRadius: 20,
-                        ),
-                      ),
-                      child: Slider(
-                        value: config.maxRounds.toDouble(),
-                        min: AppConstants.minRounds.toDouble(),
-                        max: maxRoundsLimit.toDouble(),
-                        onChanged: (v) {
-                          final rounded = (v / 5).round() * 5;
-                          context
-                              .read<GameConfigCubit>()
-                              .setMaxRounds(rounded.clamp(AppConstants.minRounds, maxRoundsLimit));
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      l10n.categoriesLabel,
-                      style: AppTypography.overline.copyWith(
-                        color: AppColors.textTertiary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    _CategoryGrid(
-                      selectedCategories: config.categories,
-                      isPremium: isPremium,
-                      onCategoryToggled: (category) {
-                        final current = List<String>.from(config.categories);
-                        if (current.contains(category)) {
-                          current.remove(category);
-                          context.read<GameConfigCubit>().setCategories(current);
-                        } else {
-                          current.add(category);
-                          context.read<GameConfigCubit>().setCategories(current);
-                        }
-                      },
-                      onPremiumLockedTapped: () => context.push('/premium'),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      l10n.premiumRules,
-                      style: AppTypography.overline.copyWith(
-                        color: AppColors.premiumGold,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.sm,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusMd,
-                        ),
-                        border: Border.all(color: AppColors.divider),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(l10n.nsfwMode, style: AppTypography.label),
-                              if (!isPremium) ...[
-                                const SizedBox(width: AppSpacing.xs),
-                                Icon(
-                                  Icons.lock_rounded,
-                                  size: 14,
-                                  color: AppColors.textTertiary,
+                          const SizedBox(height: AppSpacing.sm),
+                          _CategoryGrid(
+                            selectedCategories: config.categories,
+                            isPremium: isPremium,
+                            onCategoryToggled: (category) {
+                              final current = List<String>.from(
+                                config.categories,
+                              );
+                              if (current.contains(category)) {
+                                current.remove(category);
+                                context.read<GameConfigCubit>().setCategories(
+                                  current,
+                                );
+                              } else {
+                                current.add(category);
+                                context.read<GameConfigCubit>().setCategories(
+                                  current,
+                                );
+                              }
+                            },
+                            onPremiumLockedTapped: () =>
+                                context.push('/premium'),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            l10n.premiumRules,
+                            style: AppTypography.overline.copyWith(
+                              color: AppColors.premiumGold,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.sm,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd,
+                              ),
+                              border: Border.all(color: AppColors.divider),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      l10n.nsfwMode,
+                                      style: AppTypography.label,
+                                    ),
+                                    if (!isPremium) ...[
+                                      const SizedBox(width: AppSpacing.xs),
+                                      Icon(
+                                        Icons.lock_rounded,
+                                        size: 14,
+                                        color: AppColors.textTertiary,
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                                Switch(
+                                  value: config.nsfwEnabled,
+                                  activeTrackColor: AppColors.secondary,
+                                  onChanged: (v) => _togglePremiumFeature(
+                                    isPremium: isPremium,
+                                    value: v,
+                                    onPremiumChanged: (enabled) => context
+                                        .read<GameConfigCubit>()
+                                        .setNsfwEnabled(enabled),
+                                  ),
                                 ),
                               ],
-                            ],
-                          ),
-                          Switch(
-                            value: config.nsfwEnabled,
-                            activeTrackColor: AppColors.secondary,
-                            onChanged: (v) => _togglePremiumFeature(
-                              isPremium: isPremium,
-                              value: v,
-                              onPremiumChanged: (enabled) => context
-                                  .read<GameConfigCubit>()
-                                  .setNsfwEnabled(enabled),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.sm,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusMd,
-                        ),
-                        border: Border.all(color: AppColors.divider),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                l10n.drinkingGameMode,
-                                style: AppTypography.label,
+                          Container(
+                            margin: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.sm,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd,
                               ),
-                              if (!isPremium) ...[
-                                const SizedBox(width: AppSpacing.xs),
-                                Icon(
-                                  Icons.lock_rounded,
-                                  size: 14,
-                                  color: AppColors.textTertiary,
+                              border: Border.all(color: AppColors.divider),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      l10n.drinkingGameMode,
+                                      style: AppTypography.label,
+                                    ),
+                                    if (!isPremium) ...[
+                                      const SizedBox(width: AppSpacing.xs),
+                                      Icon(
+                                        Icons.lock_rounded,
+                                        size: 14,
+                                        color: AppColors.textTertiary,
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                                Switch(
+                                  value: config.isDrinkingGame,
+                                  activeTrackColor: AppColors.secondary,
+                                  onChanged: (v) => _togglePremiumFeature(
+                                    isPremium: isPremium,
+                                    value: v,
+                                    onPremiumChanged: (enabled) => context
+                                        .read<GameConfigCubit>()
+                                        .setIsDrinkingGame(enabled),
+                                  ),
                                 ),
                               ],
-                            ],
-                          ),
-                          Switch(
-                            value: config.isDrinkingGame,
-                            activeTrackColor: AppColors.secondary,
-                            onChanged: (v) => _togglePremiumFeature(
-                              isPremium: isPremium,
-                              value: v,
-                              onPremiumChanged: (enabled) => context
-                                  .read<GameConfigCubit>()
-                                  .setIsDrinkingGame(enabled),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
                         ],
                       ),
                     ),
@@ -427,7 +450,7 @@ class _CategoryGrid extends StatelessWidget {
     'risk',
     'moral_gray',
     'deep',
-    'sexual'
+    'sexual',
   ];
 
   @override
@@ -500,14 +523,20 @@ class _CategoryGrid extends StatelessWidget {
                 style: AppTypography.bodySmall.copyWith(
                   color: isSelected
                       ? AppColors.background
-                      : (isLocked ? AppColors.textTertiary : AppColors.textSecondary),
+                      : (isLocked
+                            ? AppColors.textTertiary
+                            : AppColors.textSecondary),
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
               if (isLocked) ...[
                 const SizedBox(width: 4),
-                Icon(Icons.lock_rounded, size: 14, color: AppColors.textTertiary),
-              ]
+                Icon(
+                  Icons.lock_rounded,
+                  size: 14,
+                  color: AppColors.textTertiary,
+                ),
+              ],
             ],
           ),
           backgroundColor: isSelected
@@ -516,9 +545,11 @@ class _CategoryGrid extends StatelessWidget {
           side: isLocked
               ? BorderSide(color: AppColors.divider.withValues(alpha: 0.2))
               : isSelected
-                  ? BorderSide(color: AppColors.primary)
-                  : BorderSide(color: AppColors.divider),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ? BorderSide(color: AppColors.primary)
+              : BorderSide(color: AppColors.divider),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           onPressed: () {
             if (isLocked) {
               onPremiumLockedTapped();

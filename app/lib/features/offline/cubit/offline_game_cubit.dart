@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/engine/escalation_engine.dart';
@@ -19,15 +20,13 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
   final _questionPool = getIt<LocalQuestionPool>();
   final _uuid = const Uuid();
 
-  /// Cached premium status (read from Hive appSettings box).
-  // TODO: Restore after testing — currently bypassed with isPremium: true
-  // bool _isPremium = false;
+  /// Cached premium status used for local pool gating.
+  bool _isPremium = false;
 
   // Temp state for the current round's question selection
   String? _pendingQuestionId;
   String? _pendingCategory;
   String? _pendingSubcategory;
-
 
   // ─── Public API ──────────────────────────────────────
 
@@ -43,8 +42,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     required List<String> categories,
     int? debugSeed,
   }) async {
-    // TODO: Restore after testing
-    // _isPremium = isPremium;
+    _isPremium = isPremium;
 
     final session = OfflineSession(
       id: _uuid.v4(),
@@ -63,12 +61,14 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
 
     _questionPool.beginSession(debugSeed: debugSeed);
 
-    emit(state.copyWith(
-      phase: OfflineGamePhase.idle, 
-      session: session,
-      isDrinkingGame: isDrinkingGame,
-      customQuestions: customQuestions,
-    ));
+    emit(
+      state.copyWith(
+        phase: OfflineGamePhase.idle,
+        session: session,
+        isDrinkingGame: isDrinkingGame,
+        customQuestions: customQuestions,
+      ),
+    );
 
     // Immediately advance to round 1
     await advanceRound();
@@ -79,9 +79,8 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     final session = await _sessionRepo.loadSession(sessionId);
     if (session == null || session.isComplete) return false;
 
-    // Read cached premium
-    // TODO: Restore after testing
-    // _isPremium = _readCachedPremium();
+    // Read cached premium for resumed sessions.
+    _isPremium = await _readCachedPremium();
 
     _questionPool.beginSession();
 
@@ -135,14 +134,17 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     bool injectedCustom = false;
     if (state.customQuestions.isNotEmpty) {
       // Find custom questions that haven't been asked yet
-      final availableCustom = state.customQuestions.where((q) => !session.usedQuestionIds.contains(q)).toList();
-      
+      final availableCustom = state.customQuestions
+          .where((q) => !session.usedQuestionIds.contains(q))
+          .toList();
+
       if (availableCustom.isNotEmpty) {
         // High chance to inject early on, or random 20% chance
-        final shouldInject = (nextRound <= 3 && availableCustom.length >= 3) || 
-                             (nextRound == 1) || 
-                             (_random() < 0.2);
-                             
+        final shouldInject =
+            (nextRound <= 3 && availableCustom.length >= 3) ||
+            (nextRound == 1) ||
+            (_random() < 0.2);
+
         if (shouldInject) {
           questionText = availableCustom[_randomInt(availableCustom.length)];
           intensity = result.intensityMax; // Custom ones are usually spicy
@@ -150,7 +152,7 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
           _pendingQuestionId = questionText; // Use text as ID for tracking
           _pendingCategory = 'Custom';
           _pendingSubcategory = null;
-          
+
           questionCategory = 'Custom';
           questionSubcategory = null;
           injectedCustom = true;
@@ -162,40 +164,38 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       // Always select from the local JSON pool.
       final selection = _questionPool.select(
         language: session.language,
-      intensityMin: result.intensityMin,
-      intensityMax: result.intensityMax,
-      nsfwEnabled: session.nsfwEnabled,
-      categories: state.categories,
-      // TODO: Restore premium gating after testing
-      // isPremium: _isPremium,
-      isPremium: true, // TEMP: bypassed for NSFW testing
-      usedIds: session.usedQuestionIds,
-      roundNumber: nextRound,
-      recentCategories: recentCategories,
-      recentSubcategories: recentSubcategories,
-      recentEnergies: recentEnergies,
-      categoriesSeenInEarlyWindow: earlyCategoriesSeen,
-      energiesSeenInEarlyWindow: earlyEnergiesSeen,
-      recentlyUsedIds: recentQuestionIds,
-      escalationMultiplier: result.escalationMultiplier,
-      vulnerabilityBias: result.vulnerabilityBias,
-    );
+        intensityMin: result.intensityMin,
+        intensityMax: result.intensityMax,
+        nsfwEnabled: session.nsfwEnabled,
+        categories: state.categories,
+        isPremium: _isPremium,
+        usedIds: session.usedQuestionIds,
+        roundNumber: nextRound,
+        recentCategories: recentCategories,
+        recentSubcategories: recentSubcategories,
+        recentEnergies: recentEnergies,
+        categoriesSeenInEarlyWindow: earlyCategoriesSeen,
+        energiesSeenInEarlyWindow: earlyEnergiesSeen,
+        recentlyUsedIds: recentQuestionIds,
+        escalationMultiplier: result.escalationMultiplier,
+        vulnerabilityBias: result.vulnerabilityBias,
+      );
 
-    if (selection != null) {
-      questionText = selection.text;
-      recycled = selection.recycled;
-      intensity = selection.question.intensity;
-      questionSource = OfflineQuestionSource.localPool;
-      _pendingQuestionId = selection.question.id;
-      _pendingCategory = selection.question.category;
-      _pendingSubcategory = selection.question.subcategory;
-      questionCategory = selection.question.category;
-      questionSubcategory = selection.question.subcategory;
-    } else {
-      // No question found — this should not happen with 1600+ questions.
-      // Emit an error or skip the round.
-      return;
-    }
+      if (selection != null) {
+        questionText = selection.text;
+        recycled = selection.recycled;
+        intensity = selection.question.intensity;
+        questionSource = OfflineQuestionSource.localPool;
+        _pendingQuestionId = selection.question.id;
+        _pendingCategory = selection.question.category;
+        _pendingSubcategory = selection.question.subcategory;
+        questionCategory = selection.question.category;
+        questionSubcategory = selection.question.subcategory;
+      } else {
+        // No question found — this should not happen with 1600+ questions.
+        // Emit an error or skip the round.
+        return;
+      }
     }
 
     String? drinkingRule;
@@ -347,9 +347,9 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
 
   String _generateDrinkingRule(int intensity) {
     final lang = state.session?.language ?? 'en';
-    
+
     final rules = _drinkingRules[lang] ?? _drinkingRules['en']!;
-    
+
     if (intensity >= 8) {
       return rules['heavy']![nextRound() % rules['heavy']!.length];
     } else if (intensity >= 4) {
@@ -396,7 +396,9 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
   }
 
   double _random() {
-    return (state.session?.currentRound ?? 0) % 10 / 10.0; // deterministic pseudo-random
+    return (state.session?.currentRound ?? 0) %
+        10 /
+        10.0; // deterministic pseudo-random
   }
 
   int _randomInt(int max) {
@@ -404,12 +406,12 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     return (state.session?.currentRound ?? 0) % max;
   }
 
-  // TODO: Restore after testing
-  // bool _readCachedPremium() {
-  //   try {
-  //     return false;
-  //   } catch (_) {
-  //     return false;
-  //   }
-  // }
+  Future<bool> _readCachedPremium() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool('is_premium') ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
 }
