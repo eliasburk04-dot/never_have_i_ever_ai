@@ -128,7 +128,7 @@
             "count": {"type": "int"}
         }
     },
-    "appSubtitle": "El juego de fiesta",
+    "appSubtitle": "El juego social de conversación",
     "playOffline": "Jugar sin conexión",
     "resumeOfflineGame": "Continuar juego sin conexión",
     "noGameData": "Sin datos del juego",
@@ -137,7 +137,7 @@
     "account": "CUENTA",
     "legal": "LEGAL",
     "version": "Version 1.0.0",
-    "drinkingGameMode": "Modo Trago 🍺",
+    "creatorPacksMode": "Modo Creator Packs ✨",
     "premiumRules": "Reglas Premium",
     "playerCount": "Cantidad de jugadores",
     "upToPlayers": "Hasta {count}",
@@ -179,17 +179,17 @@
     "purchasePremium": "Comprar Premium",
     "lifetimeOneTime": "De por vida · Compra única",
     "youArePremium": "Eres Premium",
-    "premiumEnjoy": "Tienes acceso a las 1600+ preguntas,\nModo NSFW, Modo Trago y más.",
+    "premiumEnjoy": "Tienes acceso a las 1600+ preguntas,\nModo NSFW, Creator Packs y más.",
     "unlimitedOfflineRounds": "Rondas sin conexión ilimitadas",
     "upTo100Rounds": "Hasta 100 rondas por juego",
     "allCategories": "1600+ preguntas en las 10 categorías",
     "premiumNsfwMode": "Modo NSFW 🌶️ – 160+ preguntas explícitas",
-    "premiumDrinkingMode": "Modo Trago 🍺",
+    "premiumCreatorPacks": "Creator Packs ✨",
     "premiumUpTo20Players": "Hasta 20 jugadores por sala",
     "categoriesLabel": "CATEGORÍAS",
     "goPremium": "Obtener Premium",
-    "drinkSips": "Toma {count} trago(s).",
-    "@drinkSips": {
+    "packBonusPrompts": "Bonus de pack: agrega {count} pregunta(s) personalizada(s).",
+    "@packBonusPrompts": {
         "placeholders": {
             "count": {"type": "int"}
         }

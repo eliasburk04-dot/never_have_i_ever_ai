@@ -39,12 +39,15 @@ void main() {
 
     // Default stubs
     when(() => realtimeService.connect()).thenAnswer((_) async {});
-    when(() => realtimeService.joinLobby(any(), lobbyCode: any(named: 'lobbyCode')))
-        .thenAnswer((_) async {});
+    when(
+      () =>
+          realtimeService.joinLobby(any(), lobbyCode: any(named: 'lobbyCode')),
+    ).thenAnswer((_) async {});
     when(() => realtimeService.leaveLobby()).thenReturn(null);
     when(() => realtimeService.disposeAll()).thenReturn(null);
-    when(() => realtimeService.lobbyState$)
-        .thenAnswer((_) => const Stream.empty());
+    when(
+      () => realtimeService.lobbyState$,
+    ).thenAnswer((_) => const Stream.empty());
     when(() => realtimeService.lastLobbyState).thenReturn(null);
   });
 
@@ -63,29 +66,40 @@ void main() {
     blocTest<LobbyBloc, LobbyState>(
       'emits [creating, loaded] when createLobby succeeds',
       build: () {
-        when(() => lobbyRepo.createLobby(
-              displayName: any(named: 'displayName'),
-              avatarEmoji: any(named: 'avatarEmoji'),
-              maxRounds: any(named: 'maxRounds'),
-              nsfwEnabled: any(named: 'nsfwEnabled'),
-              language: any(named: 'language'),
-            )).thenAnswer((_) async => TestFixtures.testLobby);
+        when(
+          () => lobbyRepo.createLobby(
+            displayName: any(named: 'displayName'),
+            avatarEmoji: any(named: 'avatarEmoji'),
+            maxRounds: any(named: 'maxRounds'),
+            nsfwEnabled: any(named: 'nsfwEnabled'),
+            language: any(named: 'language'),
+            categories: any(named: 'categories'),
+            selectedPackId: any(named: 'selectedPackId'),
+          ),
+        ).thenAnswer((_) async => TestFixtures.testLobby);
         when(() => lobbyRepo.codeForLobbyId(any())).thenReturn('ABC123');
-        when(() => lobbyRepo.getLobby(any()))
-            .thenAnswer((_) async => TestFixtures.testLobby);
-        when(() => lobbyRepo.getPlayers(any()))
-            .thenAnswer((_) async => [TestFixtures.hostPlayer]);
+        when(
+          () => lobbyRepo.getLobby(any()),
+        ).thenAnswer((_) async => TestFixtures.testLobby);
+        when(
+          () => lobbyRepo.getPlayers(any()),
+        ).thenAnswer((_) async => [TestFixtures.hostPlayer]);
         return LobbyBloc();
       },
-      act: (bloc) => bloc.add(const CreateLobbyRequested(
-        hostName: 'Alice',
-        maxRounds: 20,
-        nsfwEnabled: false,
-        language: 'en',
-      )),
+      act: (bloc) => bloc.add(
+        const CreateLobbyRequested(
+          hostName: 'Alice',
+          maxRounds: 20,
+          nsfwEnabled: false,
+          language: 'en',
+        ),
+      ),
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.status, 'status', LobbyBlocStatus.creating),
+        isA<LobbyState>().having(
+          (s) => s.status,
+          'status',
+          LobbyBlocStatus.creating,
+        ),
         isA<LobbyState>()
             .having((s) => s.status, 'status', LobbyBlocStatus.loaded)
             .having((s) => s.lobby?.id, 'lobby.id', 'lobby-1'),
@@ -93,47 +107,111 @@ void main() {
         isA<LobbyState>(),
       ],
       verify: (_) {
-        verify(() => lobbyRepo.createLobby(
-              displayName: 'Alice',
-              avatarEmoji: '😎',
-              maxRounds: 20,
-              nsfwEnabled: false,
-              language: 'en',
-            )).called(1);
+        verify(
+          () => lobbyRepo.createLobby(
+            displayName: 'Alice',
+            avatarEmoji: '😎',
+            maxRounds: 20,
+            nsfwEnabled: false,
+            language: 'en',
+            categories: const [],
+            selectedPackId: null,
+          ),
+        ).called(1);
         verify(() => realtimeService.connect()).called(1);
-        verify(() => realtimeService.joinLobby(
-              'lobby-1',
-              lobbyCode: 'ABC123',
-            )).called(1);
+        verify(
+          () => realtimeService.joinLobby('lobby-1', lobbyCode: 'ABC123'),
+        ).called(1);
       },
     );
 
     blocTest<LobbyBloc, LobbyState>(
       'emits [creating, error] when createLobby fails',
       build: () {
-        when(() => lobbyRepo.createLobby(
-              displayName: any(named: 'displayName'),
-              avatarEmoji: any(named: 'avatarEmoji'),
-              maxRounds: any(named: 'maxRounds'),
-              nsfwEnabled: any(named: 'nsfwEnabled'),
-              language: any(named: 'language'),
-            )).thenThrow(Exception('Network error'));
+        when(
+          () => lobbyRepo.createLobby(
+            displayName: any(named: 'displayName'),
+            avatarEmoji: any(named: 'avatarEmoji'),
+            maxRounds: any(named: 'maxRounds'),
+            nsfwEnabled: any(named: 'nsfwEnabled'),
+            language: any(named: 'language'),
+            categories: any(named: 'categories'),
+            selectedPackId: any(named: 'selectedPackId'),
+          ),
+        ).thenThrow(Exception('Network error'));
         return LobbyBloc();
       },
-      act: (bloc) => bloc.add(const CreateLobbyRequested(
-        hostName: 'Alice',
-        maxRounds: 20,
-        nsfwEnabled: false,
-        language: 'en',
-      )),
+      act: (bloc) => bloc.add(
+        const CreateLobbyRequested(
+          hostName: 'Alice',
+          maxRounds: 20,
+          nsfwEnabled: false,
+          language: 'en',
+        ),
+      ),
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.status, 'status', LobbyBlocStatus.creating),
+        isA<LobbyState>().having(
+          (s) => s.status,
+          'status',
+          LobbyBlocStatus.creating,
+        ),
         isA<LobbyState>()
             .having((s) => s.status, 'status', LobbyBlocStatus.error)
-            .having((s) => s.errorMessage, 'errorMessage',
-                contains('Network error')),
+            .having(
+              (s) => s.errorMessage,
+              'errorMessage',
+              contains('Network error'),
+            ),
       ],
+    );
+
+    blocTest<LobbyBloc, LobbyState>(
+      'forwards selectedPackId to repository on create',
+      build: () {
+        when(
+          () => lobbyRepo.createLobby(
+            displayName: any(named: 'displayName'),
+            avatarEmoji: any(named: 'avatarEmoji'),
+            maxRounds: any(named: 'maxRounds'),
+            nsfwEnabled: any(named: 'nsfwEnabled'),
+            language: any(named: 'language'),
+            categories: any(named: 'categories'),
+            selectedPackId: any(named: 'selectedPackId'),
+          ),
+        ).thenAnswer((_) async => TestFixtures.testLobby);
+        when(() => lobbyRepo.codeForLobbyId(any())).thenReturn('ABC123');
+        when(
+          () => lobbyRepo.getLobby(any()),
+        ).thenAnswer((_) async => TestFixtures.testLobby);
+        when(
+          () => lobbyRepo.getPlayers(any()),
+        ).thenAnswer((_) async => [TestFixtures.hostPlayer]);
+        return LobbyBloc();
+      },
+      act: (bloc) => bloc.add(
+        const CreateLobbyRequested(
+          hostName: 'Alice',
+          maxRounds: 20,
+          nsfwEnabled: false,
+          language: 'en',
+          categories: ['social'],
+          selectedPackId: 'deep_talk',
+        ),
+      ),
+      wait: const Duration(milliseconds: 50),
+      verify: (_) {
+        verify(
+          () => lobbyRepo.createLobby(
+            displayName: 'Alice',
+            avatarEmoji: '😎',
+            maxRounds: 20,
+            nsfwEnabled: false,
+            language: 'en',
+            categories: const ['social'],
+            selectedPackId: 'deep_talk',
+          ),
+        ).called(1);
+      },
     );
   });
 
@@ -143,25 +221,30 @@ void main() {
     blocTest<LobbyBloc, LobbyState>(
       'emits [joining, loaded] when joinLobby succeeds',
       build: () {
-        when(() => lobbyRepo.joinLobby(
-              code: any(named: 'code'),
-              displayName: any(named: 'displayName'),
-              avatarEmoji: any(named: 'avatarEmoji'),
-            )).thenAnswer((_) async => TestFixtures.testLobby);
+        when(
+          () => lobbyRepo.joinLobby(
+            code: any(named: 'code'),
+            displayName: any(named: 'displayName'),
+            avatarEmoji: any(named: 'avatarEmoji'),
+          ),
+        ).thenAnswer((_) async => TestFixtures.testLobby);
         when(() => lobbyRepo.codeForLobbyId(any())).thenReturn('ABC123');
-        when(() => lobbyRepo.getLobby(any()))
-            .thenAnswer((_) async => TestFixtures.testLobby);
-        when(() => lobbyRepo.getPlayers(any()))
-            .thenAnswer((_) async => TestFixtures.twoPlayers);
+        when(
+          () => lobbyRepo.getLobby(any()),
+        ).thenAnswer((_) async => TestFixtures.testLobby);
+        when(
+          () => lobbyRepo.getPlayers(any()),
+        ).thenAnswer((_) async => TestFixtures.twoPlayers);
         return LobbyBloc();
       },
-      act: (bloc) => bloc.add(const JoinLobbyRequested(
-        code: 'ABC123',
-        playerName: 'Bob',
-      )),
+      act: (bloc) =>
+          bloc.add(const JoinLobbyRequested(code: 'ABC123', playerName: 'Bob')),
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.status, 'status', LobbyBlocStatus.joining),
+        isA<LobbyState>().having(
+          (s) => s.status,
+          'status',
+          LobbyBlocStatus.joining,
+        ),
         isA<LobbyState>()
             .having((s) => s.status, 'status', LobbyBlocStatus.loaded)
             .having((s) => s.lobby?.code, 'lobby.code', 'ABC123'),
@@ -169,31 +252,37 @@ void main() {
         isA<LobbyState>(),
       ],
       verify: (_) {
-        verify(() => lobbyRepo.joinLobby(
-              code: 'ABC123',
-              displayName: 'Bob',
-              avatarEmoji: '🙂',
-            )).called(1);
+        verify(
+          () => lobbyRepo.joinLobby(
+            code: 'ABC123',
+            displayName: 'Bob',
+            avatarEmoji: '🙂',
+          ),
+        ).called(1);
       },
     );
 
     blocTest<LobbyBloc, LobbyState>(
       'emits [joining, error] when lobby not found',
       build: () {
-        when(() => lobbyRepo.joinLobby(
-              code: any(named: 'code'),
-              displayName: any(named: 'displayName'),
-              avatarEmoji: any(named: 'avatarEmoji'),
-            )).thenAnswer((_) async => null);
+        when(
+          () => lobbyRepo.joinLobby(
+            code: any(named: 'code'),
+            displayName: any(named: 'displayName'),
+            avatarEmoji: any(named: 'avatarEmoji'),
+          ),
+        ).thenAnswer((_) async => null);
         return LobbyBloc();
       },
-      act: (bloc) => bloc.add(const JoinLobbyRequested(
-        code: 'INVALID',
-        playerName: 'Bob',
-      )),
+      act: (bloc) => bloc.add(
+        const JoinLobbyRequested(code: 'INVALID', playerName: 'Bob'),
+      ),
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.status, 'status', LobbyBlocStatus.joining),
+        isA<LobbyState>().having(
+          (s) => s.status,
+          'status',
+          LobbyBlocStatus.joining,
+        ),
         isA<LobbyState>()
             .having((s) => s.status, 'status', LobbyBlocStatus.error)
             .having((s) => s.errorMessage, 'errorMessage', 'Lobby not found'),
@@ -203,22 +292,28 @@ void main() {
     blocTest<LobbyBloc, LobbyState>(
       'emits [joining, error] when joinLobby throws',
       build: () {
-        when(() => lobbyRepo.joinLobby(
-              code: any(named: 'code'),
-              displayName: any(named: 'displayName'),
-              avatarEmoji: any(named: 'avatarEmoji'),
-            )).thenThrow(Exception('Server offline'));
+        when(
+          () => lobbyRepo.joinLobby(
+            code: any(named: 'code'),
+            displayName: any(named: 'displayName'),
+            avatarEmoji: any(named: 'avatarEmoji'),
+          ),
+        ).thenThrow(Exception('Server offline'));
         return LobbyBloc();
       },
-      act: (bloc) => bloc.add(const JoinLobbyRequested(
-        code: 'ABC123',
-        playerName: 'Bob',
-      )),
+      act: (bloc) =>
+          bloc.add(const JoinLobbyRequested(code: 'ABC123', playerName: 'Bob')),
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.status, 'status', LobbyBlocStatus.joining),
-        isA<LobbyState>()
-            .having((s) => s.status, 'status', LobbyBlocStatus.error),
+        isA<LobbyState>().having(
+          (s) => s.status,
+          'status',
+          LobbyBlocStatus.joining,
+        ),
+        isA<LobbyState>().having(
+          (s) => s.status,
+          'status',
+          LobbyBlocStatus.error,
+        ),
       ],
     );
   });
@@ -246,7 +341,9 @@ void main() {
       verify: (_) {
         verify(() => lobbyRepo.leaveLobby('lobby-1')).called(1);
         verify(() => realtimeService.leaveLobby()).called(1);
-        verify(() => realtimeService.disposeAll()).called(greaterThanOrEqualTo(1));
+        verify(
+          () => realtimeService.disposeAll(),
+        ).called(greaterThanOrEqualTo(1));
       },
     );
 
@@ -270,14 +367,18 @@ void main() {
         players: TestFixtures.twoPlayers,
       ),
       build: () {
-        when(() => lobbyRepo.leaveLobby(any()))
-            .thenThrow(Exception('Server error'));
+        when(
+          () => lobbyRepo.leaveLobby(any()),
+        ).thenThrow(Exception('Server error'));
         return LobbyBloc();
       },
       act: (bloc) => bloc.add(const LeaveLobbyRequested()),
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.status, 'status', LobbyBlocStatus.initial),
+        isA<LobbyState>().having(
+          (s) => s.status,
+          'status',
+          LobbyBlocStatus.initial,
+        ),
       ],
     );
   });
@@ -327,13 +428,16 @@ void main() {
         final lobbyStateCtrl =
             StreamController<Map<String, dynamic>>.broadcast();
 
-        when(() => realtimeService.lobbyState$)
-            .thenAnswer((_) => lobbyStateCtrl.stream);
+        when(
+          () => realtimeService.lobbyState$,
+        ).thenAnswer((_) => lobbyStateCtrl.stream);
         when(() => lobbyRepo.codeForLobbyId(any())).thenReturn('ABC123');
-        when(() => lobbyRepo.getLobby(any()))
-            .thenAnswer((_) async => TestFixtures.testLobby);
-        when(() => lobbyRepo.getPlayers(any()))
-            .thenAnswer((_) async => TestFixtures.twoPlayers);
+        when(
+          () => lobbyRepo.getLobby(any()),
+        ).thenAnswer((_) async => TestFixtures.testLobby);
+        when(
+          () => lobbyRepo.getPlayers(any()),
+        ).thenAnswer((_) async => TestFixtures.twoPlayers);
 
         return LobbyBloc();
       },
@@ -418,10 +522,7 @@ void main() {
         status: LobbyBlocStatus.loaded,
         lobby: TestFixtures.testLobby,
       );
-      final b = LobbyState(
-        status: LobbyBlocStatus.error,
-        errorMessage: 'fail',
-      );
+      final b = LobbyState(status: LobbyBlocStatus.error, errorMessage: 'fail');
       expect(a, isNot(equals(b)));
     });
   });
@@ -479,8 +580,11 @@ void main() {
       },
       // Equatable deduplication means second emit is suppressed
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.lobby?.status, 'status', LobbyStatus.playing),
+        isA<LobbyState>().having(
+          (s) => s.lobby?.status,
+          'status',
+          LobbyStatus.playing,
+        ),
       ],
     );
 
@@ -497,8 +601,7 @@ void main() {
       },
       // Equatable deduplication
       expect: () => [
-        isA<LobbyState>()
-            .having((s) => s.players.length, 'count', 2),
+        isA<LobbyState>().having((s) => s.players.length, 'count', 2),
       ],
     );
   });

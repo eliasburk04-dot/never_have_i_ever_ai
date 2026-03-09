@@ -34,36 +34,35 @@ class OfflineRound {
   final String? category;
   final String? subcategory;
 
-  double get haveRatio =>
-      totalPlayers > 0 ? haveCount / totalPlayers : 0.0;
+  double get haveRatio => totalPlayers > 0 ? haveCount / totalPlayers : 0.0;
 
   Map<String, dynamic> toMap() => {
-        'roundNumber': roundNumber,
-        'questionText': questionText,
-        'questionId': questionId,
-        'tone': tone,
-        'intensity': intensity,
-        'haveCount': haveCount,
-        'haveNotCount': haveNotCount,
-        'totalPlayers': totalPlayers,
-        'recycled': recycled,
-        'category': category,
-        'subcategory': subcategory,
-      };
+    'roundNumber': roundNumber,
+    'questionText': questionText,
+    'questionId': questionId,
+    'tone': tone,
+    'intensity': intensity,
+    'haveCount': haveCount,
+    'haveNotCount': haveNotCount,
+    'totalPlayers': totalPlayers,
+    'recycled': recycled,
+    'category': category,
+    'subcategory': subcategory,
+  };
 
   factory OfflineRound.fromMap(Map<String, dynamic> map) => OfflineRound(
-        roundNumber: map['roundNumber'] as int,
-        questionText: map['questionText'] as String,
-        questionId: map['questionId'] as String?,
-        tone: map['tone'] as String,
-        intensity: map['intensity'] as int,
-        haveCount: map['haveCount'] as int,
-        haveNotCount: map['haveNotCount'] as int,
-        totalPlayers: map['totalPlayers'] as int,
-        recycled: map['recycled'] as bool? ?? false,
-        category: map['category'] as String?,
-        subcategory: map['subcategory'] as String?,
-      );
+    roundNumber: map['roundNumber'] as int,
+    questionText: map['questionText'] as String,
+    questionId: map['questionId'] as String?,
+    tone: map['tone'] as String,
+    intensity: map['intensity'] as int,
+    haveCount: map['haveCount'] as int,
+    haveNotCount: map['haveNotCount'] as int,
+    totalPlayers: map['totalPlayers'] as int,
+    recycled: map['recycled'] as bool? ?? false,
+    category: map['category'] as String?,
+    subcategory: map['subcategory'] as String?,
+  );
 }
 
 // ─── OfflineSession ────────────────────────────────────────
@@ -132,19 +131,19 @@ class OfflineSession extends Equatable {
       OfflineSession.fromMap(jsonDecode(json) as Map<String, dynamic>);
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'players': players.map((p) => p.toMap()).toList(),
-        'maxRounds': maxRounds,
-        'currentRound': currentRound,
-        'language': language,
-        'nsfwEnabled': nsfwEnabled,
-        'boldnessScore': boldnessScore,
-        'currentTone': currentTone,
-        'rounds': rounds.map((r) => r.toMap()).toList(),
-        'usedQuestionIds': usedQuestionIds,
-        'isComplete': isComplete,
-        'createdAt': createdAt?.toIso8601String(),
-      };
+    'id': id,
+    'players': players.map((p) => p.toMap()).toList(),
+    'maxRounds': maxRounds,
+    'currentRound': currentRound,
+    'language': language,
+    'nsfwEnabled': nsfwEnabled,
+    'boldnessScore': boldnessScore,
+    'currentTone': currentTone,
+    'rounds': rounds.map((r) => r.toMap()).toList(),
+    'usedQuestionIds': usedQuestionIds,
+    'isComplete': isComplete,
+    'createdAt': createdAt?.toIso8601String(),
+  };
 
   factory OfflineSession.fromMap(Map<String, dynamic> map) {
     return OfflineSession(
@@ -171,17 +170,17 @@ class OfflineSession extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        players,
-        maxRounds,
-        currentRound,
-        language,
-        nsfwEnabled,
-        boldnessScore,
-        currentTone,
-        rounds,
-        usedQuestionIds,
-        isComplete,
-        createdAt,
-      ];
+    id,
+    players,
+    maxRounds,
+    currentRound,
+    language,
+    nsfwEnabled,
+    boldnessScore,
+    currentTone,
+    rounds,
+    usedQuestionIds,
+    isComplete,
+    createdAt,
+  ];
 }

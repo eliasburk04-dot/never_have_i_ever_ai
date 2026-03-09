@@ -30,17 +30,21 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Pressable(
-      onPressed: isLoading ? null : () {
-        HapticsService.instance.lightImpact();
-        AudioService.instance.playTap();
-        if (onPressed != null) onPressed!();
-      },
+      onPressed: isLoading
+          ? null
+          : () {
+              HapticsService.instance.lightImpact();
+              AudioService.instance.playTap();
+              if (onPressed != null) onPressed!();
+            },
       disabled: isLoading || onPressed == null,
       child: GlassContainer(
         height: 56,
         padding: EdgeInsets.zero,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        color: isPrimary ? AppColors.accent : AppColors.surface.withValues(alpha: 0.6),
+        color: isPrimary
+            ? AppColors.accent
+            : AppColors.surface.withValues(alpha: 0.6),
         borderWidth: isPrimary ? 0 : 1.5,
         intensity: isLoading || onPressed == null ? 0.4 : 1.0,
         child: Center(
@@ -68,7 +72,9 @@ class AppButton extends StatelessWidget {
                       label,
                       style: AppTypography.button.copyWith(
                         color: isPrimary ? AppColors.background : Colors.white,
-                        fontWeight: isPrimary ? FontWeight.w700 : FontWeight.w600,
+                        fontWeight: isPrimary
+                            ? FontWeight.w700
+                            : FontWeight.w600,
                       ),
                     ),
                   ],

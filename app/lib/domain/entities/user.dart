@@ -37,11 +37,11 @@ class AppUser extends Equatable {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'display_name': displayName,
-        'avatar_emoji': avatarEmoji,
-        'preferred_language': preferredLanguage,
-      };
+    'id': id,
+    'display_name': displayName,
+    'avatar_emoji': avatarEmoji,
+    'preferred_language': preferredLanguage,
+  };
 
   @override
   List<Object?> get props => [id, displayName, avatarEmoji, preferredLanguage];

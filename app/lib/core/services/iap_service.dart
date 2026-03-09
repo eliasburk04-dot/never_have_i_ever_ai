@@ -26,7 +26,7 @@ class IapService {
       debugPrint('[IapService] Web not supported by purchases_flutter.');
       return;
     }
-    
+
     // Enable debug logs for testing
     await Purchases.setLogLevel(LogLevel.debug);
 
@@ -51,7 +51,8 @@ class IapService {
 
     try {
       final customerInfo = await Purchases.getCustomerInfo();
-      return customerInfo.entitlements.all[_premiumEntitlementId]?.isActive == true;
+      return customerInfo.entitlements.all[_premiumEntitlementId]?.isActive ==
+          true;
     } catch (e) {
       debugPrint('[IapService] Failed to check premium status: $e');
       return false;
@@ -80,8 +81,15 @@ class IapService {
     if (!_isConfigured) return false;
 
     try {
-      final customerInfo = await Purchases.purchasePackage(package);
-      return customerInfo.entitlements.all[_premiumEntitlementId]?.isActive == true;
+      final purchaseResult = await Purchases.purchase(
+        PurchaseParams.package(package),
+      );
+      return purchaseResult
+              .customerInfo
+              .entitlements
+              .all[_premiumEntitlementId]
+              ?.isActive ==
+          true;
     } catch (e) {
       debugPrint('[IapService] Purchase failed: $e');
       return false;
@@ -95,7 +103,8 @@ class IapService {
 
     try {
       final customerInfo = await Purchases.restorePurchases();
-      return customerInfo.entitlements.all[_premiumEntitlementId]?.isActive == true;
+      return customerInfo.entitlements.all[_premiumEntitlementId]?.isActive ==
+          true;
     } catch (e) {
       debugPrint('[IapService] Restore failed: $e');
       return false;

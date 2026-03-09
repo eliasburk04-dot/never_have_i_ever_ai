@@ -52,6 +52,18 @@ const CANONICAL_CATEGORIES = new Set([
 
 const CANONICAL_ENERGIES = new Set(["light", "medium", "heavy"]);
 
+const ALCOHOL_PATTERNS_EN: RegExp[] = [
+  /\b(drink|drinking|drunk|alcohol|beer|vodka|tequila|whiskey|rum|cocktail|shot|hangover)\b/i,
+];
+
+const ALCOHOL_PATTERNS_DE: RegExp[] = [
+  /\b(trinkspiel|trinken|alkohol|bier|wodka|tequila|whisky|cocktail|shots?|kater)\b/i,
+];
+
+const ALCOHOL_PATTERNS_ES: RegExp[] = [
+  /\b(beber|bebida\s+alcohólica|alcohol|cerveza|vodka|tequila|whisky|ron|cóctel|coctel|trago|tragos|resaca|borracho)\b/i,
+];
+
 // ─── Validation Functions ───────────────────────────────────────────────────
 
 export function validateQuestion(q: Question, index: number, totalCount = 999): Violation[] {
@@ -104,6 +116,19 @@ export function validateQuestion(q: Question, index: number, totalCount = 999): 
     // U16: no HTML/Markdown
     if (/<[^>]+>/.test(text) || /[*_]{2,}/.test(text)) {
       add(lang, "U16", "HTML or Markdown detected", text);
+    }
+
+    const alcoholPatterns =
+      lang === "text_en"
+        ? ALCOHOL_PATTERNS_EN
+        : lang === "text_de"
+          ? ALCOHOL_PATTERNS_DE
+          : ALCOHOL_PATTERNS_ES;
+    for (const pattern of alcoholPatterns) {
+      if (pattern.test(text)) {
+        add(lang, "A1", "Alcohol-related wording is not allowed", text);
+        break;
+      }
     }
   }
 

@@ -89,4 +89,3 @@ class PremiumRepository implements IPremiumRepository {
     await _setPremium(true);
   }
 }
-

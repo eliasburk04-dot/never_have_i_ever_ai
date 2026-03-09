@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../core/service_locator.dart';
 import '../../../core/services/native_iap_service.dart';
-import '../../../domain/repositories/i_premium_repository.dart';
 
 // ─── State ─────────────────────────────────────────────
 
@@ -49,7 +47,7 @@ class PremiumCubit extends Cubit<PremiumState> {
     _initIap();
   }
 
-  // We are bypassing IPremiumRepository for now 
+  // We are bypassing IPremiumRepository for now
   // and going straight to our new NativeIapService.
   final _iapService = NativeIapService.instance;
 
@@ -59,7 +57,9 @@ class PremiumCubit extends Cubit<PremiumState> {
       // This stream emits when buyPremium or restorePurchases succeeds.
       final isNowPremium = await _iapService.checkLocalPremiumStatus();
       if (isNowPremium && !state.isPremium) {
-        emit(state.copyWith(isPremium: true, isLoading: false, errorMessage: null));
+        emit(
+          state.copyWith(isPremium: true, isLoading: false, errorMessage: null),
+        );
       } else {
         // Purchase was cancelled, errored, or not premium — always stop loading.
         emit(state.copyWith(isLoading: false));
@@ -72,24 +72,27 @@ class PremiumCubit extends Cubit<PremiumState> {
     emit(state.copyWith(isLoading: true));
     try {
       final isPremium = await _iapService.checkLocalPremiumStatus();
-      
+
       String priceText = '\$9.99'; // Fallback
-      
+
       if (!isPremium) {
         // Timeout product query — on simulator the store may hang.
-        final product = await _iapService
-            .getPremiumProduct()
-            .timeout(const Duration(seconds: 5), onTimeout: () => null);
+        final product = await _iapService.getPremiumProduct().timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => null,
+        );
         if (product != null) {
           priceText = product.price;
         }
       }
 
-      emit(state.copyWith(
-        isPremium: isPremium,
-        isLoading: false,
-        priceString: priceText,
-      ));
+      emit(
+        state.copyWith(
+          isPremium: isPremium,
+          isLoading: false,
+          priceString: priceText,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(isLoading: false));
     }
@@ -114,10 +117,12 @@ class PremiumCubit extends Cubit<PremiumState> {
       final product = await _iapService.getPremiumProduct();
       if (product == null) {
         _purchaseTimeout?.cancel();
-        emit(state.copyWith(
-          isLoading: false,
-          errorMessage: 'Premium product not found in the store.',
-        ));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: 'Premium product not found in the store.',
+          ),
+        );
         return;
       }
 
@@ -125,10 +130,9 @@ class PremiumCubit extends Cubit<PremiumState> {
       await _iapService.buyPremium(product);
     } catch (e) {
       _purchaseTimeout?.cancel();
-      emit(state.copyWith(
-        isLoading: false,
-        errorMessage: 'Purchase error: $e',
-      ));
+      emit(
+        state.copyWith(isLoading: false, errorMessage: 'Purchase error: $e'),
+      );
     }
   }
 
@@ -151,10 +155,7 @@ class PremiumCubit extends Cubit<PremiumState> {
       // The actual result will come back asynchronously through the stream.
     } catch (e) {
       _purchaseTimeout?.cancel();
-      emit(state.copyWith(
-        isLoading: false,
-        errorMessage: 'Restore error: $e',
-      ));
+      emit(state.copyWith(isLoading: false, errorMessage: 'Restore error: $e'));
     }
   }
 

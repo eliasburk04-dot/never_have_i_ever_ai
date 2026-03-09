@@ -19,6 +19,28 @@ import {
 const EARLY_ROUND_LIMIT = 20;
 const EARLY_MIN_CATEGORIES = 5;
 const EARLY_MIN_ENERGIES = 3;
+const MAX_CUSTOM_QUESTIONS = 10;
+
+const CreatorPackIdSchema = z.enum(['icebreakers', 'deep_talk', 'date_night']);
+type CreatorPackId = z.infer<typeof CreatorPackIdSchema>;
+
+const CREATOR_PACK_CONFIG: Record<
+  CreatorPackId,
+  { categories: string[]; subcategories: string[] }
+> = {
+  icebreakers: {
+    categories: ['social', 'food', 'party'],
+    subcategories: ['awkward', 'cringe', 'faux_pas', 'habits', 'picky', 'public'],
+  },
+  deep_talk: {
+    categories: ['deep', 'confessions', 'moral_gray'],
+    subcategories: ['secrets', 'vulnerability', 'identity', 'growth', 'mental_health', 'conflict'],
+  },
+  date_night: {
+    categories: ['relationships', 'deep', 'confessions'],
+    subcategories: ['dating', 'flirting', 'situationship', 'heartbreak', 'desire', 'temptation'],
+  },
+};
 
 const SettingsSchema = z.object({
   language: z.enum(['en', 'de', 'es']).default('en'),
@@ -26,7 +48,9 @@ const SettingsSchema = z.object({
   nsfwEnabled: z.boolean().default(false),
   displayName: z.string().min(1).max(40).optional(),
   avatarEmoji: z.string().min(1).max(16).optional(),
-  categories: z.array(z.string()).optional(),
+  categories: z.array(z.string().trim().min(1).max(40)).max(12).optional(),
+  packIds: z.array(CreatorPackIdSchema).max(6).optional().default([]),
+  customQuestions: z.array(z.string().trim().min(1).max(180)).max(MAX_CUSTOM_QUESTIONS).optional().default([]),
 });
 
 export interface LobbyRow {
@@ -43,6 +67,8 @@ export interface LobbyRow {
   escalation_history: any[];
   used_question_ids: string[];
   categories?: string[];
+  pack_ids?: string[];
+  custom_questions?: unknown;
 }
 
 export interface RoundRow {
@@ -137,6 +163,107 @@ function isValidEnergy(value: unknown): value is 'light' | 'medium' | 'heavy' {
   return value === 'light' || value === 'medium' || value === 'heavy';
 }
 
+function uniqueLowercase(values: string[]): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const raw of values) {
+    const value = raw.trim();
+    if (!value) continue;
+    const key = value.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(value);
+  }
+  return out;
+}
+
+function normalizePackIds(raw: unknown): CreatorPackId[] {
+  if (!Array.isArray(raw)) return [];
+  const out: CreatorPackId[] = [];
+  for (const value of raw) {
+    const parsed = CreatorPackIdSchema.safeParse(String(value));
+    if (!parsed.success) continue;
+    if (!out.includes(parsed.data)) out.push(parsed.data);
+  }
+  return out;
+}
+
+function categoryFilterFromPacks(packIds: CreatorPackId[]): string[] {
+  const categories = new Set<string>();
+  for (const packId of packIds) {
+    for (const category of CREATOR_PACK_CONFIG[packId].categories) categories.add(category);
+  }
+  return [...categories];
+}
+
+function subcategoryPreferenceFromPacks(packIds: CreatorPackId[]): Set<string> {
+  const subcategories = new Set<string>();
+  for (const packId of packIds) {
+    for (const subcategory of CREATOR_PACK_CONFIG[packId].subcategories) subcategories.add(subcategory);
+  }
+  return subcategories;
+}
+
+function mergeCategoryFilters(categories: string[] | undefined, packIds: CreatorPackId[]): string[] | undefined {
+  const base = uniqueLowercase(Array.isArray(categories) ? categories.map((x) => String(x)) : []);
+  const fromPacks = categoryFilterFromPacks(packIds);
+  const merged = uniqueLowercase([...base, ...fromPacks]);
+  return merged.length > 0 ? merged : undefined;
+}
+
+function normalizeIncomingCustomQuestions(
+  language: 'en' | 'de' | 'es',
+  nsfwEnabled: boolean,
+  raw: unknown,
+): string[] {
+  if (!Array.isArray(raw)) return [];
+  const out: string[] = [];
+  const seen = new Set<string>();
+
+  for (const entry of raw) {
+    if (out.length >= MAX_CUSTOM_QUESTIONS) break;
+
+    const text = String(entry ?? '').replace(/\s+/g, ' ').trim();
+    if (!text) continue;
+
+    const prefixed = validatePrefix(language, text);
+    if (!passesSafetyFilter(prefixed, nsfwEnabled)) continue;
+
+    const dedupeKey = prefixed.toLowerCase();
+    if (seen.has(dedupeKey)) continue;
+    seen.add(dedupeKey);
+    out.push(prefixed);
+  }
+
+  return out;
+}
+
+function customQuestionCandidates(
+  lobby: LobbyRow,
+  usedIds: string[],
+): CandidateQuestion[] {
+  if (!Array.isArray(lobby.custom_questions)) return [];
+
+  const normalized = normalizeIncomingCustomQuestions(lobby.language, lobby.nsfw_enabled, lobby.custom_questions);
+  const out: CandidateQuestion[] = [];
+  for (const text of normalized) {
+    const id = `custom:${createHash('sha1').update(text.toLowerCase()).digest('hex').slice(0, 20)}`;
+    if (usedIds.includes(id)) continue;
+    out.push({
+      id,
+      text,
+      category: 'social',
+      subcategory: 'custom_pack',
+      intensity: 4,
+      is_nsfw: false,
+      shock_factor: 0.15,
+      vulnerability_level: 0.25,
+      energy: 'medium',
+    });
+  }
+  return out;
+}
+
 function weightCandidate(
   q: CandidateQuestion,
   ctx: {
@@ -148,6 +275,8 @@ function weightCandidate(
     nextRoundNumber: number;
     escalationMultiplier: number;
     vulnerabilityBias: number;
+    preferredCategories?: Set<string>;
+    preferredSubcategories?: Set<string>;
   },
 ): number {
   const esc = Math.max(0.4, Math.min(2.2, ctx.escalationMultiplier));
@@ -159,6 +288,8 @@ function weightCandidate(
   if (!ctx.recentCategories.includes(q.category)) diversityBonus += 0.35;
   if (!ctx.recentSubcategories.includes(q.subcategory)) diversityBonus += 0.25;
   if (!ctx.recentEnergies.includes(q.energy)) diversityBonus += 0.25;
+  if (ctx.preferredCategories?.has(q.category)) diversityBonus += 0.2;
+  if (ctx.preferredSubcategories?.has(q.subcategory)) diversityBonus += 0.3;
 
   if (ctx.nextRoundNumber <= EARLY_ROUND_LIMIT) {
     if (ctx.earlyCategorySeen.size < EARLY_MIN_CATEGORIES && !ctx.earlyCategorySeen.has(q.category)) {
@@ -304,7 +435,14 @@ async function fetchCandidateRows(
 
 export const engine = {
   validateSettings(input: unknown) {
-    return SettingsSchema.parse(input ?? {});
+    const parsed = SettingsSchema.parse(input ?? {});
+
+    return {
+      ...parsed,
+      categories: parsed.categories ? uniqueLowercase(parsed.categories) : undefined,
+      packIds: normalizePackIds(parsed.packIds),
+      customQuestions: normalizeIncomingCustomQuestions(parsed.language, parsed.nsfwEnabled, parsed.customQuestions),
+    };
   },
 
   async selectNextItem(
@@ -400,6 +538,13 @@ export const engine = {
       : [];
 
     const recentSignals = recentWindow(historyWithRatio);
+    const selectedPackIds = normalizePackIds(lobby.pack_ids);
+    const effectiveCategories = mergeCategoryFilters(lobby.categories, selectedPackIds);
+    const preferredCategories = new Set(categoryFilterFromPacks(selectedPackIds));
+    const preferredSubcategories = subcategoryPreferenceFromPacks(selectedPackIds);
+    const customCandidates = customQuestionCandidates(lobby, usedIds).filter(
+      (q) => !recentSignals.recentIds.includes(q.id),
+    );
 
     let candidateRows = await fetchCandidateRows(client, {
       gameKey: lobby.game_key,
@@ -409,7 +554,7 @@ export const engine = {
       usedIds,
       allowUsed: false,
       limit: 300,
-      categories: lobby.categories,
+      categories: effectiveCategories,
     });
 
     if (candidateRows.length === 0) {
@@ -421,7 +566,7 @@ export const engine = {
         usedIds,
         allowUsed: false,
         limit: 300,
-        categories: lobby.categories,
+        categories: effectiveCategories,
       });
     }
 
@@ -451,8 +596,33 @@ export const engine = {
     let selectedSubcategory = 'general';
     let selectedEnergy: 'light' | 'medium' | 'heavy' = 'medium';
     let selectedIntensity = intensityChosen;
+    const shouldUseCustomQuestion =
+      customCandidates.length > 0 &&
+      (opts.nextRoundNumber <= Math.min(3, customCandidates.length) || opts.nextRoundNumber % 3 === 0);
 
-
+    if (shouldUseCustomQuestion) {
+      const customWeights = customCandidates.map((q) =>
+        weightCandidate(q, {
+          recentCategories: recentSignals.recentCategories,
+          recentSubcategories: recentSignals.recentSubcategories,
+          recentEnergies: recentSignals.recentEnergies,
+          earlyCategorySeen: recentSignals.earlyCategorySeen,
+          earlyEnergySeen: recentSignals.earlyEnergySeen,
+          nextRoundNumber: opts.nextRoundNumber,
+          escalationMultiplier,
+          vulnerabilityBias,
+          preferredCategories,
+          preferredSubcategories,
+        }),
+      );
+      const pickedCustom = weightedPick(customCandidates, sessionSeed ^ 0x4f4f4f4f, opts.nextRoundNumber, customWeights);
+      questionText = pickedCustom.text;
+      questionSourceId = pickedCustom.id;
+      selectedCategory = pickedCustom.category;
+      selectedSubcategory = pickedCustom.subcategory;
+      selectedEnergy = pickedCustom.energy;
+      selectedIntensity = pickedCustom.intensity;
+    }
 
     if (!questionText) {
       fallbackUsed = true;
@@ -469,6 +639,8 @@ export const engine = {
             nextRoundNumber: opts.nextRoundNumber,
             escalationMultiplier,
             vulnerabilityBias,
+            preferredCategories,
+            preferredSubcategories,
           }),
         );
         fallbackCandidate = weightedPick(candidates, sessionSeed, opts.nextRoundNumber, weights);
@@ -476,7 +648,7 @@ export const engine = {
         const totalEligible = await countEligiblePool(client, {
           gameKey: lobby.game_key,
           nsfwEnabled: lobby.nsfw_enabled,
-          categories: lobby.categories,
+          categories: effectiveCategories,
         });
         const exhaustedRatio = totalEligible > 0 ? usedIds.length / totalEligible : 0;
         const canRecycle = opts.nextRoundNumber >= 10 && exhaustedRatio >= 0.7;
@@ -490,7 +662,7 @@ export const engine = {
             usedIds,
             allowUsed: true,
             limit: 250,
-            categories: lobby.categories,
+            categories: effectiveCategories,
           });
 
           const recycleCandidates = mapRowsToCandidates(recycleRows, lobby.language)
@@ -627,7 +799,8 @@ export const engine = {
   ): Promise<{ ok: boolean; reason?: string; row?: any; activeCount?: number }> {
     const rRes = await client.query(
       `SELECT r.*, l.code AS lobby_code, l.host_id, l.status AS lobby_status, l.language, l.max_rounds, l.current_round,
-              l.nsfw_enabled, l.boldness_score, l.current_tone, l.escalation_history, l.used_question_ids, l.game_key
+              l.nsfw_enabled, l.boldness_score, l.current_tone, l.escalation_history, l.used_question_ids,
+              l.categories, l.pack_ids, l.custom_questions, l.game_key
        FROM rounds r
        JOIN lobbies l ON l.id = r.lobby_id
        WHERE r.id = $1 AND r.game_key = $2 AND l.game_key = $2
@@ -723,6 +896,9 @@ export const engine = {
       current_tone: row.current_tone,
       escalation_history: [...meta, ...rounds],
       used_question_ids: (row.used_question_ids ?? []).map((id: unknown) => String(id)),
+      categories: Array.isArray(row.categories) ? row.categories.map((value: unknown) => String(value)) : undefined,
+      pack_ids: Array.isArray(row.pack_ids) ? row.pack_ids.map((value: unknown) => String(value)) : undefined,
+      custom_questions: Array.isArray(row.custom_questions) ? row.custom_questions : [],
     };
 
     const prevRound: RoundRow = {

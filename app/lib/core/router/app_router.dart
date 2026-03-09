@@ -66,13 +66,11 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/lobby/create',
-      pageBuilder: (_, state) =>
-          _buildPage(const CreateLobbyScreen(), state),
+      pageBuilder: (_, state) => _buildPage(const CreateLobbyScreen(), state),
     ),
     GoRoute(
       path: '/lobby/join',
-      pageBuilder: (_, state) =>
-          _buildPage(const JoinLobbyScreen(), state),
+      pageBuilder: (_, state) => _buildPage(const JoinLobbyScreen(), state),
     ),
     GoRoute(
       path: '/lobby/:id/waiting',
@@ -105,8 +103,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/privacy',
-      pageBuilder: (_, state) =>
-          _buildPage(const PrivacyPolicyScreen(), state),
+      pageBuilder: (_, state) => _buildPage(const PrivacyPolicyScreen(), state),
     ),
     GoRoute(
       path: '/terms',
@@ -115,13 +112,11 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/offline/setup',
-      pageBuilder: (_, state) =>
-          _buildPage(const OfflineSetupScreen(), state),
+      pageBuilder: (_, state) => _buildPage(const OfflineSetupScreen(), state),
     ),
     GoRoute(
       path: '/offline/game',
-      pageBuilder: (_, state) =>
-          _buildPage(const OfflineGameScreen(), state),
+      pageBuilder: (_, state) => _buildPage(const OfflineGameScreen(), state),
     ),
     GoRoute(
       path: '/offline/results',

@@ -287,7 +287,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get appSubtitle => 'Das Partyspiel';
+  String get appSubtitle => 'Das soziale Gesprächsspiel';
 
   @override
   String get playOffline => 'Offline spielen';
@@ -315,7 +315,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get version => 'Version 1.0.0';
 
   @override
-  String get drinkingGameMode => 'Trinkspiel Modus 🍺';
+  String get creatorPacksMode => 'Creator-Packs-Modus ✨';
 
   @override
   String get premiumRules => 'Premium Regeln';
@@ -403,7 +403,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get premiumEnjoy =>
-      'Du hast Zugriff auf alle 1600+ Fragen,\nNSFW-Modus, Trinkspiel & mehr.';
+      'Du hast Zugriff auf alle 1600+ Fragen,\nNSFW-Modus, Creator Packs & mehr.';
 
   @override
   String get unlimitedOfflineRounds => 'Unbegrenzte Offline-Runden';
@@ -418,7 +418,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get premiumNsfwMode => 'NSFW-Modus 🌶️ – 160+ explizite Fragen';
 
   @override
-  String get premiumDrinkingMode => 'Trinkspiel-Modus 🍺';
+  String get premiumCreatorPacks => 'Creator Packs ✨';
 
   @override
   String get premiumUpTo20Players => 'Bis zu 20 Spieler pro Lobby';
@@ -430,8 +430,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get goPremium => 'Premium holen';
 
   @override
-  String drinkSips(int count) {
-    return 'Trink $count Schluck.';
+  String packBonusPrompts(int count) {
+    return 'Pack-Bonus: füge $count eigene Frage(n) hinzu.';
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../core/constants/creator_packs.dart';
 import '../../../core/engine/escalation_engine.dart';
 import '../../../core/service_locator.dart';
 import '../../../domain/entities/offline_player.dart';
@@ -12,7 +13,6 @@ import 'offline_game_state.dart';
 
 export 'offline_game_state.dart';
 
-/// Cubit managing the offline pass-and-play game lifecycle.
 class OfflineGameCubit extends Cubit<OfflineGameState> {
   OfflineGameCubit() : super(const OfflineGameState());
 
@@ -20,29 +20,30 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
   final _questionPool = getIt<LocalQuestionPool>();
   final _uuid = const Uuid();
 
-  /// Cached premium status used for local pool gating.
   bool _isPremium = false;
 
-  // Temp state for the current round's question selection
   String? _pendingQuestionId;
   String? _pendingCategory;
   String? _pendingSubcategory;
 
-  // ─── Public API ──────────────────────────────────────
-
-  /// Start a new offline game.
   Future<void> startGame({
     required List<OfflinePlayer> players,
     required int maxRounds,
     required String language,
     required bool nsfwEnabled,
     required bool isPremium,
-    required bool isDrinkingGame,
-    required List<String> customQuestions,
     required List<String> categories,
+    required String? selectedPackId,
     int? debugSeed,
   }) async {
     _isPremium = isPremium;
+    final selectedPack = selectedPackId != null
+        ? CreatorPacks.byId(selectedPackId)
+        : null;
+    final effectiveCategories = <String>{
+      ...categories,
+      ...?selectedPack?.categories,
+    }.toList();
 
     final session = OfflineSession(
       id: _uuid.v4(),
@@ -65,21 +66,18 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       state.copyWith(
         phase: OfflineGamePhase.idle,
         session: session,
-        isDrinkingGame: isDrinkingGame,
-        customQuestions: customQuestions,
+        selectedPackId: selectedPackId,
+        categories: effectiveCategories,
       ),
     );
 
-    // Immediately advance to round 1
     await advanceRound();
   }
 
-  /// Resume an in-progress session from Hive.
   Future<bool> resumeSession(String sessionId) async {
     final session = await _sessionRepo.loadSession(sessionId);
     if (session == null || session.isComplete) return false;
 
-    // Read cached premium for resumed sessions.
     _isPremium = await _readCachedPremium();
 
     _questionPool.beginSession();
@@ -90,23 +88,17 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     return true;
   }
 
-  /// Advance to the next round (or finish the game).
-  ///
-  /// Strategy: Hybrid distribution using sigmoid curve to decide AI vs pool.
-  /// Early rounds favor pool questions, later rounds favor AI generation.
   Future<void> advanceRound() async {
     final session = state.session;
     if (session == null) return;
 
     final nextRound = session.currentRound + 1;
 
-    // Game over?
     if (nextRound > session.maxRounds) {
       await _finishGame();
       return;
     }
 
-    // Escalation math
     final result = EscalationEngine.advanceRound(
       currentBoldness: session.boldnessScore,
       nextRound: nextRound,
@@ -115,7 +107,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
       completedRounds: session.rounds,
     );
 
-    // Build category tracking from session history
     final recentCategories = _recentCategories(session, count: 2);
     final recentSubcategories = _recentSubcategories(session, count: 3);
     final recentEnergies = _recentEnergies(session, count: 3);
@@ -124,86 +115,44 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     final recentQuestionIds = _recentQuestionIds(session, count: 10);
 
     String questionText = '';
-    bool recycled = false;
-    int intensity = 1;
-    OfflineQuestionSource questionSource = OfflineQuestionSource.localPool;
+    var recycled = false;
+    var intensity = 1;
+    var questionSource = OfflineQuestionSource.localPool;
     String? questionCategory;
     String? questionSubcategory;
+    final selection = _questionPool.select(
+      language: session.language,
+      intensityMin: result.intensityMin,
+      intensityMax: result.intensityMax,
+      nsfwEnabled: session.nsfwEnabled,
+      categories: state.categories,
+      isPremium: _isPremium,
+      usedIds: session.usedQuestionIds,
+      roundNumber: nextRound,
+      recentCategories: recentCategories,
+      recentSubcategories: recentSubcategories,
+      recentEnergies: recentEnergies,
+      categoriesSeenInEarlyWindow: earlyCategoriesSeen,
+      energiesSeenInEarlyWindow: earlyEnergiesSeen,
+      recentlyUsedIds: recentQuestionIds,
+      escalationMultiplier: result.escalationMultiplier,
+      vulnerabilityBias: result.vulnerabilityBias,
+    );
 
-    // Check if we should inject a custom question
-    bool injectedCustom = false;
-    if (state.customQuestions.isNotEmpty) {
-      // Find custom questions that haven't been asked yet
-      final availableCustom = state.customQuestions
-          .where((q) => !session.usedQuestionIds.contains(q))
-          .toList();
-
-      if (availableCustom.isNotEmpty) {
-        // High chance to inject early on, or random 20% chance
-        final shouldInject =
-            (nextRound <= 3 && availableCustom.length >= 3) ||
-            (nextRound == 1) ||
-            (_random() < 0.2);
-
-        if (shouldInject) {
-          questionText = availableCustom[_randomInt(availableCustom.length)];
-          intensity = result.intensityMax; // Custom ones are usually spicy
-          questionSource = OfflineQuestionSource.localPool; // Treat as local
-          _pendingQuestionId = questionText; // Use text as ID for tracking
-          _pendingCategory = 'Custom';
-          _pendingSubcategory = null;
-
-          questionCategory = 'Custom';
-          questionSubcategory = null;
-          injectedCustom = true;
-        }
-      }
+    if (selection != null) {
+      questionText = selection.text;
+      recycled = selection.recycled;
+      intensity = selection.question.intensity;
+      questionSource = OfflineQuestionSource.localPool;
+      _pendingQuestionId = selection.question.id;
+      _pendingCategory = selection.question.category;
+      _pendingSubcategory = selection.question.subcategory;
+      questionCategory = selection.question.category;
+      questionSubcategory = selection.question.subcategory;
+    } else {
+      return;
     }
 
-    if (!injectedCustom) {
-      // Always select from the local JSON pool.
-      final selection = _questionPool.select(
-        language: session.language,
-        intensityMin: result.intensityMin,
-        intensityMax: result.intensityMax,
-        nsfwEnabled: session.nsfwEnabled,
-        categories: state.categories,
-        isPremium: _isPremium,
-        usedIds: session.usedQuestionIds,
-        roundNumber: nextRound,
-        recentCategories: recentCategories,
-        recentSubcategories: recentSubcategories,
-        recentEnergies: recentEnergies,
-        categoriesSeenInEarlyWindow: earlyCategoriesSeen,
-        energiesSeenInEarlyWindow: earlyEnergiesSeen,
-        recentlyUsedIds: recentQuestionIds,
-        escalationMultiplier: result.escalationMultiplier,
-        vulnerabilityBias: result.vulnerabilityBias,
-      );
-
-      if (selection != null) {
-        questionText = selection.text;
-        recycled = selection.recycled;
-        intensity = selection.question.intensity;
-        questionSource = OfflineQuestionSource.localPool;
-        _pendingQuestionId = selection.question.id;
-        _pendingCategory = selection.question.category;
-        _pendingSubcategory = selection.question.subcategory;
-        questionCategory = selection.question.category;
-        questionSubcategory = selection.question.subcategory;
-      } else {
-        // No question found — this should not happen with 1600+ questions.
-        // Emit an error or skip the round.
-        return;
-      }
-    }
-
-    String? drinkingRule;
-    if (state.isDrinkingGame) {
-      drinkingRule = _generateDrinkingRule(intensity);
-    }
-
-    // Update session
     final updatedSession = session.copyWith(
       currentRound: nextRound,
       boldnessScore: result.boldness,
@@ -226,15 +175,10 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
         currentCategory: questionCategory,
         currentSubcategory: questionSubcategory,
         errorMessage: null,
-        currentDrinkingRule: drinkingRule,
       ),
     );
   }
 
-  /// Submit the "I have" count for the current round and immediately advance.
-  ///
-  /// Records the round data, then loads the next question with no
-  /// intermediate results screen.
   Future<void> submitAndAdvance(int haveCount) async {
     final session = state.session;
     if (session == null) return;
@@ -257,22 +201,16 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
 
     await _sessionRepo.saveSession(updatedSession);
 
-    // Update local state with the recorded session then immediately advance
     emit(state.copyWith(session: updatedSession));
     await advanceRound();
   }
 
-  /// End the game early.
   Future<void> endGame() async {
     await _finishGame();
   }
 
-  /// Check if there's an active session to resume.
   String? get activeSessionId => _sessionRepo.activeSessionId;
 
-  // ─── Private ─────────────────────────────────────────
-
-  /// Extract last N categories from played rounds.
   List<String> _recentCategories(OfflineSession session, {int count = 2}) {
     final rounds = session.rounds;
     if (rounds.isEmpty) return [];
@@ -285,7 +223,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
         .toList();
   }
 
-  /// Extract last N subcategories from played rounds.
   List<String> _recentSubcategories(OfflineSession session, {int count = 3}) {
     final rounds = session.rounds;
     if (rounds.isEmpty) return [];
@@ -298,7 +235,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
         .toList();
   }
 
-  /// Extract last N energies from played rounds.
   List<String> _recentEnergies(OfflineSession session, {int count = 3}) {
     final rounds = session.rounds;
     if (rounds.isEmpty) return [];
@@ -308,7 +244,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     return recent.map((r) => _energyForIntensity(r.intensity)).toList();
   }
 
-  /// Distinct categories seen in the first 20 played rounds.
   List<String> _earlyWindowCategories(OfflineSession session) {
     final seen = <String>{};
     for (final round in session.rounds.take(20)) {
@@ -320,7 +255,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     return seen.toList();
   }
 
-  /// Distinct energies seen in the first 20 played rounds.
   List<String> _earlyWindowEnergies(OfflineSession session) {
     final seen = <String>{};
     for (final round in session.rounds.take(20)) {
@@ -329,7 +263,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     return seen.toList();
   }
 
-  /// Last N asked question IDs, used to prevent immediate recycling loops.
   List<String> _recentQuestionIds(OfflineSession session, {int count = 10}) {
     final ids = session.rounds
         .where((r) => r.questionId != null && r.questionId!.isNotEmpty)
@@ -345,40 +278,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
     return 'light';
   }
 
-  String _generateDrinkingRule(int intensity) {
-    final lang = state.session?.language ?? 'en';
-
-    final rules = _drinkingRules[lang] ?? _drinkingRules['en']!;
-
-    if (intensity >= 8) {
-      return rules['heavy']![nextRound() % rules['heavy']!.length];
-    } else if (intensity >= 4) {
-      return rules['medium']![nextRound() % rules['medium']!.length];
-    } else {
-      return rules['light']![nextRound() % rules['light']!.length];
-    }
-  }
-
-  static const Map<String, Map<String, List<String>>> _drinkingRules = {
-    'en': {
-      'heavy': ['Take 2 sip(s).'],
-      'medium': ['Take 1 sip(s).'],
-      'light': ['Take 1 sip(s).'],
-    },
-    'de': {
-      'heavy': ['Trink 2 Schluck.'],
-      'medium': ['Trink 1 Schluck.'],
-      'light': ['Trink 1 Schluck.'],
-    },
-    'es': {
-      'heavy': ['Toma 2 trago(s).'],
-      'medium': ['Toma 1 trago(s).'],
-      'light': ['Toma 1 trago(s).'],
-    },
-  };
-
-  int nextRound() => state.session?.currentRound ?? 0;
-
   Future<void> _finishGame() async {
     final session = state.session;
     if (session == null) return;
@@ -393,17 +292,6 @@ class OfflineGameCubit extends Cubit<OfflineGameState> {
         session: finishedSession,
       ),
     );
-  }
-
-  double _random() {
-    return (state.session?.currentRound ?? 0) %
-        10 /
-        10.0; // deterministic pseudo-random
-  }
-
-  int _randomInt(int max) {
-    if (max <= 0) return 0;
-    return (state.session?.currentRound ?? 0) % max;
   }
 
   Future<bool> _readCachedPremium() async {

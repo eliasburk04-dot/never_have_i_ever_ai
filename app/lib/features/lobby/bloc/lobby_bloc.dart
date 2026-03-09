@@ -42,6 +42,7 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
         nsfwEnabled: event.nsfwEnabled,
         language: event.language,
         categories: event.categories,
+        selectedPackId: event.selectedPackId,
       );
       emit(state.copyWith(status: LobbyBlocStatus.loaded, lobby: lobby));
       add(LobbySubscriptionStarted(lobby.id));

@@ -4,6 +4,10 @@ import '../entities/user.dart';
 abstract class IAuthRepository {
   Future<AppUser?> signInAnonymously();
   Future<AppUser?> getCurrentUser();
-  Future<void> updateProfile({String? displayName, String? avatarEmoji, String? preferredLanguage});
+  Future<void> updateProfile({
+    String? displayName,
+    String? avatarEmoji,
+    String? preferredLanguage,
+  });
   String? get currentUserId;
 }

@@ -32,20 +32,24 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(l10n.settings,
-            style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
+        title: Text(
+          l10n.settings,
+          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           // LANGUAGE
-          Text(l10n.language,
-              style: AppTypography.overline
-                  .copyWith(color: AppColors.textTertiary)),
+          Text(
+            l10n.language,
+            style: AppTypography.overline.copyWith(
+              color: AppColors.textTertiary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.sm),
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -56,17 +60,23 @@ class SettingsScreen extends StatelessWidget {
               isExpanded: true,
               underline: const SizedBox.shrink(),
               dropdownColor: AppColors.surfaceElevated,
-              style: AppTypography.body
-                  .copyWith(color: AppColors.textPrimary),
-              icon: Icon(Icons.expand_more_rounded,
-                  color: AppColors.textTertiary),
+              style: AppTypography.body.copyWith(color: AppColors.textPrimary),
+              icon: Icon(
+                Icons.expand_more_rounded,
+                color: AppColors.textTertiary,
+              ),
               items: ['en', 'de', 'es']
-                  .map((l) => DropdownMenuItem(
-                        value: l,
-                        child: Text(_languageLabel(l),
-                            style: AppTypography.body
-                                .copyWith(color: AppColors.textPrimary)),
-                      ))
+                  .map(
+                    (l) => DropdownMenuItem(
+                      value: l,
+                      child: Text(
+                        _languageLabel(l),
+                        style: AppTypography.body.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  )
                   .toList(),
               onChanged: (v) {
                 if (v != null) {
@@ -79,9 +89,12 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
 
           // ACCOUNT
-          Text(l10n.account,
-              style: AppTypography.overline
-                  .copyWith(color: AppColors.textTertiary)),
+          Text(
+            l10n.account,
+            style: AppTypography.overline.copyWith(
+              color: AppColors.textTertiary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.sm),
           Pressable(
             onPressed: () => context.push('/premium'),
@@ -101,15 +114,21 @@ class SettingsScreen extends StatelessWidget {
                       color: AppColors.premiumGold.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.star_rounded,
-                        color: AppColors.premiumGold, size: 20),
+                    child: const Icon(
+                      Icons.star_rounded,
+                      color: AppColors.premiumGold,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: Text(l10n.premiumLabel, style: AppTypography.body),
                   ),
-                  Icon(Icons.chevron_right_rounded,
-                      color: AppColors.textTertiary, size: 20),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.textTertiary,
+                    size: 20,
+                  ),
                 ],
               ),
             ),
@@ -118,9 +137,12 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
 
           // ABOUT
-          Text(l10n.about2,
-              style: AppTypography.overline
-                  .copyWith(color: AppColors.textTertiary)),
+          Text(
+            l10n.about2,
+            style: AppTypography.overline.copyWith(
+              color: AppColors.textTertiary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.sm),
           Container(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -136,8 +158,9 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   l10n.version,
-                  style: AppTypography.bodySmall
-                      .copyWith(color: AppColors.textTertiary),
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.textTertiary,
+                  ),
                 ),
               ],
             ),
@@ -146,9 +169,12 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
 
           // LEGAL
-          Text(l10n.legal,
-              style: AppTypography.overline
-                  .copyWith(color: AppColors.textTertiary)),
+          Text(
+            l10n.legal,
+            style: AppTypography.overline.copyWith(
+              color: AppColors.textTertiary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.sm),
           _LegalLink(
             label: l10n.privacyPolicy,
@@ -188,12 +214,18 @@ class _LegalLink extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text(label,
-                  style: AppTypography.body
-                      .copyWith(color: AppColors.textSecondary)),
+              child: Text(
+                label,
+                style: AppTypography.body.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
             ),
-            Icon(Icons.chevron_right_rounded,
-                size: 20, color: AppColors.textTertiary),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 20,
+              color: AppColors.textTertiary,
+            ),
           ],
         ),
       ),

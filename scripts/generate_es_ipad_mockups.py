@@ -129,7 +129,7 @@ def main() -> None:
         {
             "base": "CreateLobbyEXPOSED.png",
             "shot": "Simulator Screenshot - iPad Pro 13-inch (M5) - 2026-02-26 at 22.02.03.png",
-            "headline": "Personaliza tu partida en segundos antes de empezar.",
+            "headline": "Crea Creator Packs y personaliza la partida en segundos.",
             "out": "CreateLobbyEXPOSED-ES.png",
         },
         {

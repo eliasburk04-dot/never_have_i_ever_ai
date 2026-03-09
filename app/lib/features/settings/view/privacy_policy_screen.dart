@@ -19,8 +19,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
-        title: Text(l10n.privacyPolicy,
-            style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
+        title: Text(
+          l10n.privacyPolicy,
+          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -350,44 +352,52 @@ class PrivacyPolicyScreen extends StatelessWidget {
   static Widget _heading(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: Text(text,
-          style: AppTypography.display.copyWith(
-            fontSize: 22,
-            color: AppColors.textPrimary,
-          )),
+      child: Text(
+        text,
+        style: AppTypography.display.copyWith(
+          fontSize: 22,
+          color: AppColors.textPrimary,
+        ),
+      ),
     );
   }
 
   static Widget _section(String text) {
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.sm),
-      child: Text(text,
-          style: AppTypography.h3.copyWith(
-            fontSize: 17,
-            color: AppColors.textPrimary,
-          )),
+      child: Text(
+        text,
+        style: AppTypography.h3.copyWith(
+          fontSize: 17,
+          color: AppColors.textPrimary,
+        ),
+      ),
     );
   }
 
   static Widget _subsection(String text) {
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: AppSpacing.xs),
-      child: Text(text,
-          style: AppTypography.body.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          )),
+      child: Text(
+        text,
+        style: AppTypography.body.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary,
+        ),
+      ),
     );
   }
 
   static Widget _body(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Text(text,
-          style: AppTypography.body.copyWith(
-            color: AppColors.textSecondary,
-            height: 1.6,
-          )),
+      child: Text(
+        text,
+        style: AppTypography.body.copyWith(
+          color: AppColors.textSecondary,
+          height: 1.6,
+        ),
+      ),
     );
   }
 }

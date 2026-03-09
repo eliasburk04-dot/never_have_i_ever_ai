@@ -35,8 +35,7 @@ class GameRound extends Equatable {
   final DateTime? startedAt;
   final DateTime? completedAt;
 
-  double get haveRatio =>
-      totalPlayers > 0 ? haveCount / totalPlayers : 0.0;
+  double get haveRatio => totalPlayers > 0 ? haveCount / totalPlayers : 0.0;
 
   bool get isActive => status == RoundStatus.active;
   bool get isCompleted => status == RoundStatus.completed;
@@ -73,11 +72,9 @@ class GameRound extends Equatable {
           (map['question_source_id'] ?? map['questionSourceId']) as String?,
       tone: ToneLevel.values.byName(map['tone'] as String? ?? 'safe'),
       status: RoundStatus.values.byName(map['status'] as String? ?? 'pending'),
-      totalPlayers:
-          (map['total_players'] ?? map['totalPlayers']) as int? ?? 0,
+      totalPlayers: (map['total_players'] ?? map['totalPlayers']) as int? ?? 0,
       haveCount: (map['have_count'] ?? map['haveCount']) as int? ?? 0,
-      haveNotCount:
-          (map['have_not_count'] ?? map['haveNotCount']) as int? ?? 0,
+      haveNotCount: (map['have_not_count'] ?? map['haveNotCount']) as int? ?? 0,
       startedAt: (map['started_at'] ?? map['startedAt']) != null
           ? DateTime.parse((map['started_at'] ?? map['startedAt']) as String)
           : null,
@@ -91,12 +88,12 @@ class GameRound extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        roundNumber,
-        questionText,
-        tone,
-        status,
-        haveCount,
-        haveNotCount,
-      ];
+    id,
+    roundNumber,
+    questionText,
+    tone,
+    status,
+    haveCount,
+    haveNotCount,
+  ];
 }

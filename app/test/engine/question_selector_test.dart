@@ -113,7 +113,12 @@ void main() {
         intensityMax: 3,
         nsfwEnabled: false,
         isPremium: false,
-        usedIds: ['q1', 'q2', 'q3', 'q4'], // q4 is intensity 5, won't match. All 1-3 used.
+        usedIds: [
+          'q1',
+          'q2',
+          'q3',
+          'q4',
+        ], // q4 is intensity 5, won't match. All 1-3 used.
       );
       // expanded range 0-4 → 1-4: q4 is also used. So recycle from original candidates
       expect(result, isNotNull);

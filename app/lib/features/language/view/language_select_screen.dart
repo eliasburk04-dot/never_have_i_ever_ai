@@ -19,7 +19,10 @@ class LanguageSelectScreen extends StatelessWidget {
   const LanguageSelectScreen({super.key});
 
   Future<void> _selectLanguage(
-      BuildContext context, String langCode, String label) async {
+    BuildContext context,
+    String langCode,
+    String label,
+  ) async {
     // Update GameConfigCubit — this drives the app locale
     context.read<GameConfigCubit>().setLanguage(langCode);
 

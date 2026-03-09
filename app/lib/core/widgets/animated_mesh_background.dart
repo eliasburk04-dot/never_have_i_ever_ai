@@ -14,7 +14,7 @@ class AnimatedMeshBackground extends StatefulWidget {
 
   /// The colors of the glowing orbs. Usually 3-4 colors work best.
   final List<Color> colors;
-  
+
   /// Multiplier for the animation speed.
   final double speed;
 
@@ -26,7 +26,7 @@ class _AnimatedMeshBackgroundState extends State<AnimatedMeshBackground>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   final Random _random = Random();
-  
+
   late List<_MeshOrb> _orbs;
 
   @override
@@ -64,18 +64,20 @@ class _AnimatedMeshBackgroundState extends State<AnimatedMeshBackground>
           _orbs[i].color = widget.colors[i];
         } else {
           // Add new orb if needed
-          _orbs.add(_MeshOrb(
-            color: widget.colors[i],
-            baseX: _random.nextDouble(),
-            baseY: _random.nextDouble(),
-            radiusX: 0.15 + _random.nextDouble() * 0.2,
-            radiusY: 0.15 + _random.nextDouble() * 0.2,
-            speedX: (0.5 + _random.nextDouble()) * widget.speed,
-            speedY: (0.5 + _random.nextDouble()) * widget.speed,
-            phaseX: _random.nextDouble() * 2 * pi,
-            phaseY: _random.nextDouble() * 2 * pi,
-            size: 0.6 + _random.nextDouble() * 0.5,
-          ));
+          _orbs.add(
+            _MeshOrb(
+              color: widget.colors[i],
+              baseX: _random.nextDouble(),
+              baseY: _random.nextDouble(),
+              radiusX: 0.15 + _random.nextDouble() * 0.2,
+              radiusY: 0.15 + _random.nextDouble() * 0.2,
+              speedX: (0.5 + _random.nextDouble()) * widget.speed,
+              speedY: (0.5 + _random.nextDouble()) * widget.speed,
+              phaseX: _random.nextDouble() * 2 * pi,
+              phaseY: _random.nextDouble() * 2 * pi,
+              size: 0.6 + _random.nextDouble() * 0.5,
+            ),
+          );
         }
       }
       if (_orbs.length > widget.colors.length) {
@@ -96,12 +98,9 @@ class _AnimatedMeshBackgroundState extends State<AnimatedMeshBackground>
       animation: _controller,
       builder: (context, child) {
         final double t = _controller.value * 2 * pi;
-        
+
         return CustomPaint(
-          painter: _MeshPainter(
-            orbs: _orbs,
-            time: t,
-          ),
+          painter: _MeshPainter(orbs: _orbs, time: t),
           size: Size.infinite,
         );
       },
@@ -138,7 +137,7 @@ class _MeshOrb {
     // Calculate Lissajous curve for smooth, pseudo-random drifting
     final double x = baseX + radiusX * sin(time * speedX + phaseX);
     final double y = baseY + radiusY * cos(time * speedY + phaseY);
-    
+
     // Convert normalized coordinates [0, 1] to screen coordinates
     return Offset(
       x.clamp(-0.2, 1.2) * constraints.width,
@@ -148,10 +147,7 @@ class _MeshOrb {
 }
 
 class _MeshPainter extends CustomPainter {
-  _MeshPainter({
-    required this.orbs,
-    required this.time,
-  });
+  _MeshPainter({required this.orbs, required this.time});
 
   final List<_MeshOrb> orbs;
   final double time;
@@ -167,10 +163,7 @@ class _MeshPainter extends CustomPainter {
         ..shader = ui.Gradient.radial(
           center,
           radius,
-          [
-            orb.color,
-            orb.color.withValues(alpha: 0.0),
-          ],
+          [orb.color, orb.color.withValues(alpha: 0.0)],
           [0.0, 1.0],
         )
         // Add blend mode to allow colors to mix brightly

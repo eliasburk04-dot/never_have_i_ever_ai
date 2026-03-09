@@ -124,10 +124,20 @@ function createLobbyHandler(fixedGameKey?: string) {
       }
 
       const lobbyRes = await client.query(
-        `INSERT INTO lobbies (game_key, code, host_id, language, max_rounds, nsfw_enabled, categories)
-         VALUES ($1,$2,$3,$4,$5,$6,$7)
+        `INSERT INTO lobbies (game_key, code, host_id, language, max_rounds, nsfw_enabled, categories, pack_ids, custom_questions)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb)
          RETURNING *`,
-        [gameKey, code, hostId, body.language, body.maxRounds, body.nsfwEnabled, body.categories ?? []],
+        [
+          gameKey,
+          code,
+          hostId,
+          body.language,
+          body.maxRounds,
+          body.nsfwEnabled,
+          body.categories ?? [],
+          body.packIds ?? [],
+          JSON.stringify(body.customQuestions ?? []),
+        ],
       );
       const lobby = lobbyRes.rows[0];
 
@@ -390,6 +400,9 @@ function startGameHandler(fastify: FastifyInstance, fixedGameKey?: string) {
         current_tone: lobby.current_tone,
         escalation_history: lobby.escalation_history ?? [],
         used_question_ids: lobby.used_question_ids ?? [],
+        categories: Array.isArray(lobby.categories) ? lobby.categories : [],
+        pack_ids: Array.isArray(lobby.pack_ids) ? lobby.pack_ids : [],
+        custom_questions: Array.isArray(lobby.custom_questions) ? lobby.custom_questions : [],
       };
 
       const next = await engine.selectNextItem(client, lobbyRow, {

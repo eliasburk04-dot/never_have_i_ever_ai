@@ -8,10 +8,7 @@ import 'package:uuid/uuid.dart';
 import '../core/constants/env.dart';
 
 class BackendSession {
-  const BackendSession({
-    required this.userId,
-    required this.jwt,
-  });
+  const BackendSession({required this.userId, required this.jwt});
 
   final String userId;
   final String jwt;
@@ -24,9 +21,9 @@ class BackendSessionService {
     FlutterSecureStorage? secureStorage,
     http.Client? httpClient,
     Uuid? uuid,
-  })  : _secureStorage = secureStorage ?? const FlutterSecureStorage(),
-        _http = httpClient ?? http.Client(),
-        _uuid = uuid ?? const Uuid();
+  }) : _secureStorage = secureStorage ?? const FlutterSecureStorage(),
+       _http = httpClient ?? http.Client(),
+       _uuid = uuid ?? const Uuid();
 
   static const _userIdKey = 'backend_user_id';
   static const _jwtKey = 'backend_jwt';
@@ -110,4 +107,3 @@ class BackendSessionService {
     _cached = null;
   }
 }
-

@@ -18,7 +18,8 @@ class CreateLobbyRequested extends LobbyEvent {
     required this.maxRounds,
     required this.nsfwEnabled,
     required this.language,
-    required this.categories,
+    this.categories = const [],
+    this.selectedPackId,
   });
 
   final String hostName;
@@ -26,9 +27,17 @@ class CreateLobbyRequested extends LobbyEvent {
   final bool nsfwEnabled;
   final String language;
   final List<String> categories;
+  final String? selectedPackId;
 
   @override
-  List<Object?> get props => [hostName, maxRounds, nsfwEnabled, language, categories];
+  List<Object?> get props => [
+    hostName,
+    maxRounds,
+    nsfwEnabled,
+    language,
+    categories,
+    selectedPackId,
+  ];
 }
 
 class JoinLobbyRequested extends LobbyEvent {

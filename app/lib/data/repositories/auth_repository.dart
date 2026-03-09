@@ -60,8 +60,10 @@ class AuthRepository implements IAuthRepository {
     String? preferredLanguage,
   }) async {
     final prefs = await _prefs();
-    if (displayName != null) await prefs.setString(_displayNameKey, displayName);
-    if (avatarEmoji != null) await prefs.setString(_avatarEmojiKey, avatarEmoji);
+    if (displayName != null)
+      await prefs.setString(_displayNameKey, displayName);
+    if (avatarEmoji != null)
+      await prefs.setString(_avatarEmojiKey, avatarEmoji);
     if (preferredLanguage != null) {
       await prefs.setString(_preferredLanguageKey, preferredLanguage);
     }

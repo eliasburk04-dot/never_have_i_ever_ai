@@ -2,9 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/constants/creator_packs.dart';
+import '../../../core/constants/game_setup_config.dart';
 import '../../../domain/entities/offline_player.dart';
 
-// ─── State ─────────────────────────────────────────────────
+const _unsetSelectedPackId = Object();
 
 class GameConfigState extends Equatable {
   const GameConfigState({
@@ -12,86 +14,92 @@ class GameConfigState extends Equatable {
     this.maxRounds = 20,
     this.nsfwEnabled = false,
     this.language = 'en',
-    this.isDrinkingGame = false,
-    this.customQuestions = const [],
-    this.categories = const ['social', 'party', 'food', 'embarrassing'],
+    this.categories = GameSetupConfig.defaultCategories,
+    this.selectedPackId = CreatorPacks.defaultSelectionId,
   });
 
   final List<OfflinePlayer> players;
   final int maxRounds;
   final bool nsfwEnabled;
   final String language;
-  final bool isDrinkingGame;
-  final List<String> customQuestions;
   final List<String> categories;
+  final String? selectedPackId;
 
   GameConfigState copyWith({
     List<OfflinePlayer>? players,
     int? maxRounds,
     bool? nsfwEnabled,
     String? language,
-    bool? isDrinkingGame,
-    List<String>? customQuestions,
     List<String>? categories,
+    Object? selectedPackId = _unsetSelectedPackId,
   }) {
     return GameConfigState(
       players: players ?? this.players,
       maxRounds: maxRounds ?? this.maxRounds,
       nsfwEnabled: nsfwEnabled ?? this.nsfwEnabled,
       language: language ?? this.language,
-      isDrinkingGame: isDrinkingGame ?? this.isDrinkingGame,
-      customQuestions: customQuestions ?? this.customQuestions,
       categories: categories ?? this.categories,
+      selectedPackId: selectedPackId == _unsetSelectedPackId
+          ? this.selectedPackId
+          : selectedPackId as String?,
     );
   }
 
   @override
-  List<Object?> get props => [players, maxRounds, nsfwEnabled, language, isDrinkingGame, customQuestions, categories];
+  List<Object?> get props => [
+    players,
+    maxRounds,
+    nsfwEnabled,
+    language,
+    categories,
+    selectedPackId,
+  ];
 }
 
-// ─── Cubit ─────────────────────────────────────────────────
-
-/// Manages game configuration that persists across "Play Again" cycles.
-///
-/// Settings are saved to SharedPreferences so they survive app restarts.
-/// Player names, rounds, NSFW toggle, and language are all preserved.
 class GameConfigCubit extends Cubit<GameConfigState> {
   GameConfigCubit() : super(const GameConfigState());
 
-  /// Load persisted settings from SharedPreferences.
   Future<void> loadPersistedSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final language = prefs.getString('language') ?? 'en';
     final maxRounds = prefs.getInt('maxRounds') ?? 20;
     final nsfwEnabled = prefs.getBool('nsfwEnabled') ?? false;
-    final isDrinkingGame = prefs.getBool('isDrinkingGame') ?? false;
-    final customQuestions = prefs.getStringList('customQuestions') ?? [];
-    final categories = prefs.getStringList('categories') ?? ['social', 'party', 'food', 'embarrassing'];
+    final categories =
+        prefs.getStringList('categories') ?? GameSetupConfig.defaultCategories;
 
-    // Restore player names if available
+    final legacyPackIds = prefs.getStringList('selectedPackIds') ?? [];
+    final savedPackId =
+        prefs.getString('selectedPackId') ??
+        (legacyPackIds.isNotEmpty
+            ? legacyPackIds.first
+            : CreatorPacks.defaultSelectionId);
+    final selectedPackId = CreatorPacks.byId(savedPackId) != null
+        ? savedPackId
+        : null;
+
     final playerNames = prefs.getStringList('playerNames') ?? [];
     final playerEmojis = prefs.getStringList('playerEmojis') ?? [];
 
-    List<OfflinePlayer> players = [];
-    if (playerNames.isNotEmpty) {
-      players = List.generate(
-        playerNames.length,
-        (i) => OfflinePlayer(
-          name: playerNames[i],
-          emoji: i < playerEmojis.length ? playerEmojis[i] : '😎',
-        ),
-      );
-    }
+    final players = playerNames.isEmpty
+        ? <OfflinePlayer>[]
+        : List.generate(
+            playerNames.length,
+            (i) => OfflinePlayer(
+              name: playerNames[i],
+              emoji: i < playerEmojis.length ? playerEmojis[i] : '😎',
+            ),
+          );
 
-    emit(GameConfigState(
-      players: players,
-      maxRounds: maxRounds,
-      nsfwEnabled: nsfwEnabled,
-      language: language,
-      isDrinkingGame: isDrinkingGame,
-      customQuestions: customQuestions,
-      categories: categories,
-    ));
+    emit(
+      GameConfigState(
+        players: players,
+        maxRounds: maxRounds,
+        nsfwEnabled: nsfwEnabled,
+        language: language,
+        categories: categories,
+        selectedPackId: selectedPackId,
+      ),
+    );
   }
 
   void setLanguage(String language) {
@@ -109,16 +117,20 @@ class GameConfigCubit extends Cubit<GameConfigState> {
     _persist();
   }
 
-  void setIsDrinkingGame(bool enabled) {
-    emit(state.copyWith(isDrinkingGame: enabled));
-    _persist();
-  }
-
   void setCategories(List<String> categories) {
-    // Ensure at least one category is selected
-    if (categories.isEmpty) return;
     emit(state.copyWith(categories: categories));
     _persistCategories(categories);
+  }
+
+  void setSelectedPackId(String? packId) {
+    if (packId != null && CreatorPacks.byId(packId) == null) return;
+    emit(state.copyWith(selectedPackId: packId));
+    _persistSelectedPackId(packId);
+  }
+
+  void toggleSelectedPackId(String packId) {
+    final next = state.selectedPackId == packId ? null : packId;
+    setSelectedPackId(next);
   }
 
   void setPlayers(List<OfflinePlayer> players) {
@@ -126,27 +138,10 @@ class GameConfigCubit extends Cubit<GameConfigState> {
     _persistPlayers(players);
   }
 
-  void addCustomQuestion(String question) {
-    if (question.trim().isEmpty) return;
-    final list = List<String>.from(state.customQuestions)..add(question.trim());
-    emit(state.copyWith(customQuestions: list));
-    _persistCustomQuestions(list);
-  }
-
-  void removeCustomQuestion(int index) {
-    if (index < 0 || index >= state.customQuestions.length) return;
-    final list = List<String>.from(state.customQuestions)..removeAt(index);
-    emit(state.copyWith(customQuestions: list));
-    _persistCustomQuestions(list);
-  }
-
-  // ─── Persistence ─────────────────────────────────────
-
   Future<void> _persist() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('maxRounds', state.maxRounds);
     await prefs.setBool('nsfwEnabled', state.nsfwEnabled);
-    await prefs.setBool('isDrinkingGame', state.isDrinkingGame);
   }
 
   Future<void> _persistLanguage(String language) async {
@@ -166,13 +161,19 @@ class GameConfigCubit extends Cubit<GameConfigState> {
     );
   }
 
-  Future<void> _persistCustomQuestions(List<String> questions) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('customQuestions', questions);
-  }
-
   Future<void> _persistCategories(List<String> categories) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('categories', categories);
+  }
+
+  Future<void> _persistSelectedPackId(String? packId) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (packId == null) {
+      await prefs.remove('selectedPackId');
+      await prefs.setStringList('selectedPackIds', const []);
+      return;
+    }
+    await prefs.setString('selectedPackId', packId);
+    await prefs.setStringList('selectedPackIds', [packId]);
   }
 }

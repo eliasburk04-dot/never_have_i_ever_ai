@@ -32,10 +32,9 @@ class _JoinLobbyScreenState extends State<JoinLobbyScreen> {
     final code = _codeController.text.trim().toUpperCase();
     if (name.isEmpty || code.length != 6) return;
 
-    context.read<LobbyBloc>().add(JoinLobbyRequested(
-          code: code,
-          playerName: name,
-        ));
+    context.read<LobbyBloc>().add(
+      JoinLobbyRequested(code: code, playerName: name),
+    );
   }
 
   @override
@@ -97,8 +96,7 @@ class _JoinLobbyScreenState extends State<JoinLobbyScreen> {
                       width: double.infinity,
                       child: AppButton(
                         label: 'Join Game',
-                        isLoading:
-                            state.status == LobbyBlocStatus.joining,
+                        isLoading: state.status == LobbyBlocStatus.joining,
                         onPressed: _joinLobby,
                         icon: Icons.arrow_forward_rounded,
                       ),

@@ -13,7 +13,7 @@ class AppColors {
   static const backgroundElevated = Color(0xFF09090B); // Very dark gray
   static const surface = Color(0xFF18181B); // Brutalist gray surface
   static const surfaceElevated = Color(0xFF27272A); // Lighter gray structure
-  
+
   // ── Glass Surfaces ─────────────────────────────────────
   static const glassSurface = Color(0x18FFFFFF); // slightly milkier raw glass
   static const glassBorder = Color(0x33FFFFFF); // harsher structural borders
@@ -27,11 +27,11 @@ class AppColors {
   static const accent = Color(0xFFFAFAFA);
   static const accentLight = Color(0xFFFFFFFF);
   static const accentDeep = Color(0xFFA1A1AA);
-  
+
   // Premium Gold is replaced by an Industrial Chrome/Titanium
   static const secondary = Color(0xFFD4D4D8);
   static const secondaryMuted = Color(0xFF52525B);
-  
+
   // ── Premium Gold ───────────────────────────────────────
   static const premiumGold = Color(0xFFFFD700);
 
@@ -52,23 +52,25 @@ class AppColors {
 
   // ── Tone Escalation (Stark Industrial Tones) ───────────
   // Instead of playful vibrant colors, we use raw warning colors:
-  static const toneSafe = Color(0xFFA1A1AA);      // Gray/Silver
-  static const toneDeeper = Color(0xFFEAB308);    // Raw caution yellow
-  static const toneSecretive = Color(0xFF7C3AED); // High voltage purple (or solid sharp white)
-  static const toneFreaky = Color(0xFFDC2626);    // Danger red
+  static const toneSafe = Color(0xFFA1A1AA); // Gray/Silver
+  static const toneDeeper = Color(0xFFEAB308); // Raw caution yellow
+  static const toneSecretive = Color(
+    0xFF7C3AED,
+  ); // High voltage purple (or solid sharp white)
+  static const toneFreaky = Color(0xFFDC2626); // Danger red
 
   // ── Answer Buttons ─────────────────────────────────────
   // ── Answer Buttons ─────────────────────────────────────
   // Stark brutalist contrast for answers.
-  static const iHave = Color(0xFF000000);        // Black core
-  static const iHavePressed = Color(0xFF27272A); 
-  static const iHaveNot = Color(0xFFFFFFFF);     // White core
-  static const iHaveNotPressed = Color(0xFFE4E4E7); 
-  static const iHaveText = Color(0xFFFFFFFF);    // White text on black
+  static const iHave = Color(0xFF000000); // Black core
+  static const iHavePressed = Color(0xFF27272A);
+  static const iHaveNot = Color(0xFFFFFFFF); // White core
+  static const iHaveNotPressed = Color(0xFFE4E4E7);
+  static const iHaveText = Color(0xFFFFFFFF); // White text on black
   static const iHaveNotText = Color(0xFF000000); // Black text on white
-  static const iHaveGlow = Color(0x33FFFFFF);    
-  static const iHaveNotGlow = Color(0x00000000); 
-  static const iHaveBorder = Color(0xFFFFFFFF);  // Hard white border
+  static const iHaveGlow = Color(0x33FFFFFF);
+  static const iHaveNotGlow = Color(0x00000000);
+  static const iHaveBorder = Color(0xFFFFFFFF); // Hard white border
   static const iHaveNotBorder = Color(0xFF000000); // Hard black border
 
   // ── Player Status Row Backgrounds ──────────────────────

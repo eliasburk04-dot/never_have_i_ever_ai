@@ -73,7 +73,11 @@ class LobbyWaitingScreen extends StatelessWidget {
                         Clipboard.setData(ClipboardData(text: lobby.code));
                         HapticFeedback.mediumImpact();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(AppLocalizations.of(context)!.codeCopied)),
+                          SnackBar(
+                            content: Text(
+                              AppLocalizations.of(context)!.codeCopied,
+                            ),
+                          ),
                         );
                       },
                       child: Container(
@@ -99,7 +103,10 @@ class LobbyWaitingScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            Text(AppLocalizations.of(context)!.lobbyCodeLabel, style: AppTypography.overline),
+                            Text(
+                              AppLocalizations.of(context)!.lobbyCodeLabel,
+                              style: AppTypography.overline,
+                            ),
                             const SizedBox(height: AppSpacing.sm),
                             Text(lobby.code, style: AppTypography.lobbyCode),
                             const SizedBox(height: AppSpacing.xs),
@@ -130,7 +137,12 @@ class LobbyWaitingScreen extends StatelessWidget {
                     // Players header
                     Row(
                       children: [
-                        Text(AppLocalizations.of(context)!.playersLabel.toUpperCase(), style: AppTypography.overline),
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.playersLabel.toUpperCase(),
+                          style: AppTypography.overline,
+                        ),
                         const SizedBox(width: AppSpacing.sm),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -242,85 +254,90 @@ class LobbyWaitingScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.md),
 
                     // Start button for host, status text for guests
-                    Builder(builder: (context) {
-                      final session = getIt<BackendSessionService>();
-                      final myUserId = session.cachedUserId;
-                      // Primary: compare cached userId with lobby hostId.
-                      // Fallback: check if *we* are flagged is_host in the
-                      // player list (covers serialisation mismatches).
-                      final isHost = (myUserId != null &&
-                              myUserId.isNotEmpty &&
-                              lobby.hostId == myUserId) ||
-                          (myUserId != null &&
-                              state.players.any(
-                                (p) => p.userId == myUserId && p.isHost,
-                              ));
-                      final hasEnough =
-                          state.players.length >= AppConstants.minPlayers;
-                      final isStarting =
-                          state.status == LobbyBlocStatus.starting;
+                    Builder(
+                      builder: (context) {
+                        final session = getIt<BackendSessionService>();
+                        final myUserId = session.cachedUserId;
+                        // Primary: compare cached userId with lobby hostId.
+                        // Fallback: check if *we* are flagged is_host in the
+                        // player list (covers serialisation mismatches).
+                        final isHost =
+                            (myUserId != null &&
+                                myUserId.isNotEmpty &&
+                                lobby.hostId == myUserId) ||
+                            (myUserId != null &&
+                                state.players.any(
+                                  (p) => p.userId == myUserId && p.isHost,
+                                ));
+                        final hasEnough =
+                            state.players.length >= AppConstants.minPlayers;
+                        final isStarting =
+                            state.status == LobbyBlocStatus.starting;
 
-                      if (!hasEnough) {
+                        if (!hasEnough) {
+                          return Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.needMinPlayers(AppConstants.minPlayers),
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.textTertiary,
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        }
+
+                        if (isHost) {
+                          return SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: ElevatedButton(
+                              onPressed: isStarting
+                                  ? null
+                                  : () {
+                                      HapticFeedback.mediumImpact();
+                                      context.read<LobbyBloc>().add(
+                                        const StartGameRequested(),
+                                      );
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.accent,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusMd,
+                                  ),
+                                ),
+                              ),
+                              child: isStarting
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      AppLocalizations.of(context)!.startGame,
+                                      style: AppTypography.button.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                            ),
+                          ).animate().fadeIn(duration: 300.ms);
+                        }
+
+                        // Guest: waiting for host
                         return Text(
-                          AppLocalizations.of(context)!.needMinPlayers(AppConstants.minPlayers),
+                          AppLocalizations.of(context)!.waitingForHost,
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.textTertiary,
                           ),
                           textAlign: TextAlign.center,
                         );
-                      }
-
-                      if (isHost) {
-                        return SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: ElevatedButton(
-                            onPressed: isStarting
-                                ? null
-                                : () {
-                                    HapticFeedback.mediumImpact();
-                                    context
-                                        .read<LobbyBloc>()
-                                        .add(const StartGameRequested());
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.accent,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  AppSpacing.radiusMd,
-                                ),
-                              ),
-                            ),
-                            child: isStarting
-                                ? const SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.5,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(
-                                    AppLocalizations.of(context)!.startGame,
-                                    style: AppTypography.button.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                          ),
-                        ).animate().fadeIn(duration: 300.ms);
-                      }
-
-                      // Guest: waiting for host
-                      return Text(
-                        AppLocalizations.of(context)!.waitingForHost,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.textTertiary,
-                        ),
-                        textAlign: TextAlign.center,
-                      );
-                    }),
+                      },
+                    ),
                   ],
                 ),
               );

@@ -183,8 +183,8 @@ class PremiumScreen extends StatelessWidget {
                               textKey: 'premiumNsfwMode',
                             ),
                             const _FeatureRow(
-                              icon: Icons.local_bar_rounded,
-                              textKey: 'premiumDrinkingMode',
+                              icon: Icons.collections_bookmark_rounded,
+                              textKey: 'premiumCreatorPacks',
                             ),
                             const _FeatureRow(
                               icon: Icons.repeat_rounded,
@@ -304,7 +304,7 @@ class _FeatureRow extends StatelessWidget {
     final text = switch (textKey) {
       'allCategories' => l10n.allCategories,
       'premiumNsfwMode' => l10n.premiumNsfwMode,
-      'premiumDrinkingMode' => l10n.premiumDrinkingMode,
+      'premiumCreatorPacks' => l10n.premiumCreatorPacks,
       'upTo100Rounds' => l10n.upTo100Rounds,
       'premiumUpTo20Players' => l10n.premiumUpTo20Players,
       'unlimitedOfflineRounds' => l10n.unlimitedOfflineRounds,

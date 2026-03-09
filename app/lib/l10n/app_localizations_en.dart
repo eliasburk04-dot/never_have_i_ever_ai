@@ -287,7 +287,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get appSubtitle => 'The party game';
+  String get appSubtitle => 'The social conversation game';
 
   @override
   String get playOffline => 'Play Offline';
@@ -314,7 +314,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get version => 'Version 1.0.0';
 
   @override
-  String get drinkingGameMode => 'Drinking Game Mode 🍺';
+  String get creatorPacksMode => 'Creator Packs Mode ✨';
 
   @override
   String get premiumRules => 'Premium Rules';
@@ -402,7 +402,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get premiumEnjoy =>
-      'You have access to all 1600+ questions,\nNSFW Mode, Drinking Game & more.';
+      'You have access to all 1600+ questions,\nNSFW Mode, Creator Packs & more.';
 
   @override
   String get unlimitedOfflineRounds => 'Unlimited offline rounds';
@@ -417,7 +417,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumNsfwMode => 'NSFW Mode 🌶️ – 160+ explicit questions';
 
   @override
-  String get premiumDrinkingMode => 'Drinking Game Mode 🍺';
+  String get premiumCreatorPacks => 'Creator Packs ✨';
 
   @override
   String get premiumUpTo20Players => 'Up to 20 players per lobby';
@@ -429,8 +429,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goPremium => 'Go Premium';
 
   @override
-  String drinkSips(int count) {
-    return 'Take $count sip(s).';
+  String packBonusPrompts(int count) {
+    return 'Pack bonus: add $count custom prompt(s).';
   }
 
   @override

@@ -19,8 +19,10 @@ class TermsOfServiceScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
-        title: Text(l10n.termsOfService,
-            style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
+        title: Text(
+          l10n.termsOfService,
+          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -50,7 +52,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _heading('Terms of Service'),
       _body('Last updated: February 24, 2026'),
       _body(
-        'By downloading, installing, or using EXPOSED – Party Game ("EXPOSED", "the App"), '
+        'By downloading, installing, or using EXPOSED ("EXPOSED", "the App"), '
         'you agree to these Terms of Service. If you do not agree, do not use the App.',
       ),
       _section('1. Eligibility'),
@@ -83,7 +85,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _body(
         '• EXPOSED contains pre-written questions across various intensity levels.\n'
         '• NSFW content (18+) is optional and must be explicitly enabled.\n'
-        '• Drinking Game Mode is optional and intended for legal drinking age users only.\n'
+        '• Creator Packs and custom prompts are optional and user-controlled.\n'
         '• We are not responsible for how players choose to answer or act upon questions.',
       ),
       _section('6. Disclaimer'),
@@ -96,8 +98,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _body(
         'To the maximum extent permitted by applicable law, we shall not be liable for any indirect, '
         'incidental, special, or consequential damages arising from the use of the App, '
-        'including but not limited to damages from gameplay decisions, social interactions, '
-        'or consumption of alcohol during Drinking Game Mode.',
+        'including but not limited to damages from gameplay decisions and social interactions.',
       ),
       _section('8. Intellectual Property'),
       _body(
@@ -131,7 +132,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _heading('Nutzungsbedingungen'),
       _body('Stand: 24. Februar 2026'),
       _body(
-        'Durch das Herunterladen, Installieren oder Nutzen von EXPOSED – Party Game '
+        'Durch das Herunterladen, Installieren oder Nutzen von EXPOSED '
         '(„EXPOSED", „die App") stimmst du diesen Nutzungsbedingungen zu. '
         'Wenn du nicht einverstanden bist, nutze die App nicht.',
       ),
@@ -165,7 +166,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _body(
         '• EXPOSED enthält vorgeschriebene Fragen in verschiedenen Intensitätsstufen.\n'
         '• NSFW-Inhalte (18+) sind optional und müssen explizit aktiviert werden.\n'
-        '• Der Trinkspiel-Modus ist optional und nur für Nutzer im gesetzlichen Trinkalter bestimmt.\n'
+        '• Creator Packs und eigene Fragen sind optional und werden von Nutzern selbst gesteuert.\n'
         '• Wir sind nicht verantwortlich dafür, wie Spieler auf Fragen antworten oder handeln.',
       ),
       _section('6. Haftungsausschluss'),
@@ -178,7 +179,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _body(
         'Im gesetzlich zulässigen Rahmen haften wir nicht für indirekte, zufällige, besondere oder '
         'Folgeschäden, die aus der Nutzung der App entstehen, einschließlich, aber nicht beschränkt auf '
-        'Schäden durch Spielentscheidungen, soziale Interaktionen oder Alkoholkonsum im Trinkspiel-Modus.',
+        'Schäden durch Spielentscheidungen oder soziale Interaktionen.',
       ),
       _section('8. Geistiges Eigentum'),
       _body(
@@ -213,7 +214,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _heading('Términos de Servicio'),
       _body('Última actualización: 24 de febrero de 2026'),
       _body(
-        'Al descargar, instalar o usar EXPOSED – Party Game ("EXPOSED", "la App"), '
+        'Al descargar, instalar o usar EXPOSED ("EXPOSED", "la App"), '
         'aceptas estos Términos de Servicio. Si no estás de acuerdo, no uses la App.',
       ),
       _section('1. Elegibilidad'),
@@ -246,7 +247,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _body(
         '• EXPOSED contiene preguntas predefinidas en varios niveles de intensidad.\n'
         '• El contenido NSFW (18+) es opcional y debe activarse explícitamente.\n'
-        '• El Modo Trago es opcional y está destinado solo a usuarios en edad legal para beber.\n'
+        '• Los Creator Packs y las preguntas personalizadas son opcionales y controlados por los usuarios.\n'
         '• No somos responsables de cómo los jugadores responden o actúan ante las preguntas.',
       ),
       _section('6. Descargo de responsabilidad'),
@@ -259,8 +260,7 @@ class TermsOfServiceScreen extends StatelessWidget {
       _body(
         'En la máxima medida permitida por la ley, no seremos responsables de daños indirectos, '
         'incidentales, especiales o consecuentes derivados del uso de la App, incluyendo, '
-        'entre otros, daños por decisiones de juego, interacciones sociales o consumo de alcohol '
-        'durante el Modo Trago.',
+        'entre otros, daños por decisiones de juego o interacciones sociales.',
       ),
       _section('8. Propiedad intelectual'),
       _body(
@@ -292,33 +292,39 @@ class TermsOfServiceScreen extends StatelessWidget {
   static Widget _heading(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: Text(text,
-          style: AppTypography.display.copyWith(
-            fontSize: 22,
-            color: AppColors.textPrimary,
-          )),
+      child: Text(
+        text,
+        style: AppTypography.display.copyWith(
+          fontSize: 22,
+          color: AppColors.textPrimary,
+        ),
+      ),
     );
   }
 
   static Widget _section(String text) {
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.sm),
-      child: Text(text,
-          style: AppTypography.h3.copyWith(
-            fontSize: 17,
-            color: AppColors.textPrimary,
-          )),
+      child: Text(
+        text,
+        style: AppTypography.h3.copyWith(
+          fontSize: 17,
+          color: AppColors.textPrimary,
+        ),
+      ),
     );
   }
 
   static Widget _body(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Text(text,
-          style: AppTypography.body.copyWith(
-            color: AppColors.textSecondary,
-            height: 1.6,
-          )),
+      child: Text(
+        text,
+        style: AppTypography.body.copyWith(
+          color: AppColors.textSecondary,
+          height: 1.6,
+        ),
+      ),
     );
   }
 }

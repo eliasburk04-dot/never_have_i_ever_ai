@@ -1,23 +1,15 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../core/constants/creator_packs.dart';
+import '../../../core/constants/game_setup_config.dart';
 import '../../../domain/entities/offline_session.dart';
 
-/// Phases of an offline game.
-enum OfflineGamePhase {
-  /// Initial — no game running.
-  idle,
+enum OfflineGamePhase { idle, showingQuestion, complete }
 
-  /// A question is being displayed. Players discuss + count hands.
-  showingQuestion,
-
-  /// All rounds finished — final summary.
-  complete,
-}
-
-/// Source of the currently displayed question.
 enum OfflineQuestionSource { localPool, aiGenerated, emergencyFallback }
 
-/// State for the offline pass-and-play game.
+const _unsetOfflineSelectedPackId = Object();
+
 class OfflineGameState extends Equatable {
   const OfflineGameState({
     this.phase = OfflineGamePhase.idle,
@@ -29,10 +21,8 @@ class OfflineGameState extends Equatable {
     this.currentCategory,
     this.currentSubcategory,
     this.errorMessage,
-    this.isDrinkingGame = false,
-    this.currentDrinkingRule,
-    this.customQuestions = const [],
-    this.categories = const ['social', 'party', 'food', 'embarrassing'],
+    this.categories = GameSetupConfig.defaultCategories,
+    this.selectedPackId = CreatorPacks.defaultSelectionId,
   });
 
   final OfflineGamePhase phase;
@@ -44,18 +34,8 @@ class OfflineGameState extends Equatable {
   final String? currentCategory;
   final String? currentSubcategory;
   final String? errorMessage;
-  
-  /// Whether the Premium 'Drinking Game Mode' is active for this session
-  final bool isDrinkingGame;
-  
-  /// The generated drinking rule for the current card (e.g., 'Take 2 sips')
-  final String? currentDrinkingRule;
-  
-  /// A list of custom questions injected by the players
-  final List<String> customQuestions;
-
-  /// The categories selected for this session
   final List<String> categories;
+  final String? selectedPackId;
 
   int get roundNumber => session?.currentRound ?? 0;
   int get maxRounds => session?.maxRounds ?? 0;
@@ -74,10 +54,8 @@ class OfflineGameState extends Equatable {
     String? currentCategory,
     String? currentSubcategory,
     String? errorMessage,
-    bool? isDrinkingGame,
-    String? currentDrinkingRule,
-    List<String>? customQuestions,
     List<String>? categories,
+    Object? selectedPackId = _unsetOfflineSelectedPackId,
   }) {
     return OfflineGameState(
       phase: phase ?? this.phase,
@@ -91,10 +69,10 @@ class OfflineGameState extends Equatable {
       currentCategory: currentCategory ?? this.currentCategory,
       currentSubcategory: currentSubcategory ?? this.currentSubcategory,
       errorMessage: errorMessage,
-      isDrinkingGame: isDrinkingGame ?? this.isDrinkingGame,
-      currentDrinkingRule: currentDrinkingRule ?? this.currentDrinkingRule,
-      customQuestions: customQuestions ?? this.customQuestions,
       categories: categories ?? this.categories,
+      selectedPackId: selectedPackId == _unsetOfflineSelectedPackId
+          ? this.selectedPackId
+          : selectedPackId as String?,
     );
   }
 
@@ -109,9 +87,7 @@ class OfflineGameState extends Equatable {
     currentCategory,
     currentSubcategory,
     errorMessage,
-    isDrinkingGame,
-    currentDrinkingRule,
-    customQuestions,
     categories,
+    selectedPackId,
   ];
 }

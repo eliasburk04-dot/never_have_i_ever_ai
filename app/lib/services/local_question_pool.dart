@@ -131,7 +131,7 @@ class LocalQuestionPool {
     required bool nsfwEnabled,
     required bool isPremium,
     required List<String> usedIds,
-    required List<String> categories,
+    List<String> categories = const [],
     int roundNumber = 999,
     List<String> recentCategories = const [],
     List<String> recentSubcategories = const [],
@@ -147,7 +147,9 @@ class LocalQuestionPool {
     if (roundNumber <= 20) {
       effectiveMin = effectiveMin.clamp(1, 4);
       effectiveMax = effectiveMax.clamp(1, 4);
-      if (effectiveMax < effectiveMin) effectiveMax = effectiveMin;
+      if (effectiveMax < effectiveMin) {
+        effectiveMax = effectiveMin;
+      }
     }
 
     final usedSet = usedIds.toSet();
@@ -165,7 +167,8 @@ class LocalQuestionPool {
     if (nsfwEnabled || categories.isNotEmpty) {
       candidates = candidates.where((q) {
         if (nsfwEnabled && q.isNsfw) return true;
-        if (categories.isNotEmpty && categories.contains(q.category)) return true;
+        if (categories.isNotEmpty && categories.contains(q.category))
+          return true;
         return false;
       }).toList();
     }
@@ -209,12 +212,15 @@ class LocalQuestionPool {
     if (nsfwEnabled || categories.isNotEmpty) {
       expanded.removeWhere((q) {
         if (nsfwEnabled && q.isNsfw) return false;
-        if (categories.isNotEmpty && categories.contains(q.category)) return false;
+        if (categories.isNotEmpty && categories.contains(q.category))
+          return false;
         return true;
       });
     }
-    if (!isPremium) expanded.removeWhere((q) => q.isPremium);
-    
+    if (!isPremium) {
+      expanded.removeWhere((q) => q.isPremium);
+    }
+
     final expandedUnused = expanded
         .where((q) => !usedSet.contains(q.id))
         .toList();
@@ -291,7 +297,8 @@ class LocalQuestionPool {
       // Union filter: must match NSFW or category
       if (nsfwEnabled || categories.isNotEmpty) {
         final matchesNsfw = nsfwEnabled && q.isNsfw;
-        final matchesCategory = categories.isNotEmpty && categories.contains(q.category);
+        final matchesCategory =
+            categories.isNotEmpty && categories.contains(q.category);
         if (!matchesNsfw && !matchesCategory) return false;
       }
       if (!isPremium && q.isPremium) return false;
@@ -466,8 +473,6 @@ class LocalQuestionPool {
     }
     return pool.last;
   }
-
-
 }
 
 /// Result of a question selection.

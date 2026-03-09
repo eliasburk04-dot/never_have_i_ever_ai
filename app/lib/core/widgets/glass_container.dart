@@ -22,10 +22,10 @@ class GlassContainer extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final BorderRadius? borderRadius;
   final double borderWidth;
-  
+
   /// Controls how opaque the glass is (1.0 = normal glass, 0.0 = completely transparent)
   final double intensity;
-  
+
   /// Optional base color for the glass tint. Defaults to AppColors.glassSurface
   final Color? color;
 
@@ -34,7 +34,7 @@ class GlassContainer extends StatelessWidget {
     final defaultRadius = BorderRadius.circular(AppSpacing.radiusXl);
     final effectiveRadius = borderRadius ?? defaultRadius;
     final baseColor = color ?? AppColors.glassSurface;
-    
+
     // Calculate effective opacity based on intensity
     final effectiveColor = baseColor.withValues(
       alpha: (baseColor.a * intensity).clamp(0.0, 1.0),

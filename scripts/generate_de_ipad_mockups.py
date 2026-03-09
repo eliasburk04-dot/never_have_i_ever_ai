@@ -133,7 +133,7 @@ def main() -> None:
         {
             "base": "CreateLobbyEXPOSED.png",
             "shot": "Simulator Screenshot - iPad Pro 13-inch (M5) - 2026-02-26 at 21.36.45.png",
-            "headline": "Passe dein Spiel in Sekunden vor dem Start an.",
+            "headline": "Erstelle Creator Packs und passe dein Spiel in Sekunden an.",
             "out": "CreateLobbyEXPOSED-DE.png",
         },
         {

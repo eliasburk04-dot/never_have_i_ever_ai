@@ -24,9 +24,12 @@ class OfflineResultsScreen extends StatelessWidget {
             final session = state.session;
             if (session == null) {
               return Center(
-                child: Text(l10n.noGameData,
-                    style: AppTypography.body
-                        .copyWith(color: AppColors.textSecondary)),
+                child: Text(
+                  l10n.noGameData,
+                  style: AppTypography.body.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
               );
             }
 
@@ -47,24 +50,36 @@ class OfflineResultsScreen extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.accent.withValues(alpha: 0.12),
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusFull,
+                          ),
                         ),
-                        child: Text(l10n.roundsCount(rounds.length),
-                            style: AppTypography.label
-                                .copyWith(color: AppColors.accent)),
+                        child: Text(
+                          l10n.roundsCount(rounds.length),
+                          style: AppTypography.label.copyWith(
+                            color: AppColors.accent,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
-                      Text('·',
-                          style: AppTypography.body
-                              .copyWith(color: AppColors.textTertiary)),
+                      Text(
+                        '·',
+                        style: AppTypography.body.copyWith(
+                          color: AppColors.textTertiary,
+                        ),
+                      ),
                       const SizedBox(width: AppSpacing.sm),
-                      Text(l10n.playersCount(session.playerCount),
-                          style: AppTypography.bodySmall
-                              .copyWith(color: AppColors.textSecondary)),
+                      Text(
+                        l10n.playersCount(session.playerCount),
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
                     ],
                   ),
 
@@ -78,106 +93,118 @@ class OfflineResultsScreen extends StatelessWidget {
                           const SizedBox(height: AppSpacing.sm),
                       itemBuilder: (context, index) {
                         final round = rounds[index];
-                        final havePercent =
-                            (round.haveRatio * 100).round();
+                        final havePercent = (round.haveRatio * 100).round();
 
                         return Container(
-                          padding: const EdgeInsets.all(AppSpacing.md),
-                          decoration: BoxDecoration(
-                            color: AppColors.surface,
-                            borderRadius: BorderRadius.circular(
-                                AppSpacing.radiusMd),
-                            border: Border.all(color: AppColors.divider),
-                          ),
-                          child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.accent
-                                          .withValues(alpha: 0.12),
-                                      borderRadius:
-                                          BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      'R${index + 1}',
-                                      style: AppTypography.label.copyWith(
-                                          color: AppColors.accent),
-                                    ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Expanded(
-                                    child: Text(
-                                      round.questionText,
-                                      style: AppTypography.body,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  if (round.recycled)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white
-                                            .withValues(alpha: 0.06),
-                                        borderRadius:
-                                            BorderRadius.circular(4),
-                                      ),
-                                      child: const Text('🔄',
-                                          style: TextStyle(fontSize: 10)),
-                                    ),
-                                ],
+                              padding: const EdgeInsets.all(AppSpacing.md),
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusMd,
+                                ),
+                                border: Border.all(color: AppColors.divider),
                               ),
-                              const SizedBox(height: AppSpacing.sm),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Row(
-                                  children: [
-                                    if (havePercent > 0)
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.accent.withValues(
+                                            alpha: 0.12,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'R${index + 1}',
+                                          style: AppTypography.label.copyWith(
+                                            color: AppColors.accent,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: AppSpacing.sm),
                                       Expanded(
-                                        flex: havePercent,
-                                        child: Container(
-                                          height: 6,
+                                        child: Text(
+                                          round.questionText,
+                                          style: AppTypography.body,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      if (round.recycled)
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 6,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.06,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            '🔄',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: AppSpacing.sm),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: Row(
+                                      children: [
+                                        if (havePercent > 0)
+                                          Expanded(
+                                            flex: havePercent,
+                                            child: Container(
+                                              height: 6,
+                                              color: AppColors.accent,
+                                            ),
+                                          ),
+                                        if (havePercent < 100)
+                                          Expanded(
+                                            flex: 100 - havePercent,
+                                            child: Container(
+                                              height: 6,
+                                              color: AppColors.iHaveNot,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '$havePercent%',
+                                        style: AppTypography.bodySmall.copyWith(
                                           color: AppColors.accent,
                                         ),
                                       ),
-                                    if (havePercent < 100)
-                                      Expanded(
-                                        flex: 100 - havePercent,
-                                        child: Container(
-                                          height: 6,
-                                          color: AppColors.iHaveNot,
+                                      Text(
+                                        '${100 - havePercent}%',
+                                        style: AppTypography.bodySmall.copyWith(
+                                          color: AppColors.textTertiary,
                                         ),
                                       ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '$havePercent%',
-                                    style: AppTypography.bodySmall
-                                        .copyWith(color: AppColors.accent),
-                                  ),
-                                  Text(
-                                    '${100 - havePercent}%',
-                                    style: AppTypography.bodySmall.copyWith(
-                                        color: AppColors.textTertiary),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                        )
+                            )
                             .animate()
                             .fadeIn(delay: (index * 60).ms, duration: 300.ms)
                             .slideX(begin: -0.03);

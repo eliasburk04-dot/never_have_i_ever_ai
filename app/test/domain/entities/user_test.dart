@@ -47,7 +47,10 @@ void main() {
         preferredLanguage: 'en',
       );
 
-      final updated = user.copyWith(displayName: 'Bob', preferredLanguage: 'de');
+      final updated = user.copyWith(
+        displayName: 'Bob',
+        preferredLanguage: 'de',
+      );
       expect(updated.displayName, 'Bob');
       expect(updated.preferredLanguage, 'de');
       expect(updated.id, 'u1'); // unchanged
@@ -56,15 +59,17 @@ void main() {
 
     test('equatable equality', () {
       const a = AppUser(
-          id: 'u1',
-          displayName: 'A',
-          avatarEmoji: '😎',
-          preferredLanguage: 'en');
+        id: 'u1',
+        displayName: 'A',
+        avatarEmoji: '😎',
+        preferredLanguage: 'en',
+      );
       const b = AppUser(
-          id: 'u1',
-          displayName: 'A',
-          avatarEmoji: '😎',
-          preferredLanguage: 'en');
+        id: 'u1',
+        displayName: 'A',
+        avatarEmoji: '😎',
+        preferredLanguage: 'en',
+      );
       expect(a, equals(b));
     });
   });

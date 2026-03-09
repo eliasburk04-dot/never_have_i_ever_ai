@@ -32,7 +32,8 @@ class LobbyRepository implements ILobbyRepository {
     required bool nsfwEnabled,
     required String displayName,
     required String avatarEmoji,
-    required List<String> categories,
+    List<String> categories = const [],
+    String? selectedPackId,
   }) async {
     await _session.ensureSession(); // ensure JWT exists
     final res = await _api.postJson(
@@ -44,6 +45,9 @@ class LobbyRepository implements ILobbyRepository {
         'displayName': displayName,
         'avatarEmoji': avatarEmoji,
         'categories': categories,
+        'packIds': selectedPackId == null
+            ? <String>[]
+            : <String>[selectedPackId],
       },
     );
 

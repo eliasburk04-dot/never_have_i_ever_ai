@@ -1,4 +1,4 @@
-# Never Have I Ever — AI-Powered Party Game
+# Never Have I Ever — AI-Powered Social Conversation Game
 
 > Multiplayer. Adaptive. Localized. App Store Ready.
 
@@ -94,7 +94,7 @@ Flutter App ←──Socket.IO WebSocket──→ Self-hosted Backend (Raspberry
 | Socket.IO (not polling) | Low-latency multiplayer sync for real-time game state |
 | BLoC (not Riverpod) | Event-driven architecture fits game state machines perfectly |
 
-| Lifetime IAP (not subscription) | Higher conversion for party games, simpler for users |
+| Lifetime IAP (not subscription) | Higher conversion for social games, simpler for users |
 | Anonymous auth (not social login) | Party game = instant play. No friction. |
 
 ---

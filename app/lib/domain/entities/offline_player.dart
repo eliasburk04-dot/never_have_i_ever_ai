@@ -18,10 +18,7 @@ class OfflinePlayer extends Equatable {
   double get haveRatio =>
       totalRoundsPlayed > 0 ? haveCount / totalRoundsPlayed : 0.0;
 
-  OfflinePlayer copyWith({
-    int? haveCount,
-    int? totalRoundsPlayed,
-  }) {
+  OfflinePlayer copyWith({int? haveCount, int? totalRoundsPlayed}) {
     return OfflinePlayer(
       name: name,
       emoji: emoji,
@@ -31,18 +28,18 @@ class OfflinePlayer extends Equatable {
   }
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'emoji': emoji,
-        'haveCount': haveCount,
-        'totalRoundsPlayed': totalRoundsPlayed,
-      };
+    'name': name,
+    'emoji': emoji,
+    'haveCount': haveCount,
+    'totalRoundsPlayed': totalRoundsPlayed,
+  };
 
   factory OfflinePlayer.fromMap(Map<String, dynamic> map) => OfflinePlayer(
-        name: map['name'] as String,
-        emoji: map['emoji'] as String,
-        haveCount: map['haveCount'] as int? ?? 0,
-        totalRoundsPlayed: map['totalRoundsPlayed'] as int? ?? 0,
-      );
+    name: map['name'] as String,
+    emoji: map['emoji'] as String,
+    haveCount: map['haveCount'] as int? ?? 0,
+    totalRoundsPlayed: map['totalRoundsPlayed'] as int? ?? 0,
+  );
 
   @override
   List<Object?> get props => [name, emoji, haveCount, totalRoundsPlayed];

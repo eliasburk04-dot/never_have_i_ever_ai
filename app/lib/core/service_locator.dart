@@ -27,9 +27,7 @@ void setupServiceLocator() {
   getIt.registerLazySingleton(() => LocalQuestionPool());
 
   // Repositories
-  getIt.registerLazySingleton<IAuthRepository>(
-    () => AuthRepository(getIt()),
-  );
+  getIt.registerLazySingleton<IAuthRepository>(() => AuthRepository(getIt()));
   getIt.registerLazySingleton<ILobbyRepository>(
     () => LobbyRepository(getIt(), getIt()),
   );

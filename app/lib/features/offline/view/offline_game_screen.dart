@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -64,8 +63,10 @@ class OfflineGameScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(l10n.endGameTitle,
-            style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
+        title: Text(
+          l10n.endGameTitle,
+          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+        ),
         content: Text(
           l10n.endGameBody,
           style: AppTypography.body.copyWith(color: AppColors.textSecondary),
@@ -73,8 +74,10 @@ class OfflineGameScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.keepPlaying,
-                style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(
+              l10n.keepPlaying,
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -82,8 +85,7 @@ class OfflineGameScreen extends StatelessWidget {
               context.read<OfflineGameCubit>().endGame();
               context.go('/home');
             },
-            child:
-                Text(l10n.endGame, style: TextStyle(color: AppColors.error)),
+            child: Text(l10n.endGame, style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -123,8 +125,10 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(l10n.endGameTitle,
-            style: AppTypography.h3.copyWith(color: AppColors.textPrimary)),
+        title: Text(
+          l10n.endGameTitle,
+          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+        ),
         content: Text(
           l10n.endGameBody,
           style: AppTypography.body.copyWith(color: AppColors.textSecondary),
@@ -132,8 +136,10 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.keepPlaying,
-                style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(
+              l10n.keepPlaying,
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -141,8 +147,7 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
               context.read<OfflineGameCubit>().endGame();
               GoRouter.of(context).go('/home');
             },
-            child:
-                Text(l10n.endGame, style: TextStyle(color: AppColors.error)),
+            child: Text(l10n.endGame, style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -175,151 +180,155 @@ class _QuestionPhaseState extends State<_QuestionPhase> {
             speed: tone == 'safe' ? 0.8 : 1.5,
           ),
         ),
-        
+
         // 2. Content
         SafeArea(
           child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          children: [
-            // Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.xs + 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusFull),
-                  ),
-                  child: Text(
-                    '${l10n.rounds} ${s.roundNumber} / ${s.maxRounds}',
-                    style: AppTypography.label
-                        .copyWith(color: AppColors.textSecondary),
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.xs + 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
+                      ),
+                      child: Text(
+                        '${l10n.rounds} ${s.roundNumber} / ${s.maxRounds}',
+                        style: AppTypography.label.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                    Pressable(
+                      onPressed: () => _showExitConfirm(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.xs + 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusFull,
+                          ),
+                        ),
+                        child: Text(
+                          l10n.endGame,
+                          style: AppTypography.label.copyWith(
+                            color: AppColors.textTertiary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Tone badge
+                const SizedBox(height: AppSpacing.sm),
+                _ToneBadge(tone: tone),
+
+                const Spacer(),
+
+                // Question card with escalation glow
+                _OfflineQuestionCard(
+                  text: s.currentQuestionText ?? '',
+                  tone: tone,
+                  isRecycled: s.currentQuestionRecycled,
+                ),
+
+                const Spacer(),
+
+                // "How many said I have?" picker
+                Text(l10n.howManySaidIHave, style: AppTypography.body),
+                const SizedBox(height: AppSpacing.md),
+
+                // Number picker
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: List.generate(playerCount + 1, (i) {
+                    final isSelected = i == _selectedHaveCount;
+                    return Pressable(
+                      onPressed: () {
+                        HapticsService.instance.lightImpact();
+                        AudioService.instance.playTap();
+                        setState(() => _selectedHaveCount = i);
+                      },
+                      scale: 0.94,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.accent
+                              : AppColors.surface,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd,
+                          ),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.accent
+                                : AppColors.border,
+                            width: isSelected ? 2 : 1,
+                          ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.glowAccent(0.2),
+                                    blurRadius: 12,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '$i',
+                          style: AppTypography.h3.copyWith(
+                            color: isSelected
+                                ? AppColors.background
+                                : AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l10n.outOfPlayers(playerCount),
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.textTertiary,
                   ),
                 ),
-                Pressable(
-                  onPressed: () => _showExitConfirm(context),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                      vertical: AppSpacing.xs + 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusFull),
-                    ),
-                    child: Text(
-                      l10n.endGame,
-                      style: AppTypography.label
-                          .copyWith(color: AppColors.textTertiary),
-                    ),
+
+                const SizedBox(height: AppSpacing.lg),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: l10n.next,
+                    onPressed: _submitAndAdvance,
+                    icon: Icons.arrow_forward_rounded,
                   ),
                 ),
               ],
             ),
-
-            // Tone badge
-            const SizedBox(height: AppSpacing.sm),
-            _ToneBadge(tone: tone),
-
-            const Spacer(),
-
-            // Question card with escalation glow
-            _OfflineQuestionCard(
-              text: s.currentQuestionText ?? '',
-              tone: tone,
-              isRecycled: s.currentQuestionRecycled,
-              drinkingRule: s.currentDrinkingRule,
-            ),
-
-            const Spacer(),
-
-            // "How many said I have?" picker
-            Text(
-              l10n.howManySaidIHave,
-              style: AppTypography.body,
-            ),
-            const SizedBox(height: AppSpacing.md),
-
-            // Number picker
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              alignment: WrapAlignment.center,
-              children: List.generate(playerCount + 1, (i) {
-                final isSelected = i == _selectedHaveCount;
-                return Pressable(
-                  onPressed: () {
-                    HapticsService.instance.lightImpact();
-                    AudioService.instance.playTap();
-                    setState(() => _selectedHaveCount = i);
-                  },
-                  scale: 0.94,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppColors.accent : AppColors.surface,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusMd),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.accent
-                            : AppColors.border,
-                        width: isSelected ? 2 : 1,
-                      ),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: AppColors.glowAccent(0.2),
-                                blurRadius: 12,
-                              ),
-                            ]
-                          : null,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '$i',
-                      style: AppTypography.h3.copyWith(
-                        color: isSelected
-                            ? AppColors.background
-                            : AppColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              l10n.outOfPlayers(playerCount),
-              style: AppTypography.bodySmall
-                  .copyWith(color: AppColors.textTertiary),
-            ),
-
-            const SizedBox(height: AppSpacing.lg),
-
-            SizedBox(
-              width: double.infinity,
-              child: AppButton(
-                label: l10n.next,
-                onPressed: _submitAndAdvance,
-                icon: Icons.arrow_forward_rounded,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-      ),
-    ],
-  );
+      ],
+    );
   }
 }
 
@@ -330,138 +339,70 @@ class _OfflineQuestionCard extends StatelessWidget {
     required this.text,
     required this.tone,
     this.isRecycled = false,
-    this.drinkingRule,
   });
 
   final String text;
   final String tone;
   final bool isRecycled;
-  final String? drinkingRule;
-
-  Color get _glowColor {
-    switch (tone) {
-      case 'deeper':
-        return AppColors.toneDeeper;
-      case 'secretive':
-        return AppColors.toneSecretive;
-      case 'freaky':
-        return AppColors.toneFreaky;
-      default:
-        return AppColors.accent;
-    }
-  }
-
-  double get _glowOpacity {
-    switch (tone) {
-      case 'deeper':
-        return 0.25;
-      case 'secretive':
-        return 0.35;
-      case 'freaky':
-        return 0.45;
-      default:
-        return 0.18;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xl,
-        vertical: AppSpacing.xxl,
-      ),
-      color: AppColors.accent.withValues(alpha: 0.05),
-      borderWidth: 1.5,
-      child: Column(
-        children: [
-          Builder(builder: (context) {
-            final l10n = AppLocalizations.of(context)!;
-            return Text(
-              l10n.neverHaveIEver,
-              style: AppTypography.overline.copyWith(
-                color: AppColors.accentLight.withValues(alpha: 0.6),
-                letterSpacing: 3,
-              ),
-            );
-          }),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            text,
-            style: AppTypography.question,
-            textAlign: TextAlign.center,
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl,
+            vertical: AppSpacing.xxl,
           ),
-          if (isRecycled) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Builder(builder: (context) {
-                final l10n = AppLocalizations.of(context)!;
-                return Text(
-                  l10n.recycled,
-                  style: AppTypography.bodySmall
-                      .copyWith(color: AppColors.textTertiary, fontSize: 12),
-                );
-              }),
-            ),
-          ],
-          if (drinkingRule != null && drinkingRule!.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.lg),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.sm,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.warning.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                border: Border.all(
-                  color: AppColors.warning.withValues(alpha: 0.6),
-                  width: 1.5,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.warning.withValues(alpha: 0.15),
-                    blurRadius: 12,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('🍺', style: TextStyle(fontSize: 18)),
-                  const SizedBox(width: AppSpacing.sm),
-                  Flexible(
-                    child: Text(
-                      drinkingRule!,
-                      style: AppTypography.body.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        shadows: [
-                          Shadow(
-                            color: AppColors.warning.withValues(alpha: 0.8),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
+          color: AppColors.accent.withValues(alpha: 0.05),
+          borderWidth: 1.5,
+          child: Column(
+            children: [
+              Builder(
+                builder: (context) {
+                  final l10n = AppLocalizations.of(context)!;
+                  return Text(
+                    l10n.neverHaveIEver,
+                    style: AppTypography.overline.copyWith(
+                      color: AppColors.accentLight.withValues(alpha: 0.6),
+                      letterSpacing: 3,
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            ),
-          ],
-        ],
-      ),
-    )
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                text,
+                style: AppTypography.question,
+                textAlign: TextAlign.center,
+              ),
+              if (isRecycled) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Builder(
+                    builder: (context) {
+                      final l10n = AppLocalizations.of(context)!;
+                      return Text(
+                        l10n.recycled,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.textTertiary,
+                          fontSize: 12,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ],
+          ),
+        )
         .animate()
         .fadeIn(duration: 400.ms)
         .scale(
@@ -517,9 +458,7 @@ class _ToneBadge extends StatelessWidget {
           color: Colors.white,
           fontWeight: FontWeight.w900,
           letterSpacing: 1.5,
-          shadows: [
-            Shadow(color: color.withValues(alpha: 0.8), blurRadius: 4),
-          ],
+          shadows: [Shadow(color: color.withValues(alpha: 0.8), blurRadius: 4)],
         ),
       ),
     );

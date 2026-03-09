@@ -6,10 +6,8 @@ import '../core/constants/env.dart';
 import 'backend_session_service.dart';
 
 class BackendApiService {
-  BackendApiService(
-    this._session, {
-    http.Client? httpClient,
-  }) : _http = httpClient ?? http.Client();
+  BackendApiService(this._session, {http.Client? httpClient})
+    : _http = httpClient ?? http.Client();
 
   final BackendSessionService _session;
   final http.Client _http;
@@ -103,4 +101,3 @@ class BackendApiService {
     throw Exception('Unexpected API response');
   }
 }
-

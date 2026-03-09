@@ -24,6 +24,16 @@ export async function fetchLobbyStateByCode(
   ]);
   const lobby = lobbyRes.rows[0];
   if (!lobby) return null;
+  const packIds = Array.isArray(lobby.pack_ids) ? lobby.pack_ids.map((value: unknown) => String(value)) : [];
+  const customQuestions = Array.isArray(lobby.custom_questions)
+    ? lobby.custom_questions.map((value: unknown) => String(value ?? '').trim()).filter(Boolean)
+    : [];
+  const { custom_questions: _customQuestions, ...lobbyRest } = lobby;
+  const lobbyPayload = {
+    ...lobbyRest,
+    pack_ids: packIds,
+    custom_questions_count: customQuestions.length,
+  };
 
   const playersRes = await client.query(
     `SELECT lp.*, u.display_name AS user_display_name, u.avatar_emoji AS user_avatar_emoji
@@ -69,5 +79,5 @@ export async function fetchLobbyStateByCode(
     }
   }
 
-  return { lobby, players, round, answers, answered };
+  return { lobby: lobbyPayload, players, round, answers, answered };
 }

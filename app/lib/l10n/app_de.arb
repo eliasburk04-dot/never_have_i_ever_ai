@@ -128,7 +128,7 @@
             "count": {"type": "int"}
         }
     },
-    "appSubtitle": "Das Partyspiel",
+    "appSubtitle": "Das soziale Gesprächsspiel",
     "playOffline": "Offline spielen",
     "resumeOfflineGame": "Offline Spiel fortsetzen",
     "noGameData": "Keine Spieldaten",
@@ -137,7 +137,7 @@
     "account": "KONTO",
     "legal": "RECHTLICHES",
     "version": "Version 1.0.0",
-    "drinkingGameMode": "Trinkspiel Modus 🍺",
+    "creatorPacksMode": "Creator-Packs-Modus ✨",
     "premiumRules": "Premium Regeln",
     "playerCount": "Spieleranzahl",
     "upToPlayers": "Bis zu {count}",
@@ -179,17 +179,17 @@
     "purchasePremium": "Premium kaufen",
     "lifetimeOneTime": "Lebenslang · Einmalkauf",
     "youArePremium": "Du bist Premium",
-    "premiumEnjoy": "Du hast Zugriff auf alle 1600+ Fragen,\nNSFW-Modus, Trinkspiel & mehr.",
+    "premiumEnjoy": "Du hast Zugriff auf alle 1600+ Fragen,\nNSFW-Modus, Creator Packs & mehr.",
     "unlimitedOfflineRounds": "Unbegrenzte Offline-Runden",
     "upTo100Rounds": "Bis zu 100 Runden pro Spiel",
     "allCategories": "1600+ Fragen aus allen 10 Kategorien",
     "premiumNsfwMode": "NSFW-Modus 🌶️ – 160+ explizite Fragen",
-    "premiumDrinkingMode": "Trinkspiel-Modus 🍺",
+    "premiumCreatorPacks": "Creator Packs ✨",
     "premiumUpTo20Players": "Bis zu 20 Spieler pro Lobby",
     "categoriesLabel": "KATEGORIEN",
     "goPremium": "Premium holen",
-    "drinkSips": "Trink {count} Schluck.",
-    "@drinkSips": {
+    "packBonusPrompts": "Pack-Bonus: füge {count} eigene Frage(n) hinzu.",
+    "@packBonusPrompts": {
         "placeholders": {
             "count": {"type": "int"}
         }

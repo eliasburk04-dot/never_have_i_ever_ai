@@ -61,9 +61,9 @@ class StoreKitService {
   // ─── Product loading ──────────────────────────────────
 
   Future<void> _loadProducts() async {
-    final response = await _iap.queryProductDetails(
-      {AppConstants.lifetimeProductId},
-    );
+    final response = await _iap.queryProductDetails({
+      AppConstants.lifetimeProductId,
+    });
 
     if (response.notFoundIDs.isNotEmpty) {
       _log.w('Product(s) not found: ${response.notFoundIDs}');
@@ -76,7 +76,9 @@ class StoreKitService {
 
     if (response.productDetails.isNotEmpty) {
       _premiumProduct = response.productDetails.first;
-      _log.i('Loaded product: ${_premiumProduct!.id} — ${_premiumProduct!.price}');
+      _log.i(
+        'Loaded product: ${_premiumProduct!.id} — ${_premiumProduct!.price}',
+      );
     }
   }
 
@@ -178,6 +180,5 @@ class StoreKitService {
 }
 
 /// Callback type for server-side receipt verification.
-typedef PurchaseVerificationCallback = Future<void> Function(
-  PurchaseDetails purchase,
-);
+typedef PurchaseVerificationCallback =
+    Future<void> Function(PurchaseDetails purchase);

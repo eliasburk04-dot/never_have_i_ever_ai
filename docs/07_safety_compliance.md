@@ -25,7 +25,7 @@ Required because NSFW mode exists (even though it's behind a toggle).
 ✅ Embarrassing personal stories
 ✅ Mild innuendo
 ✅ "Crush" or "attraction" themes
-✅ Party/drinking references
+❌ Alcohol/drinking references
 ✅ "Sent a risky text" type scenarios
 
 ### Forbidden (Hard Blocks)
@@ -137,9 +137,9 @@ ABSOLUTE RESTRICTIONS — VIOLATION = SYSTEM FAILURE:
 If the current tone is "freaky" and NSFW is enabled:
 - You may reference adult dating scenarios
 - You may reference mild embarrassment about attraction
-- You may reference party/drinking experiences
+- Do not reference alcohol or drinking challenges
 - Keep everything suggestive, NEVER explicit
-- Think "truth or dare at a college party" level
+- Keep content social, respectful, and non-alcoholic
 ```
 
 ---

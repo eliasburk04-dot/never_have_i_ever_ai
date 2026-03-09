@@ -28,23 +28,30 @@ void main() {
   });
 
   group('createLobby', () {
-    test('sends correct body and returns lobby', () async {
-      when(() => api.postJson('/lobby/create', body: any(named: 'body')))
-          .thenAnswer((_) async => {
-                'lobby': {
-                  'id': 'lobby-1',
-                  'code': 'ABC123',
-                  'host_id': 'user-1',
-                  'status': 'waiting',
-                  'language': 'en',
-                  'max_rounds': 20,
-                  'current_round': 0,
-                  'nsfw_enabled': false,
-                  'boldness_score': 0.0,
-                  'current_tone': 'safe',
-                  'round_timeout_seconds': 30,
-                }
-              });
+    test('sends [] as packIds when no pack is selected', () async {
+      Map<String, dynamic>? capturedBody;
+      when(
+        () => api.postJson('/lobby/create', body: any(named: 'body')),
+      ).thenAnswer((invocation) async {
+        capturedBody = Map<String, dynamic>.from(
+          invocation.namedArguments[#body] as Map<String, dynamic>,
+        );
+        return {
+          'lobby': {
+            'id': 'lobby-1',
+            'code': 'ABC123',
+            'host_id': 'user-1',
+            'status': 'waiting',
+            'language': 'en',
+            'max_rounds': 20,
+            'current_round': 0,
+            'nsfw_enabled': false,
+            'boldness_score': 0.0,
+            'current_tone': 'safe',
+            'round_timeout_seconds': 30,
+          },
+        };
+      });
 
       final lobby = await repo.createLobby(
         language: 'en',
@@ -58,30 +65,72 @@ void main() {
       expect(lobby.code, 'ABC123');
       expect(lobby.hostId, 'user-1');
       expect(lobby.status, LobbyStatus.waiting);
+      expect(capturedBody?['packIds'], isA<List<String>>());
+      expect(capturedBody?['packIds'], isEmpty);
 
       // Verify code cache works
       expect(repo.codeForLobbyId('lobby-1'), 'ABC123');
+    });
+
+    test('sends [selectedPackId] as packIds when a pack is selected', () async {
+      Map<String, dynamic>? capturedBody;
+      when(
+        () => api.postJson('/lobby/create', body: any(named: 'body')),
+      ).thenAnswer((invocation) async {
+        capturedBody = Map<String, dynamic>.from(
+          invocation.namedArguments[#body] as Map<String, dynamic>,
+        );
+        return {
+          'lobby': {
+            'id': 'lobby-1',
+            'code': 'ABC123',
+            'host_id': 'user-1',
+            'status': 'waiting',
+            'language': 'en',
+            'max_rounds': 20,
+            'current_round': 0,
+            'nsfw_enabled': false,
+            'boldness_score': 0.0,
+            'current_tone': 'safe',
+            'round_timeout_seconds': 30,
+          },
+        };
+      });
+
+      await repo.createLobby(
+        language: 'en',
+        maxRounds: 20,
+        nsfwEnabled: false,
+        displayName: 'Alice',
+        avatarEmoji: '😎',
+        selectedPackId: 'deep_talk',
+      );
+
+      expect(capturedBody?['packIds'], equals(['deep_talk']));
     });
   });
 
   group('joinLobby', () {
     test('sends code and returns lobby', () async {
-      when(() => api.postJson('/lobby/join', body: any(named: 'body')))
-          .thenAnswer((_) async => {
-                'lobby': {
-                  'id': 'lobby-1',
-                  'code': 'ABC123',
-                  'host_id': 'user-1',
-                  'status': 'waiting',
-                  'language': 'en',
-                  'max_rounds': 20,
-                  'current_round': 0,
-                  'nsfw_enabled': false,
-                  'boldness_score': 0.0,
-                  'current_tone': 'safe',
-                  'round_timeout_seconds': 30,
-                }
-              });
+      when(
+        () => api.postJson('/lobby/join', body: any(named: 'body')),
+      ).thenAnswer(
+        (_) async => {
+          'lobby': {
+            'id': 'lobby-1',
+            'code': 'ABC123',
+            'host_id': 'user-1',
+            'status': 'waiting',
+            'language': 'en',
+            'max_rounds': 20,
+            'current_round': 0,
+            'nsfw_enabled': false,
+            'boldness_score': 0.0,
+            'current_tone': 'safe',
+            'round_timeout_seconds': 30,
+          },
+        },
+      );
 
       final lobby = await repo.joinLobby(
         code: 'ABC123',
@@ -95,8 +144,9 @@ void main() {
     });
 
     test('returns null on failure', () async {
-      when(() => api.postJson('/lobby/join', body: any(named: 'body')))
-          .thenThrow(Exception('404'));
+      when(
+        () => api.postJson('/lobby/join', body: any(named: 'body')),
+      ).thenThrow(Exception('404'));
 
       final lobby = await repo.joinLobby(
         code: 'INVALID',
@@ -111,22 +161,25 @@ void main() {
   group('getLobby', () {
     test('fetches state by code', () async {
       // First, populate the code cache
-      when(() => api.postJson('/lobby/create', body: any(named: 'body')))
-          .thenAnswer((_) async => {
-                'lobby': {
-                  'id': 'lobby-1',
-                  'code': 'ABC123',
-                  'host_id': 'user-1',
-                  'status': 'waiting',
-                  'language': 'en',
-                  'max_rounds': 20,
-                  'current_round': 0,
-                  'nsfw_enabled': false,
-                  'boldness_score': 0.0,
-                  'current_tone': 'safe',
-                  'round_timeout_seconds': 30,
-                }
-              });
+      when(
+        () => api.postJson('/lobby/create', body: any(named: 'body')),
+      ).thenAnswer(
+        (_) async => {
+          'lobby': {
+            'id': 'lobby-1',
+            'code': 'ABC123',
+            'host_id': 'user-1',
+            'status': 'waiting',
+            'language': 'en',
+            'max_rounds': 20,
+            'current_round': 0,
+            'nsfw_enabled': false,
+            'boldness_score': 0.0,
+            'current_tone': 'safe',
+            'round_timeout_seconds': 30,
+          },
+        },
+      );
 
       await repo.createLobby(
         language: 'en',
@@ -136,21 +189,23 @@ void main() {
         avatarEmoji: '😎',
       );
 
-      when(() => api.getJson('/lobby/ABC123/state')).thenAnswer((_) async => {
-            'lobby': {
-              'id': 'lobby-1',
-              'code': 'ABC123',
-              'host_id': 'user-1',
-              'status': 'playing',
-              'language': 'en',
-              'max_rounds': 20,
-              'current_round': 3,
-              'nsfw_enabled': false,
-              'boldness_score': 0.2,
-              'current_tone': 'safe',
-              'round_timeout_seconds': 30,
-            }
-          });
+      when(() => api.getJson('/lobby/ABC123/state')).thenAnswer(
+        (_) async => {
+          'lobby': {
+            'id': 'lobby-1',
+            'code': 'ABC123',
+            'host_id': 'user-1',
+            'status': 'playing',
+            'language': 'en',
+            'max_rounds': 20,
+            'current_round': 3,
+            'nsfw_enabled': false,
+            'boldness_score': 0.2,
+            'current_tone': 'safe',
+            'round_timeout_seconds': 30,
+          },
+        },
+      );
 
       final lobby = await repo.getLobby('lobby-1');
       expect(lobby, isNotNull);
@@ -167,22 +222,25 @@ void main() {
   group('getPlayers', () {
     test('parses player list from state endpoint', () async {
       // Populate cache
-      when(() => api.postJson('/lobby/create', body: any(named: 'body')))
-          .thenAnswer((_) async => {
-                'lobby': {
-                  'id': 'lobby-1',
-                  'code': 'ABC123',
-                  'host_id': 'user-1',
-                  'status': 'waiting',
-                  'language': 'en',
-                  'max_rounds': 20,
-                  'current_round': 0,
-                  'nsfw_enabled': false,
-                  'boldness_score': 0.0,
-                  'current_tone': 'safe',
-                  'round_timeout_seconds': 30,
-                }
-              });
+      when(
+        () => api.postJson('/lobby/create', body: any(named: 'body')),
+      ).thenAnswer(
+        (_) async => {
+          'lobby': {
+            'id': 'lobby-1',
+            'code': 'ABC123',
+            'host_id': 'user-1',
+            'status': 'waiting',
+            'language': 'en',
+            'max_rounds': 20,
+            'current_round': 0,
+            'nsfw_enabled': false,
+            'boldness_score': 0.0,
+            'current_tone': 'safe',
+            'round_timeout_seconds': 30,
+          },
+        },
+      );
 
       await repo.createLobby(
         language: 'en',
@@ -192,29 +250,31 @@ void main() {
         avatarEmoji: '😎',
       );
 
-      when(() => api.getJson('/lobby/ABC123/state')).thenAnswer((_) async => {
-            'lobby': {'id': 'lobby-1', 'code': 'ABC123'},
-            'players': [
-              {
-                'id': 'p-1',
-                'lobby_id': 'lobby-1',
-                'user_id': 'user-1',
-                'display_name': 'Alice',
-                'avatar_emoji': '😎',
-                'status': 'connected',
-                'is_host': true,
-              },
-              {
-                'id': 'p-2',
-                'lobby_id': 'lobby-1',
-                'user_id': 'user-2',
-                'display_name': 'Bob',
-                'avatar_emoji': '🙂',
-                'status': 'connected',
-                'is_host': false,
-              },
-            ],
-          });
+      when(() => api.getJson('/lobby/ABC123/state')).thenAnswer(
+        (_) async => {
+          'lobby': {'id': 'lobby-1', 'code': 'ABC123'},
+          'players': [
+            {
+              'id': 'p-1',
+              'lobby_id': 'lobby-1',
+              'user_id': 'user-1',
+              'display_name': 'Alice',
+              'avatar_emoji': '😎',
+              'status': 'connected',
+              'is_host': true,
+            },
+            {
+              'id': 'p-2',
+              'lobby_id': 'lobby-1',
+              'user_id': 'user-2',
+              'display_name': 'Bob',
+              'avatar_emoji': '🙂',
+              'status': 'connected',
+              'is_host': false,
+            },
+          ],
+        },
+      );
 
       final players = await repo.getPlayers('lobby-1');
       expect(players.length, 2);
@@ -231,22 +291,25 @@ void main() {
   group('leaveLobby', () {
     test('calls REST leave endpoint and clears cache', () async {
       // Populate cache
-      when(() => api.postJson('/lobby/create', body: any(named: 'body')))
-          .thenAnswer((_) async => {
-                'lobby': {
-                  'id': 'lobby-1',
-                  'code': 'ABC123',
-                  'host_id': 'user-1',
-                  'status': 'waiting',
-                  'language': 'en',
-                  'max_rounds': 20,
-                  'current_round': 0,
-                  'nsfw_enabled': false,
-                  'boldness_score': 0.0,
-                  'current_tone': 'safe',
-                  'round_timeout_seconds': 30,
-                }
-              });
+      when(
+        () => api.postJson('/lobby/create', body: any(named: 'body')),
+      ).thenAnswer(
+        (_) async => {
+          'lobby': {
+            'id': 'lobby-1',
+            'code': 'ABC123',
+            'host_id': 'user-1',
+            'status': 'waiting',
+            'language': 'en',
+            'max_rounds': 20,
+            'current_round': 0,
+            'nsfw_enabled': false,
+            'boldness_score': 0.0,
+            'current_tone': 'safe',
+            'round_timeout_seconds': 30,
+          },
+        },
+      );
 
       await repo.createLobby(
         language: 'en',
@@ -257,8 +320,9 @@ void main() {
       );
       expect(repo.codeForLobbyId('lobby-1'), 'ABC123');
 
-      when(() => api.postJson('/lobby/ABC123/leave'))
-          .thenAnswer((_) async => {'ok': true});
+      when(
+        () => api.postJson('/lobby/ABC123/leave'),
+      ).thenAnswer((_) async => {'ok': true});
 
       await repo.leaveLobby('lobby-1');
 

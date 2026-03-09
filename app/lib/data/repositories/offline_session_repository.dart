@@ -29,8 +29,7 @@ class OfflineSessionRepository implements IOfflineSessionRepository {
   }
 
   @override
-  String? get activeSessionId =>
-      _settingsBox.get(_activeIdKey) as String?;
+  String? get activeSessionId => _settingsBox.get(_activeIdKey) as String?;
 
   @override
   Future<void> setActiveSessionId(String? id) async {
@@ -54,8 +53,11 @@ class OfflineSessionRepository implements IOfflineSessionRepository {
         // Skip corrupted entries
       }
     }
-    sessions.sort((a, b) =>
-        (b.createdAt ?? DateTime(2000)).compareTo(a.createdAt ?? DateTime(2000)));
+    sessions.sort(
+      (a, b) => (b.createdAt ?? DateTime(2000)).compareTo(
+        a.createdAt ?? DateTime(2000),
+      ),
+    );
     return sessions;
   }
 

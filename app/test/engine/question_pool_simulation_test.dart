@@ -30,12 +30,7 @@ const _safeSubcategories = [
   'social_media',
 ];
 
-const _nsfwCategories = [
-  'sexual',
-  'relationships',
-  'confessions',
-  'deep',
-];
+const _nsfwCategories = ['sexual', 'relationships', 'confessions', 'deep'];
 
 const _nsfwSubcategories = [
   'desire',

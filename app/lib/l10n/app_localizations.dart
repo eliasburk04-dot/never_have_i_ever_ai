@@ -625,7 +625,7 @@ abstract class AppLocalizations {
   /// No description provided for @appSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'The party game'**
+  /// **'The social conversation game'**
   String get appSubtitle;
 
   /// No description provided for @playOffline.
@@ -676,11 +676,11 @@ abstract class AppLocalizations {
   /// **'Version 1.0.0'**
   String get version;
 
-  /// No description provided for @drinkingGameMode.
+  /// No description provided for @creatorPacksMode.
   ///
   /// In en, this message translates to:
-  /// **'Drinking Game Mode 🍺'**
-  String get drinkingGameMode;
+  /// **'Creator Packs Mode ✨'**
+  String get creatorPacksMode;
 
   /// No description provided for @premiumRules.
   ///
@@ -841,7 +841,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumEnjoy.
   ///
   /// In en, this message translates to:
-  /// **'You have access to all 1600+ questions,\nNSFW Mode, Drinking Game & more.'**
+  /// **'You have access to all 1600+ questions,\nNSFW Mode, Creator Packs & more.'**
   String get premiumEnjoy;
 
   /// No description provided for @unlimitedOfflineRounds.
@@ -868,11 +868,11 @@ abstract class AppLocalizations {
   /// **'NSFW Mode 🌶️ – 160+ explicit questions'**
   String get premiumNsfwMode;
 
-  /// No description provided for @premiumDrinkingMode.
+  /// No description provided for @premiumCreatorPacks.
   ///
   /// In en, this message translates to:
-  /// **'Drinking Game Mode 🍺'**
-  String get premiumDrinkingMode;
+  /// **'Creator Packs ✨'**
+  String get premiumCreatorPacks;
 
   /// No description provided for @premiumUpTo20Players.
   ///
@@ -892,11 +892,11 @@ abstract class AppLocalizations {
   /// **'Go Premium'**
   String get goPremium;
 
-  /// No description provided for @drinkSips.
+  /// No description provided for @packBonusPrompts.
   ///
   /// In en, this message translates to:
-  /// **'Take {count} sip(s).'**
-  String drinkSips(int count);
+  /// **'Pack bonus: add {count} custom prompt(s).'**
+  String packBonusPrompts(int count);
 
   /// No description provided for @catSocial.
   ///

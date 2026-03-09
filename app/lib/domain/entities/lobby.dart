@@ -68,10 +68,12 @@ class Lobby extends Equatable {
   }
 
   factory Lobby.fromMap(Map<String, dynamic> map) {
-    final hostId = (map['host_id'] ??
-            map['hostId'] ??
-            map['host_user_id'] ??
-            map['hostUserId']) as String?;
+    final hostId =
+        (map['host_id'] ??
+                map['hostId'] ??
+                map['host_user_id'] ??
+                map['hostUserId'])
+            as String?;
     final statusName = (map['status'] ?? 'waiting') as String;
     return Lobby(
       id: map['id'] as String,
@@ -85,18 +87,17 @@ class Lobby extends Equatable {
           (map['nsfw_enabled'] ?? map['nsfwEnabled']) as bool? ?? false,
       boldnessScore:
           ((map['boldness_score'] ?? map['boldnessScore']) as num?)
-                  ?.toDouble() ??
-              0.0,
+              ?.toDouble() ??
+          0.0,
       currentTone: ToneLevel.values.byName(
         (map['current_tone'] ?? map['currentTone']) as String? ?? 'safe',
       ),
       roundTimeoutSeconds:
-          (map['round_timeout_seconds'] ?? map['roundTimeoutSeconds']) as int? ??
-              30,
+          (map['round_timeout_seconds'] ?? map['roundTimeoutSeconds'])
+              as int? ??
+          30,
       createdAt: (map['created_at'] ?? map['createdAt']) != null
-          ? DateTime.parse(
-              (map['created_at'] ?? map['createdAt']) as String,
-            )
+          ? DateTime.parse((map['created_at'] ?? map['createdAt']) as String)
           : null,
       endedAt: (map['ended_at'] ?? map['endedAt']) != null
           ? DateTime.parse((map['ended_at'] ?? map['endedAt']) as String)
@@ -106,15 +107,15 @@ class Lobby extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        code,
-        hostId,
-        status,
-        language,
-        maxRounds,
-        currentRound,
-        nsfwEnabled,
-        boldnessScore,
-        currentTone,
-      ];
+    id,
+    code,
+    hostId,
+    status,
+    language,
+    maxRounds,
+    currentRound,
+    nsfwEnabled,
+    boldnessScore,
+    currentTone,
+  ];
 }

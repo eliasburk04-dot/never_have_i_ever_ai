@@ -7,7 +7,6 @@ import 'package:nhie_app/features/game/bloc/game_bloc.dart';
 import '../../fixtures.dart';
 
 void main() {
-
   group('GameEvent', () {
     test('GameStarted props', () {
       const event = GameStarted('lobby-1');
@@ -139,9 +138,7 @@ void main() {
       expect(state.allAnswered, true);
 
       // Player 1 changes answer
-      final updated = state.copyWith(
-        answers: {'user-1': true, 'user-3': true},
-      );
+      final updated = state.copyWith(answers: {'user-1': true, 'user-3': true});
       expect(updated.allAnswered, true);
     });
   });

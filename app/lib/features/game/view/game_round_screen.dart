@@ -50,10 +50,7 @@ class _GameRoundScreenState extends State<GameRoundScreen> {
                 case GamePhase.loading:
                   return _buildLoading();
                 case GamePhase.playing:
-                  return _PlayingScreen(
-                    state: state,
-                    lobbyId: lobbyId,
-                  );
+                  return _PlayingScreen(state: state, lobbyId: lobbyId);
                 case GamePhase.complete:
                   return const SizedBox.shrink();
               }
@@ -80,8 +77,9 @@ class _GameRoundScreenState extends State<GameRoundScreen> {
           const SizedBox(height: AppSpacing.md),
           Text(
             AppLocalizations.of(context)!.gettingNextQuestion,
-            style: AppTypography.bodySmall
-                .copyWith(color: AppColors.textTertiary),
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.textTertiary,
+            ),
           ),
         ],
       ),
@@ -92,10 +90,7 @@ class _GameRoundScreenState extends State<GameRoundScreen> {
 // ─── Playing Screen ──────────────────────────────────────
 
 class _PlayingScreen extends StatelessWidget {
-  const _PlayingScreen({
-    required this.state,
-    required this.lobbyId,
-  });
+  const _PlayingScreen({required this.state, required this.lobbyId});
 
   final GameState state;
   final String lobbyId;
@@ -128,13 +123,13 @@ class _PlayingScreen extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.surface,
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusFull),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                   child: Text(
                     '${AppLocalizations.of(context)!.rounds} ${state.roundNumber}',
-                    style: AppTypography.label
-                        .copyWith(color: AppColors.textSecondary),
+                    style: AppTypography.label.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
                 _EscalationBadge(tone: tone),
@@ -192,14 +187,14 @@ class _PlayingScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusMd),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   border: Border.all(color: AppColors.divider),
                 ),
                 child: Text(
                   AppLocalizations.of(context)!.waitingForHostToContinue,
-                  style: AppTypography.bodySmall
-                      .copyWith(color: AppColors.textTertiary),
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.textTertiary,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -267,10 +262,8 @@ class _PlayerStatusList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activePlayers =
-        players.where((p) => p.isConnected).toList();
-    final disconnected =
-        players.where((p) => !p.isConnected).toList();
+    final activePlayers = players.where((p) => p.isConnected).toList();
+    final disconnected = players.where((p) => !p.isConnected).toList();
 
     return Container(
       width: double.infinity,
@@ -286,25 +279,30 @@ class _PlayerStatusList extends StatelessWidget {
         children: [
           Text(
             AppLocalizations.of(context)!.playersLabel,
-            style: AppTypography.overline
-                .copyWith(color: AppColors.textTertiary),
+            style: AppTypography.overline.copyWith(
+              color: AppColors.textTertiary,
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Flexible(
             child: ListView(
               shrinkWrap: true,
               children: [
-                ...activePlayers.map((player) => _PlayerRow(
-                      player: player,
-                      answer: answers[player.userId],
-                      isCurrentUser: player.userId == currentUserId,
-                    )),
-                ...disconnected.map((player) => _PlayerRow(
-                      player: player,
-                      answer: null,
-                      isCurrentUser: player.userId == currentUserId,
-                      isDisconnected: true,
-                    )),
+                ...activePlayers.map(
+                  (player) => _PlayerRow(
+                    player: player,
+                    answer: answers[player.userId],
+                    isCurrentUser: player.userId == currentUserId,
+                  ),
+                ),
+                ...disconnected.map(
+                  (player) => _PlayerRow(
+                    player: player,
+                    answer: null,
+                    isCurrentUser: player.userId == currentUserId,
+                    isDisconnected: true,
+                  ),
+                ),
               ],
             ),
           ),
@@ -360,15 +358,14 @@ class _PlayerRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
         border: isCurrentUser
             ? Border.all(
-                color: AppColors.accent.withValues(alpha: 0.3), width: 1)
+                color: AppColors.accent.withValues(alpha: 0.3),
+                width: 1,
+              )
             : null,
       ),
       child: Row(
         children: [
-          Text(
-            player.avatarEmoji,
-            style: const TextStyle(fontSize: 20),
-          ),
+          Text(player.avatarEmoji, style: const TextStyle(fontSize: 20)),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
@@ -382,8 +379,7 @@ class _PlayerRow extends StatelessWidget {
             ),
           ),
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               color: _indicatorColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
@@ -443,52 +439,50 @@ class _EscalationQuestionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 600),
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xl,
-        vertical: AppSpacing.xxl,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.accent.withValues(alpha: 0.12),
-            AppColors.accentDeep.withValues(alpha: 0.06),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        border: Border.all(
-          color: AppColors.accent.withValues(alpha: 0.15),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: _glowColor.withValues(alpha: _glowOpacity),
-            blurRadius: 32,
-            offset: const Offset(0, 8),
+          duration: const Duration(milliseconds: 600),
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl,
+            vertical: AppSpacing.xxl,
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            AppLocalizations.of(context)!.neverHaveIEver,
-            style: AppTypography.overline.copyWith(
-              color: AppColors.accentLight.withValues(alpha: 0.6),
-              letterSpacing: 3,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.accent.withValues(alpha: 0.12),
+                AppColors.accentDeep.withValues(alpha: 0.06),
+              ],
             ),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+            border: Border.all(color: AppColors.accent.withValues(alpha: 0.15)),
+            boxShadow: [
+              BoxShadow(
+                color: _glowColor.withValues(alpha: _glowOpacity),
+                blurRadius: 32,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            questionText,
-            style: AppTypography.question,
-            textAlign: TextAlign.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.neverHaveIEver,
+                style: AppTypography.overline.copyWith(
+                  color: AppColors.accentLight.withValues(alpha: 0.6),
+                  letterSpacing: 3,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                questionText,
+                style: AppTypography.question,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-        ],
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: 400.ms)
         .scale(
@@ -584,8 +578,9 @@ class _GameAnswerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgColor = isHave ? AppColors.iHave : AppColors.iHaveNot;
     final glowColor = isHave ? AppColors.iHaveGlow : AppColors.iHaveNotGlow;
-    final borderColor =
-        isHave ? AppColors.iHaveBorder : AppColors.iHaveNotBorder;
+    final borderColor = isHave
+        ? AppColors.iHaveBorder
+        : AppColors.iHaveNotBorder;
 
     return Expanded(
       child: Pressable(
